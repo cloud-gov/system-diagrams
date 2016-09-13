@@ -1,0 +1,23 @@
+graph LR;
+    client_user["fa:fa-user Client Users"]
+    login["fa:fa-server Portal URLS:
+    <br />- cloud.gov
+    <br />- login.cloud.gov
+    <br />- uaa.cloud.gov
+    <br />- api.cloud.gov
+    <br />- logs.cloud.gov
+    "]
+    elb["fa:fa-code-fork Elastic Load Balancer"]
+    client_user-->login
+    login--"Port 443"-->elb
+    elb-->cf_router_1["fa:fa-random CF Router"]
+    elb-->cf_router_2["fa:fa-random CF Router"]
+
+    subgraph Diego Runner
+        cf_app_1["fa:fa-cogs CF App 1 Container"]
+        cf_app_2["fa:fa-cogs CF App 2 Container"]
+        cf_app_3["fa:fa-cogs CF App 3 Container"]
+    end
+
+    B-->D
+    C-->D

@@ -46,7 +46,7 @@ gulp.task( 'clean', () => del( 'public' ) );
  * @return { stream } - A stream of copied font files.
  */
 gulp.task( 'copy:fonts', () => {
-  return gulp.src( 'node_modules/uswds/dist/fonts/**/*' )
+  return gulp.src( ['node_modules/uswds/dist/fonts/**/*', 'node_modules/font-awesome/fonts/*'] )
     .pipe( gulp.dest( 'public/fonts' ) );
 } );
 

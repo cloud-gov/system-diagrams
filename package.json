@@ -28,6 +28,7 @@
     "connect": "^3.4.1",
     "del": "^2.2.1",
     "figlet": "^1.1.2",
+    "font-awesome": "^4.6.3",
     "gulp": "^3.9.1",
     "gulp-sass": "^2.3.2",
     "gulp-util": "^3.0.7",
