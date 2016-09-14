@@ -88,7 +88,7 @@ graph LR;
     snort-updates--Network Vulnerability Updates-->concourse
     concourse--Embeds updates in Program-->snort
   end
-  
+
   subgraph Riemann / Pagerduty Alert Flow
     subgraph Internal
       riemann4["Riemann Event Processor"]
@@ -123,3 +123,29 @@ graph LR;
     aws-logs-agent--Sends Logs-->aws-logs
   end
 
+  subgraph Service Provisioning
+    service-user["Cloud Foundry User"]
+    broker["Service Broker Instance"]
+    provider["Service Provider Instance"]
+    service-user--Requests service instance-->broker
+    broker--Provisions service instance-->s3
+    broker--Provisions service instance-->rds
+    broker--Provisions service instance-->provider
+    subgraph AWS GovCloud
+      s3["Amazon Simple Storage Service (S3)"]
+      rds["Amazon Relational Database Service (RDS)"]
+    end
+  end
+
+  subgraph Service Access
+    app["Cloud Foundry Application"]
+    service-instance["Service Instance"]
+    app--Accesses service data-->service-instance
+  end
+
+  subgraph New Relic
+    18F--Requests application diagnostics-->new-relic
+    subgraph External
+      new-relic["New Relic"]
+    end
+  end
