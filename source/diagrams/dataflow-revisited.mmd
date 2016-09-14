@@ -1,0 +1,125 @@
+graph LR;
+  subgraph User Request
+    subgraph Internal
+      elb["Elastic Load Balancer"]
+      vpc["Virtual Private Cloud"]
+      router["Cloud Foundry Router"]
+      diego["Diego Runner"]
+      container["Application"]
+    end
+    subgraph External
+      user["User"]
+    end
+
+    user--Port 443-->elb
+    elb-->vpc
+    vpc-->router
+    router-->diego
+    diego-->container
+  end
+
+  subgraph Application Response
+    subgraph Internal
+      elb2["Elastic Load Balancer"]
+      vpc2["Virtual Private Cloud"]
+      router2["Cloud Foundry Router"]
+      diego2["Diego Runner"]
+      container2["Application"]
+    end
+    subgraph External
+      user2["User"]
+    end
+
+    elb2--TLS Established Session Port-->user2
+    vpc2-->elb2
+    router2-->vpc2
+    diego2-->router2
+    container2-->diego2
+  end
+
+  subgraph Nessus Scanning
+    subgraph Internal
+      subgraph Tooling VPC
+        nessus["Nessus Manager"]
+      end
+      subgraph All Servers
+        nessus-agent1["Nessus Agent"]
+      end
+    end
+    subgraph External
+      nessus-updates["GSA Tenable Updates"]
+      email2["Email"]
+    end
+
+    nessus-agent1--Sends Scanning Results-->nessus
+    nessus--Monitors-->nessus-agent1
+    nessus-updates--Security Definition Updates-->nessus
+    nessus--Reports-->email2
+  end
+
+  subgraph ClamAV
+    subgraph Internal
+      subgraph All Servers
+        clamav["ClamAV Scanner"]
+      end
+      riemann2["Riemann Event Processor"]
+    end
+    subgraph External
+      clamav-updates["ClamAV Definitions"]
+    end
+
+    clamav--Sends Alerts-->riemann2
+    clamav-updates--Security Definition Updates-->clamav
+  end
+
+  subgraph Snort
+    subgraph Internal
+      concourse["Concourse CI"]
+      subgraph All Servers
+        snort["Snort Network Scanner"]
+      end
+      riemann3["Riemann Event Processor"]
+    end
+    subgraph External
+      snort-updates["Snort Network Vulnerability Profiles"]
+    end
+
+    snort--Sends Alerts-->riemann3
+    snort-updates--Network Vulnerability Updates-->concourse
+    concourse--Embeds updates in Program-->snort
+  end
+  
+  subgraph Riemann / Pagerduty Alert Flow
+    subgraph Internal
+      riemann4["Riemann Event Processor"]
+    end
+    subgraph External
+      pagerduty5["Pagerduty"]
+      sms5["Text Messages"]
+      email5["Email"]
+      phone5["On Call Phone"]
+    end
+
+    riemann4--Sends Alerts-->pagerduty5
+    pagerduty5-->sms5
+    pagerduty5-->phone5
+    pagerduty5-->email5
+  end
+
+  subgraph Tripwire
+    subgraph Internal
+      subgraph All Servers
+        job1["BOSH Job"]
+        logs["System Logs"]
+        aws-logs-agent["AWS CloudWatch Agent"]
+      end
+      subgraph Amazon CloudWatch Logs
+        aws-logs["CloudWatch GovCloud Endpoint"]
+      end
+    end
+
+    job1--Sends Report-->logs
+    logs-->aws-logs-agent
+    aws-logs-agent--Sends Logs-->aws-logs
+  end
+
