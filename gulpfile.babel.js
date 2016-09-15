@@ -123,9 +123,21 @@ gulp.task( 'render:list', [ 'render' ], ( done ) => {
   fs.readdir( 'source/diagrams', ( error, files ) => {
 
     let diagrams = files.map( ( file ) => {
+      let content = fs.readFileSync('source/diagrams/' + file, 'utf-8');
+      let metadata = content.split('\n').filter(function(line) {
+	return line.match(/^%%/) !== null;
+      }).reduce(function(memo, line) {
+	let parts = line.replace(/^%%/, '').split(':').map(function(part) {
+	  return part.trim();
+	});
+	memo[parts[0]] = parts[1];
+	return memo;
+      }, {});
+
       return {
         href: `${ path.basename( file, '.mmd' ) }.html`,
-        name: file,
+        name: metadata.title || "needs a title",
+	description: metadata.description || "need a description"
       };
     } );
 
