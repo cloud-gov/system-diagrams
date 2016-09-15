@@ -1,0 +1,17 @@
+graph LR
+  subgraph Snort
+    subgraph Internal
+      concourse["Concourse CI"]
+      subgraph All Servers
+        snort["Snort Network Scanner"]
+      end
+      riemann3["Riemann Event Processor"]
+    end
+    subgraph External
+      snort-updates["Snort Network Vulnerability Profiles"]
+    end
+
+    snort--Sends Alerts-->riemann3
+    snort-updates--Network Vulnerability Updates-->concourse
+    concourse--Embeds updates in Program-->snort
+  end

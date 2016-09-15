@@ -1,0 +1,17 @@
+graph LR
+  subgraph Riemann / Pagerduty Alert Flow
+    subgraph Internal
+      riemann4["Riemann Event Processor"]
+    end
+    subgraph External
+      pagerduty5["Pagerduty"]
+      sms5["Text Messages"]
+      email5["Email"]
+      phone5["On Call Phone"]
+    end
+
+    riemann4--Sends Alerts-->pagerduty5
+    pagerduty5-->sms5
+    pagerduty5-->phone5
+    pagerduty5-->email5
+  end

@@ -1,0 +1,17 @@
+graph LR
+  subgraph Tripwire
+    subgraph Internal
+      subgraph All Servers
+        job1["BOSH Job"]
+        logs["System Logs"]
+        aws-logs-agent["AWS CloudWatch Agent"]
+      end
+      subgraph Amazon CloudWatch Logs
+        aws-logs["CloudWatch GovCloud Endpoint"]
+      end
+    end
+
+    job1--Sends Report-->logs
+    logs-->aws-logs-agent
+    aws-logs-agent--Sends Logs-->aws-logs
+  end

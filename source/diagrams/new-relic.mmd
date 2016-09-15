@@ -1,0 +1,9 @@
+graph LR
+  subgraph New Relic
+    agent["New Relic Agent: Internal Servers"]
+    agent--Error reports: Port 443 TLS-->new-relic
+    cloud-ops["Cloud Operations"]--Requests application diagnostics-->new-relic
+    subgraph External
+      new-relic["New Relic"]
+    end
+  end

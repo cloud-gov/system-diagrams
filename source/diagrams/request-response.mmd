@@ -1,0 +1,38 @@
+graph LR
+  subgraph User Request
+    subgraph Internal
+      elb["Elastic Load Balancer"]
+      vpc["Virtual Private Cloud"]
+      router["Cloud Foundry Router"]
+      diego["Diego Runner"]
+      container["Application"]
+    end
+    subgraph External
+      user["User"]
+    end
+
+    user--Port 443-->elb
+    elb-->vpc
+    vpc-->router
+    router-->diego
+    diego-->container
+  end
+
+  subgraph Application Response
+    subgraph Internal
+      elb2["Elastic Load Balancer"]
+      vpc2["Virtual Private Cloud"]
+      router2["Cloud Foundry Router"]
+      diego2["Diego Runner"]
+      container2["Application"]
+    end
+    subgraph External
+      user2["User"]
+    end
+
+    elb2--TLS Established Session Port-->user2
+    vpc2-->elb2
+    router2-->vpc2
+    diego2-->router2
+    container2-->diego2
+  end
