@@ -4,6 +4,8 @@ graph LR
   subgraph Riemann / Pagerduty Alert Flow
     subgraph Internal
       riemann4["Riemann Event Processor"]
+      influxdb["InfluxDB Time Series Database"]
+      grafana["Grafana Time Series Visualizations"]
     end
     subgraph External
       pagerduty5["Pagerduty"]
@@ -13,6 +15,8 @@ graph LR
     end
 
     riemann4--Sends Alerts-->pagerduty5
+    riemann4--Persists events-->influxdb
+    influxdb--Visualizes events-->grafana
     pagerduty5-->sms5
     pagerduty5-->phone5
     pagerduty5-->email5
