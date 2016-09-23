@@ -1,0 +1,27 @@
+%% title: 10-4.2 Jumpbox Data Flow
+%% description: Section 10 - System Environment - Figure 10-4.2 Jumpbox Data Flow
+graph TD
+
+  subgraph AWS
+    UAA["User Authentication/Authorization (UAA)"]
+    web["Concourse Web Server"]
+    worker[Concourse Worker]
+    Jumpbox{Ephemeral Jumpbox}
+    BOSH[BOSH Director]
+    EC2[EC2 Instances]
+    ELB("Elastic Load Balancer (ELB)")
+  end
+  subgraph GSA Responsibility
+    SAML{"Single Sign-on (SSO)<br>providing MFA"}
+  end
+  Ops((Cloud Operations))
+
+  Ops--"Concourse CLI (fly)"-->ELB
+  ELB-->web
+  UAA-.Authentication.->SAML
+  web-.Authorization.->UAA
+  web--Run Jumpbox Job-->worker
+  worker-.Container.->Jumpbox
+  Jumpbox--BOSH SSH Request-->BOSH
+  BOSH-.BOSH Director sets up temporary SSH key.->EC2
+  Jumpbox--SSH using temporary key-->EC2

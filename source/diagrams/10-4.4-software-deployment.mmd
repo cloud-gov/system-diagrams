@@ -1,0 +1,37 @@
+%% title: 10-4.4 Software Deployment Data Flow
+%% description: Section 10 - System Environment - Figure 10-4.3 Software Deployment Data Flow
+graph TD
+  subgraph AWS
+    subgraph Concourse
+      web["Concourse Web Server"]
+      worker["Concourse Worker"]
+      test-job("Test Build")
+      deploy-job("Deployment Build")
+    end
+    elb["Elastic Load Balancer (ELB)"]
+    UAA["User Authentication/Authorization (UAA)"]
+    bosh["BOSH Director"]
+    ec2["EC2 Instance"]
+  end
+  subgraph External
+    github["GitHub Repository"]
+    github-auth{"GitHub Account<br>MFA Authentication"}
+  end
+  subgraph GSA Responsibility
+    SAML{"Single Sign-on (SSO)<br>providing MFA"}
+  end
+  Ops((Cloud Operations))
+
+  Ops--"SSH or HTTPS<br>(software changes)"-->github
+  Ops--HTTPS-->elb
+  elb-->web
+  web-->worker
+  web-.Authorization.->UAA
+  UAA-.Authentication.->SAML
+  github-."Authentication/Authorization".->github-auth
+  worker-.Runs automated tests against the software.->test-job
+  worker-."Only starts when Test Build passes".->deploy-job
+  test-job--Downloads latest version-->github
+  deploy-job--Downloads same version that passed Test Build-->github
+  deploy-job--Instructs BOSH to deploy-->bosh
+  bosh--Deploys changes-->ec2
