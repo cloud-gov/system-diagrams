@@ -1,0 +1,79 @@
+%% title: 10-4.3 Monitoring & Alerting Data Flow
+%% description: Section 10 - System Environment - Figure 10-4.3 Monitoring & Alerting Data Flow
+graph LR
+  subgraph AWS
+    elb["Elastic Load Balancer<br>(ELB)"]
+    UAA["User Authentication/Authorization (UAA)"]
+    aws-logs["CloudWatch"]
+    aws-console["AWS Console"]
+    aws-iam("AWS IAM")
+    subgraph ""
+      nessus["Nessus Manager"]
+      riemann["Riemann Event Processor"]
+      influxdb["InfluxDB<br>(Time Series Database)"]
+      grafana["Grafana<br>(Time Series Visualizations)"]
+    end
+    subgraph All EC2 Instances
+      nessusagent{"Nessus<br>Scanning<br>Agent"}
+      clamav{"ClamAV<br>(Virus/Malware)"}
+      tripwire{"Tripwire<br>(Filesystem Integrity)"}
+      logs("System Logs")
+      aws-logs-agent{"AWS<br>CloudWatch<br>Agent"}
+      nragent{"New Relic Agent"}
+      snort{"Snort IDS<br>(Intrusion Detection)"}
+    end
+  end
+  subgraph GSA Responsibility
+    SAML{"Single Sign-on (SSO)<br>providing MFA"}
+    nessusupdates>"GSA Tenable Updates"]
+  end
+  subgraph External
+    clamav-updates>"ClamAV Updates"]
+    pagerduty["Pager Duty"]
+    new-relic["New Relic"]
+    new-relic-account["New Relic Account"]
+    snort-updates>"Snort Network<br>Vulnerability Profiles"]
+  end
+  email("Email")
+  sms("Text Messages")
+  phone("On Call Phone")
+  Ops((Cloud Operations))
+
+  nessusagent--Sends Scanning Results-->nessus
+  nessus--Monitors-->nessusagent
+  nessusupdates--Security Definition Updates-->nessus
+  nessus--Reports-->email
+
+  tripwire--Sends Report-->logs
+  aws-logs-agent--Reads Logs-->logs
+  aws-logs-agent--Sends Logs-->aws-logs
+  aws-logs--View Logs-->aws-console
+
+  clamav-updates--Security Definition Updates-->clamav
+  clamav--Sends Alerts-->riemann
+
+  snort-updates--Security Definition Updates-->snort
+  snort--Sends Alerts-->riemann
+
+  riemann--Persists events-->influxdb
+  influxdb--Visualizes events-->grafana
+  elb-->grafana
+  riemann--Processed Alerts-->pagerduty
+  pagerduty-->email
+  pagerduty-->sms
+  pagerduty-->phone
+
+  nragent-->new-relic
+  new-relic-."Authentication/Authorization".->new-relic-account
+
+  UAA-.Authentication.->SAML
+  grafana-.Authorization.->UAA
+
+  aws-console-."Authentication/Authorization".->aws-iam
+  email-->Ops
+  sms-->Ops
+  phone-->Ops
+  Ops--HTTPS-->elb
+  Ops--HTTPS-->aws-console
+  Ops--HTTPS-->new-relic
+
