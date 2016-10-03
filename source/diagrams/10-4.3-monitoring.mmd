@@ -28,8 +28,11 @@ graph LR
     nessusupdates>"GSA Tenable Updates"]
   end
   subgraph External
+    statuspage["StatusPage"]
+    sp-account["StatusPage Account"]
     clamav-updates>"ClamAV Updates"]
     pagerduty["Pager Duty"]
+    pagerduty-account["Pager Duty Account"]
     new-relic["New Relic"]
     new-relic-account["New Relic Account"]
     snort-updates>"Snort Network<br>Vulnerability Profiles"]
@@ -70,10 +73,14 @@ graph LR
   grafana-.Authorization.->UAA
 
   aws-console-."Authentication/Authorization".->aws-iam
+  statuspage-."Authentication/Authorization".->sp-account
+  pagerduty-."Authentication/Authorization".->pagerduty-account
   email-->Ops
   sms-->Ops
   phone-->Ops
   Ops--HTTPS-->elb
   Ops--HTTPS-->aws-console
   Ops--HTTPS-->new-relic
+  Ops--HTTPS-->statuspage
+  Ops--HTTPS-->pagerduty
 

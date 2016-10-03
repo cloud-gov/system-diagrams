@@ -31,6 +31,7 @@ graph LR
     SAML{"Single Sign-on (SSO)<br>providing MFA"}
   end
   Customer((Customer))
+  statuspage["Status Page<br>cloudgov.statuspage.io""]
 
 
   Router-->Cell
@@ -54,6 +55,7 @@ graph LR
 
   Customer--HTTPS-->ELB
   Customer--SSH using temporary key-->ELB
+  Customer--HTTPS-->statuspage
 
   ELB --SSH using temporary key--> SSHProxy
   ELB --Web Requests--> Router
