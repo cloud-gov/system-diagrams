@@ -112,17 +112,17 @@ graph LR
   ops-->ops-elb
   ops-->github
   ops-->slack
-  ops-->aws-console
+  ops---aws-console
   ops-->newrelic
   ops-->statuspage
   ops-->pagerduty
 
-  codeclimate--Static analysis-->github
-  travis--Continuous Testing-->github
+  codeclimate-- Static analysis --- github
+  travis-- Continuous Testing --- github
   api--Monitoring-->newrelic
   api--Alerting-->pagerduty
-  visualops--API Read-only for infrastructure visualization-->api
-  cloudability--API Read-only for cost and utilization data-->api
+  api--API Read-only for infrastructure visualization-->visualops
+  api--API Read-only for cost and utilization data-->cloudability
 
   apps-elb-->prod-elb-endpoint-1a
   apps-elb-->prod-elb-endpoint-1b
