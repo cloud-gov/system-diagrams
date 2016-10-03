@@ -10,8 +10,12 @@ let ss = document.getElementById( 'js-stage' );
 let btn = document.getElementById( 'save-png-button' );
 btn.addEventListener('click', function() {
   let svgList = ss.getElementsByTagName('svg');
+  let options = {
+    scale: 2,
+    backgroundColor: '#ffffff',
+  };
   if (svgList.length) {
-    svgPng.saveSvgAsPng(svgList[0], document.title+'.png', {scale: 2});
+    svgPng.saveSvgAsPng(svgList[0], document.title+'.png', options);
   }
 });
 
