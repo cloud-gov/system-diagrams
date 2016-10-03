@@ -5,6 +5,7 @@
 @import './shell';
 
 .mermaid {
+  background: $color-gray-lightest;
 
   font-family: $font-sans;
 
@@ -22,7 +23,8 @@
 
   rect {
     fill: $color-gray-lightest !important;
-    stroke: $color-gray-lighter !important;
+    stroke: $color-gray-dark !important;
+    stroke-width: 2px !important;
   }
 
   text {
@@ -50,8 +52,12 @@
 }
 
 .edgeLabel {
-  background-color: $color-gray-cool-light;
+  background-color: $color-white;
+  border: $color-white 5px solid;
   color: $color-black;
+  &:empty {
+    border: none;
+  }
 }
 
 rect {
