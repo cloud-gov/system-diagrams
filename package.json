@@ -1,7 +1,7 @@
 {
-  "name": "scuttle",
-  "version": "0.0.1",
+  "name": "cg-diagrams",
   "description": "Mermaid-based flow charts and diagrams using the US Draft Web Design Standards",
+  "private": true,
   "main": "gulpfile.js",
   "scripts": {
     "prestart": "gulp clean",
@@ -12,12 +12,6 @@
     "type": "git",
     "url": "git+https://github.com/rogeruiz/scuttle.git"
   },
-  "author": "Roger Steve Ruiz <hi@rog.gr>",
-  "license": "MIT",
-  "bugs": {
-    "url": "https://github.com/rogeruiz/scuttle/issues"
-  },
-  "homepage": "https://github.com/rogeruiz/scuttle#readme",
   "devDependencies": {
     "babel-core": "^6.10.4",
     "babel-preset-es2015": "^6.9.0",
