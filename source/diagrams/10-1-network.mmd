@@ -28,76 +28,14 @@ graph LR
     aws-console["AWS Console"]
     subgraph cloud.gov Authorization Boundary
       subgraph Production VPC
-        subgraph Availability Zone us-gov-west-1a
-          subgraph Public Subnet
-            prod-nat-1a["NAT Gateway"]
-            prod-elb-endpoint-1a>"ELB Endpoint"]
-          end
-          subgraph Private Subnet - Core Tier A
-            prod-cf-1a{"CloudFoundry<br>Core Components"}
-          end
-          subgraph Private Subnet - Core Tier B
-            prod-diego-1a{"CloundFoundry<br>Container Management"}
-          end
-          subgraph Private Subnet - Database Tier
-            prod-rds-1a{"RDS instances"}
-          end
-          subgraph Private Subnet - Services Tier
-            prod-services-1a{"Service instances"}
-          end
-        end
-        subgraph Availability Zone us-gov-west-1b
-          subgraph Public Subnet
-            prod-nat-1b["NAT Gateway"]
-            prod-elb-endpoint-1b>"ELB Endpoint"]
-          end
-          subgraph Private Subnet - Core Tier A
-            prod-cf-1b{"CloudFoundry<br>Core Components"}
-          end
-          subgraph Private Subnet - Core Tier B
-            prod-diego-1b{"CloundFoundry<br>Container Management"}
-          end
-          subgraph Private Subnet - Database Tier
-            prod-rds-1b{"RDS instances"}
-          end
-          subgraph Private Subnet - Services Tier
-            prod-services-1b{"Service instances"}
-          end
-        end
+        prod-az-1a["Availability Zone us-gov-west-1a"]
+        prod-az-1b["Availability Zone us-gov-west-1b"]
         vpc-router-prod["VPC Router"]
       end
       vpc-peering["VPC Peering Connection"]
       subgraph Tooling VPC
-        subgraph Availability Zone us-gov-west-1a
-          subgraph Public Subnet
-            tooling-nat-1a["NAT Gateway"]
-            tooling-elb-endpoint-1a>"ELB Endpoint"]
-          end
-          subgraph Private Subnet - Operations Tier
-            tooling-ops-1a["BOSH Director/UAA"]
-          end
-          subgraph Private Subnet - Database Tier
-            tooling-rds-1a{"RDS instances"}
-          end
-          subgraph Private Subnet - Concourse Tier
-            tooling-concourse-1a["Concourse - production"]
-          end
-        end
-        subgraph Availability Zone us-gov-west-1b
-          subgraph Public Subnet
-            tooling-nat-1b["NAT Gateway"]
-            tooling-elb-endpoint-1b>"ELB Endpoint"]
-          end
-          subgraph Private Subnet - Operations Tier
-            tooling-ops-1b["Nessus"]
-          end
-          subgraph Private Subnet - Database Tier
-            tooling-rds-1b{"RDS instances"}
-          end
-          subgraph Private Subnet - Concourse Tier
-            tooling-concourse-1b["Concourse - standby"]
-          end
-        end
+        tooling-az-1a["Availability Zone us-gov-west-1a"]
+        tooling-az-1b["Availability Zone us-gov-west-1b"]
         vpc-router-tooling["VPC Router"]
       end
     end
@@ -124,29 +62,11 @@ graph LR
   api--API Read-only for infrastructure visualization-->visualops
   api--API Read-only for cost and utilization data-->cloudability
 
-  apps-elb-->prod-elb-endpoint-1a
-  apps-elb-->prod-elb-endpoint-1b
-  prod-nat-1a-->prod-elb-endpoint-1a
-  prod-nat-1b-->prod-elb-endpoint-1b
-  prod-cf-1a-->prod-nat-1a
-  prod-cf-1b-->prod-nat-1b
-  prod-diego-1a-->prod-nat-1a
-  prod-diego-1b-->prod-nat-1b
-  prod-rds-1a-->prod-nat-1a
-  prod-rds-1b-->prod-nat-1b
-  prod-services-1a-->prod-nat-1a
-  prod-services-1b-->prod-nat-1b
+  apps-elb-->prod-az-1a
+  apps-elb-->prod-az-1b
 
-  ops-elb-->tooling-elb-endpoint-1a
-  ops-elb-->tooling-elb-endpoint-1b
-  tooling-nat-1a-->tooling-elb-endpoint-1a
-  tooling-nat-1b-->tooling-elb-endpoint-1b
-  tooling-ops-1a-->tooling-nat-1a
-  tooling-ops-1b-->tooling-nat-1b
-  tooling-rds-1a-->tooling-nat-1a
-  tooling-rds-1b-->tooling-nat-1b
-  tooling-concourse-1a-->tooling-nat-1a
-  tooling-concourse-1b-->tooling-nat-1b
+  ops-elb-->tooling-az-1a
+  ops-elb-->tooling-az-1b
 
   vpc-router-tooling-->vpc-peering
   vpc-router-prod-->vpc-peering
