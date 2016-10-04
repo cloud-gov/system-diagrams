@@ -1,0 +1,23 @@
+%% title: Legend
+%% description: Legend for the graphs
+
+graph LR
+
+  subgraph Grouping of Components
+    Component["Component (which may be comprised of sub-components)"]
+    Component2{"&nbsp;&nbsp; Collections of VMs or Containers &nbsp;&nbsp;"}
+    Component3("Actors")
+    Component4>"External data components"]
+  end
+
+  subgraph Arrow Sketches
+    Comp4["&nbsp;Component"]
+    Comp5["&nbsp;Component"]
+    Comp6["&nbsp;Component"]
+    Comp7["&nbsp;Component"]
+    Comp8["&nbsp;Component"]
+    Comp9["&nbsp;Component"]
+    Comp4 --"Bidirectional data/information flow"--- Comp5
+    Comp6 --"One-directional data/information flow"--> Comp7
+    Comp8 -."Data/information request that is system generated, rather than actor requested (e.g. authentication, or container creation)".-> Comp9
+  end
