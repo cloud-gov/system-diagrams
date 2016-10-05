@@ -18,9 +18,9 @@ graph LR
   end
   ops-elb["UAA & Concourse ELB"]
 
-  ops-elb-->elb-endpoint
+  ops-elb---elb-endpoint
 
-  nat-->elb-endpoint
-  ops-->nat
-  rds-->nat
-  concourse-->nat
+  nat---elb-endpoint
+  ops---nat
+  rds---nat
+  concourse---nat

@@ -21,10 +21,10 @@ graph LR
   end
   apps-elb["Customer ELB"]
 
-  apps-elb-->elb-endpoint
+  apps-elb---elb-endpoint
 
-  nat-->elb-endpoint
-  cf-->nat
-  diego-->nat
-  rds-->nat
-  services-->nat
+  nat---elb-endpoint
+  cf---nat
+  diego---nat
+  rds---nat
+  services---nat
