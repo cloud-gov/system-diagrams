@@ -23,8 +23,8 @@ graph LR
 
   apps-elb---elb-endpoint
 
-  nat---elb-endpoint
-  cf---nat
-  diego---nat
-  rds---nat
-  services---nat
+  elb-endpoint---nat
+  nat---cf
+  nat---diego
+  nat---rds
+  nat---services

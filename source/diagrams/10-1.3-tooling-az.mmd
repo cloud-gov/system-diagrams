@@ -20,7 +20,7 @@ graph LR
 
   ops-elb---elb-endpoint
 
-  nat---elb-endpoint
-  ops---nat
-  rds---nat
-  concourse---nat
+  elb-endpoint---nat
+  nat---ops
+  nat---rds
+  nat---concourse
