@@ -4,7 +4,8 @@
 @import './mermaid';
 @import './shell';
 
-.mermaid {
+.scuttle-stage,
+.scuttle-legend {
   background: $color-gray-lightest;
 
   font-family: $font-sans;
@@ -13,17 +14,26 @@
     color: $color-white;
 
     overflow-wrap: break-word;
-    word-break: break-all;
+    word-break: break-word;
 
   }
 
+}
+
+.scuttle-stage {
+  overflow-x: scroll;
+  min-height: 999px;
+}
+
+.scuttle-legend .edgeLabel {
+  line-height: 1.75;
 }
 
 .cluster {
 
   rect {
     fill: $color-gray-lightest !important;
-    stroke: $color-gray-dark !important;
+    stroke: $color-primary !important;
     stroke-width: 2px !important;
   }
 
