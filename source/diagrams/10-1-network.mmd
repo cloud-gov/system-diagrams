@@ -13,7 +13,6 @@ graph LR
     visualops["VisualOps"]
   end
   subgraph AWS
-    api["API Endpoint"]
     apps-elb["Customer ELB"]
     ops-elb["UAA & Concourse ELB"]
     s3["S3"]
@@ -85,10 +84,10 @@ graph LR
 
   codeclimate-- Static analysis --- github
   travis-- Continuous Testing --- github
-  api--Monitoring-->newrelic
-  api--Alerting-->pagerduty
-  api--API Read-only for infrastructure visualization-->visualops
-  api--API Read-only for cost and utilization data-->cloudability
+  prod-nat--Monitoring-->newrelic
+  tooling-nat--Alerting-->pagerduty
+  iam--API Read-only for infrastructure visualization-->visualops
+  iam--API Read-only for cost and utilization data-->cloudability
 
   vpc-router-tooling-- VPC Peering Connection --- vpc-router-prod
   aws-console-."Authentication/Authorization".->iam
