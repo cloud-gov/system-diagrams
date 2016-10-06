@@ -30,7 +30,7 @@ graph LR
         subgraph Availability Zones us-gov-west-1a/b
           subgraph Public Subnet
             prod-nat["NAT Gateway"]
-            prod-elb-endpoint>"ELB Endpoint"]
+            prod-elb-endpoint("ELB Endpoint")
           end
           subgraph Private Subnet - Core Tier A
             prod-cf{"Cloud Foundry<br>Core Components"}
@@ -47,11 +47,12 @@ graph LR
         end
         vpc-router-prod["VPC Router"]
       end
+      vpc-peering["VPC Peering Connection"]
       subgraph Tooling VPC
         subgraph Tooling Availability Zones us-gov-west-1a/b
           subgraph Public Subnet
             tooling-nat["NAT Gateway"]
-            tooling-elb-endpoint>"ELB Endpoint"]
+            tooling-elb-endpoint("ELB Endpoint")
           end
           subgraph Private Subnet - Operations Tier
             tooling-ops["BOSH Director/UAA"]
@@ -89,7 +90,8 @@ graph LR
   iam--API Read-only for infrastructure visualization-->visualops
   iam--API Read-only for cost and utilization data-->cloudability
 
-  vpc-router-tooling-- VPC Peering Connection --- vpc-router-prod
+  vpc-router-tooling-->vpc-peering
+  vpc-router-prod-->vpc-peering
   aws-console-."Authentication/Authorization".->iam
   iam-.->iam-perms
   iam-perms-.->iam-roles

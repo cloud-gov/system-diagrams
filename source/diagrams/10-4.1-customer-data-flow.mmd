@@ -38,11 +38,11 @@ graph LR
   SSHProxy--SSH using temporary key-->Router
   CloudController-.API Request Sets up temporary SSH key.->SSHProxy
   CloudController--Request for provision-->ServiceBroker
-  CloudController--Provision/Scale Application Instances-->Cell
+  CloudController--Provision/scale application instances-->Cell
   CloudControllerDB-->CloudController
   ServiceBroker--Provisions-->Service
   Service--Service protocol-->AppContainer
-  HM--Monitoring of Assigned Port-->AppContainer
+  HM--Monitoring of assigned port-->AppContainer
   Cell-.Container.->AppContainer
   AppContainer-->Loggregator
   Cell-.Container.->Dashboard
@@ -53,14 +53,14 @@ graph LR
   Logstash-->ES
   ES-->Kibana
 
-  Customer--HTTPS-->ELB
+  Customer--"Web request (HTTPS)"-->ELB
   Customer--SSH using temporary key-->ELB
-  Customer--HTTPS-->statuspage
+  Customer--"Web request (HTTPS)"-->statuspage
 
   ELB --SSH using temporary key--> SSHProxy
-  ELB --Web Requests--> Router
-  ELB --API Requests--> CloudController
-  ELB --> Kibana
+  ELB --"Web request (HTTPS)"--> Router
+  ELB --API request--> CloudController
+  ELB -- "Triggered by web request (HTTPS) only" --> Kibana
 
   UAA-.Authentication.->SAML
   CloudController-.Authorization.->UAA

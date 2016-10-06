@@ -20,8 +20,8 @@ graph TD
   ELB-->web
   UAA-.Authentication.->SAML
   web-.Authorization.->UAA
-  web--Run Jumpbox Job-->worker
+  web--Run jumpbox job-->worker
   worker-.Container.->Jumpbox
-  Jumpbox--BOSH SSH Request-->BOSH
+  Jumpbox--BOSH SSH request-->BOSH
   BOSH-.BOSH Director sets up temporary SSH key.->EC2
   Jumpbox--SSH using temporary key-->EC2
