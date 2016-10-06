@@ -4,8 +4,12 @@
   "private": true,
   "main": "gulpfile.js",
   "scripts": {
+    "build": "gulp",
+    "deploy": "npm run build && npm run target && npm run push",
     "prestart": "gulp clean",
+    "push": "cf push",
     "start": "gulp server",
+    "target": "cf target -o cloud-gov -s diagrams",
     "test": "echo \"Error: no test specified\" && exit 1"
   },
   "repository": {
