@@ -27,7 +27,7 @@ graph LR
     aws-console["AWS Console"]
     subgraph cloud.gov Authorization Boundary
       subgraph Production VPC
-        subgraph Availability Zones us-gov-west-1*
+        subgraph Availability Zones us-gov-west-1a/b
           subgraph Public Subnet
             prod-nat["NAT Gateway"]
             prod-elb-endpoint>"ELB Endpoint"]
@@ -48,7 +48,7 @@ graph LR
         vpc-router-prod["VPC Router"]
       end
       subgraph Tooling VPC
-        subgraph Tooling Availability Zones us-gov-west-1*
+        subgraph Tooling Availability Zones us-gov-west-1a/b
           subgraph Public Subnet
             tooling-nat["NAT Gateway"]
             tooling-elb-endpoint>"ELB Endpoint"]
