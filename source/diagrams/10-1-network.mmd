@@ -48,7 +48,6 @@ graph LR
         end
         vpc-router-prod["VPC Router"]
       end
-      vpc-peering["VPC Peering Connection"]
       subgraph Tooling VPC
         subgraph Tooling Availability Zones us-gov-west-1*
           subgraph Public Subnet
@@ -91,8 +90,7 @@ graph LR
   api--API Read-only for infrastructure visualization-->visualops
   api--API Read-only for cost and utilization data-->cloudability
 
-  vpc-router-tooling-->vpc-peering
-  vpc-router-prod-->vpc-peering
+  vpc-router-tooling-- VPC Peering Connection --- vpc-router-prod
   aws-console-."Authentication/Authorization".->iam
   iam-.->iam-perms
   iam-perms-.->iam-roles
