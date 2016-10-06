@@ -4,9 +4,9 @@ image_resource:
   source:
     repository: node
 inputs:
-- name: cg-docs-source
+- name: cg-diagrams-source
 outputs:
-- name: cg-docs-compiled
+- name: cg-diagrams-compiled
 run:
-  dir: cg-docs-source
+  dir: cg-diagrams-source
   path: ci/build.sh

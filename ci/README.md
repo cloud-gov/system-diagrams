@@ -5,11 +5,11 @@ Uses [Concourse](http://concourse.ci/). To set up deployment, run the following 
 ```bash
 # configuration
 ORG=cloud-gov
-SPACE=docs
-USER=docs-deployer
+SPACE=diagrams
+USER=diagrams-deployer
 PASS=...
 FLY_TARGET=cloudgov
-PIPELINE=deploy-docs
+PIPELINE=deploy-diagrams
 
 # set up the deployment environment
 cf create-space $SPACE -o $ORG
