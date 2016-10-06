@@ -3,24 +3,24 @@
 graph LR
   subgraph Availability Zone
     subgraph Public Subnet
-      tooling-nat["NAT Gateway"]
-      tooling-elb-endpoint>"ELB Endpoint"]
+      nat["NAT Gateway"]
+      elb-endpoint>"ELB Endpoint"]
     end
     subgraph Private Subnet - Operations Tier
-      tooling-ops["BOSH Director/UAA"]
+      ops["BOSH Director/UAA"]
     end
     subgraph Private Subnet - Database Tier
-      tooling-rds{"RDS instances"}
+      rds{"RDS instances"}
     end
     subgraph Private Subnet - Concourse Tier
-      tooling-concourse["Concourse - production"]
+      concourse["Concourse - production"]
     end
   end
   ops-elb["UAA & Concourse ELB"]
 
-  ops-elb-->tooling-elb-endpoint
+  ops-elb---elb-endpoint
 
-  tooling-nat-->tooling-elb-endpoint
-  tooling-ops-->tooling-nat
-  tooling-rds-->tooling-nat
-  tooling-concourse-->tooling-nat
+  elb-endpoint---nat
+  nat---ops
+  nat---rds
+  nat---concourse

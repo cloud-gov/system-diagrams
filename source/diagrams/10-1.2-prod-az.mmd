@@ -3,28 +3,28 @@
 graph LR
   subgraph Availability Zone
     subgraph Public Subnet
-      prod-nat["NAT Gateway"]
-      prod-elb-endpoint>"ELB Endpoint"]
+      nat["NAT Gateway"]
+      elb-endpoint>"ELB Endpoint"]
     end
     subgraph Private Subnet - Core Tier A
-      prod-cf{"CloudFoundry<br>Core Components"}
+      cf{"CloudFoundry<br>Core Components"}
     end
     subgraph Private Subnet - Core Tier B
-      prod-diego{"CloundFoundry<br>Container Management"}
+      diego{"CloundFoundry<br>Container Management"}
     end
     subgraph Private Subnet - Database Tier
-      prod-rds{"RDS instances"}
+      rds{"RDS instances"}
     end
     subgraph Private Subnet - Services Tier
-      prod-services{"Service instances"}
+      services{"Service instances"}
     end
   end
   apps-elb["Customer ELB"]
 
-  apps-elb-->prod-elb-endpoint
+  apps-elb---elb-endpoint
 
-  prod-nat-->prod-elb-endpoint
-  prod-cf-->prod-nat
-  prod-diego-->prod-nat
-  prod-rds-->prod-nat
-  prod-services-->prod-nat
+  elb-endpoint---nat
+  nat---cf
+  nat---diego
+  nat---rds
+  nat---services
