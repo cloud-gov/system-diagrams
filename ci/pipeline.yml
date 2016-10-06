@@ -5,7 +5,20 @@ jobs:
   - get: cg-diagrams-source
     trigger: true
   - task: build
-    file: cg-diagrams-source/ci/build.yml
+    config:
+      platform: linux
+      image_resource:
+        type: docker-image
+        source:
+          repository: node
+          tag: "6"
+      inputs:
+      - name: cg-diagrams-source
+      outputs:
+      - name: cg-diagrams-compiled
+      run:
+        dir: cg-diagrams-source
+        path: ci/build.sh
     params:
       COPY_OUTPUT: 1
   - put: cloud-gov-production
