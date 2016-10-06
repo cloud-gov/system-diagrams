@@ -8,7 +8,7 @@ ORG=cloud-gov
 SPACE=diagrams
 USER=diagrams-deployer
 PASS=...
-FLY_TARGET=cloudgov
+FLY_TARGET=fr
 PIPELINE=deploy-diagrams
 
 # set up the deployment environment
