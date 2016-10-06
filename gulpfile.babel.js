@@ -200,11 +200,14 @@ gulp.task( 'server', [ 'stylesheets', 'javascript', 'render:list' ], ( done ) =>
 } );
 
 /**
- * @name export
- * @desc Exports a PNG using PhantomJS of the mermaid diagrams.
+ * @name build
+ * @desc Exports the compiled diagrams and pages into the public/ directory.
  * @param { function } done - Callback that signals the task is complete.
  */
-gulp.task( 'export', ( done ) => { done(); } );
+gulp.task( 'build', [ 'stylesheets', 'javascript', 'render:list' ], ( done ) => {
+  logMessage( 'build', 'Build complete.' );
+  done();
+} );
 
 /**
  * @name notify

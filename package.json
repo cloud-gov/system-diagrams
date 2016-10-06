@@ -4,7 +4,7 @@
   "private": true,
   "main": "gulpfile.js",
   "scripts": {
-    "build": "gulp",
+    "build": "gulp build",
     "deploy": "npm run build && npm run target && npm run push",
     "prestart": "gulp clean",
     "push": "cf push",

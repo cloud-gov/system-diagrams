@@ -4,7 +4,7 @@ set -e
 set -x
 
 npm install
-./node_modules/.bin/gulp render
+npm run build
 
 # copy files to output directory, so that they can be read by subsequent step
 if [ -n "$COPY_OUTPUT" ]; then
