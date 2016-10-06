@@ -2,7 +2,7 @@
 %% description: Section 10 - System Environment - Figure 10-4.1 Customer Data Flow
 graph LR
   subgraph AWS
-    subgraph CloudFoundry Components
+    subgraph Cloud Foundry Components
       subgraph Container Management
         Cell["Cell"]
         AppContainer{"Customer<br>Application"}
@@ -21,7 +21,7 @@ graph LR
       Parser[Loggregator Parser]
       Q[Redis Queue]
       Logstash[Logstash]
-      ES[ElasticSearch]
+      ES[Elasticsearch]
       Kibana[Kibana<br>logs.cloud.gov]
     end
     ELB("Elastic Load Balancer (ELB)")
@@ -31,7 +31,7 @@ graph LR
     SAML{"Single Sign-on (SSO)<br>providing MFA"}
   end
   Customer((Customer))
-  statuspage["Status Page<br>cloudgov.statuspage.io"]
+  statuspage["StatusPage<br>cloudgov.statuspage.io"]
 
 
   Router-->Cell
