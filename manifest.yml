@@ -1,0 +1,10 @@
+applications:
+- name: diagrams
+  instances: 2
+  memory: 256M
+  disk_quota: 1024M
+  routes:
+  - route: diagrams.fr.cloud.gov
+  buildpack: staticfile_buildpack
+  stack: cflinuxfs2
+  path: public
