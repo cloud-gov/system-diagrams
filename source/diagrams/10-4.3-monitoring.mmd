@@ -48,12 +48,14 @@ graph LR
   nessus--Reports-->email
 
   tripwire--Sends Report-->logs
-  aws-logs-agent--Reads Logs-->logs
+  logs--Reads Logs-->aws-logs-agent
   aws-logs-agent--Sends Logs-->aws-logs
   aws-logs--View Logs-->aws-console
 
   clamav-updates--Security Definition Updates-->clamav
   clamav--Sends Alerts-->riemann
+  
+  logs--Sends logs-->riemann
 
   snort-updates--Security Definition Updates-->snort
   snort--Sends Alerts-->riemann
