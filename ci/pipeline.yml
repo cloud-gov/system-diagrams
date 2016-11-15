@@ -67,6 +67,7 @@ resources:
   source:
     url: {{slack-webhook-url}}
 
+resource_types:
 - name: slack-notification
   type: docker-image
   source:
