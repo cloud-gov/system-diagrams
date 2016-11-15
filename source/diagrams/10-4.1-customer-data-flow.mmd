@@ -6,12 +6,12 @@ graph LR
       subgraph Container Management
         Cell["Cell"]
         AppContainer{"Customer<br>Application"}
-        Dashboard{Dashboard<br>dashboard.cloud.gov}
+        Dashboard{Dashboard<br>dashboard.fr.cloud.gov}
       end
       Router[Router]
       SSHProxy[SSH Proxy]
-      UAA["User Authentication/Authorization (UAA)<br>login.cloud.gov"]
-      CloudController[Cloud Controller<br>api.cloud.gov]
+      UAA["User Authentication/Authorization (UAA)<br>login.fr.cloud.gov"]
+      CloudController[Cloud Controller<br>api.fr.cloud.gov]
       ServiceBroker[Service Broker]
       Service["Service<br>e.g. MongoDB"]
       HM[Health Monitor]
@@ -22,7 +22,7 @@ graph LR
       Q[Redis Queue]
       Logstash[Logstash]
       ES[Elasticsearch]
-      Kibana[Kibana<br>logs.cloud.gov]
+      Kibana[Kibana<br>logs.fr.cloud.gov]
     end
     ELB("Elastic Load Balancer (ELB)")
     CloudControllerDB(Cloud Controller<br>RDS DB)
