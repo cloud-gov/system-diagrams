@@ -47,7 +47,7 @@ graph LR
         end
         vpc-router-prod["VPC Router"]
       end
-      vpc-peering["VPC Peering Connection"]
+      vpc-peering["VPC Peering Connection<br>(Note: Also peered to Staging VPC,<br>which is architecturally a copy of Production VPC,<br>but outside the cloud.gov Authorization Boundary.)"]
       subgraph Tooling VPC
         subgraph Tooling Availability Zones us-gov-west-1a/b
           subgraph Public Subnet
