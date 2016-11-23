@@ -9,8 +9,6 @@ graph LR
     statuspage["StatusPage"]
     codeclimate["Code Climate"]
     travis["Travis CI"]
-    cloudability["Cloudability"]
-    visualops["VisualOps"]
   end
   subgraph AWS
     apps-elb["Customer ELB"]
@@ -87,8 +85,6 @@ graph LR
   travis-- Continuous Testing --- github
   prod-nat--Monitoring-->newrelic
   tooling-nat--Alerting-->pagerduty
-  iam--API Read-only for infrastructure visualization-->visualops
-  iam--API Read-only for cost and utilization data-->cloudability
 
   vpc-router-tooling-->vpc-peering
   vpc-router-prod-->vpc-peering
