@@ -25,7 +25,7 @@ graph LR
   end
   subgraph GSA Responsibility
     SAML{"Single Sign-on (SSO)<br>providing MFA"}
-    nessusupdates>"GSA Tenable Updates"]
+    gsanessus>"GSA Nessus Manager (Tenable Security Center)"]
   end
   subgraph External
     statuspage["StatusPage"]
@@ -36,6 +36,7 @@ graph LR
     new-relic["New Relic"]
     new-relic-account["New Relic Account"]
     snort-updates>"Snort Network<br>Vulnerability Profiles"]
+    tenable-updates>"Tenable Updates"]
   end
   email("Email")
   sms("Text Messages")
@@ -44,8 +45,10 @@ graph LR
 
   nessusagent--Sends Scanning Results-->nessus
   nessus--Monitors-->nessusagent
-  nessusupdates--Security Definition Updates-->nessus
+  gsanessus--Sends Settings Updates-->nessus
+  nessus--Sends Scanning Results-->gsanessus
   nessus--Reports-->email
+  tenable-updates--Security Definition Updates-->nessus
 
   tripwire--Sends Report-->logs
   logs--Reads Logs-->aws-logs-agent
