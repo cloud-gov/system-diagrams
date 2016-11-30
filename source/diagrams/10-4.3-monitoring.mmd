@@ -6,6 +6,7 @@ graph LR
     UAA["User Authentication/Authorization (UAA)"]
     aws-logs["CloudWatch"]
     aws-console["AWS Console"]
+    aws-api["AWS API"]
     aws-iam("AWS IAM")
     subgraph ""
       nessus["Nessus Manager"]
@@ -21,6 +22,12 @@ graph LR
       aws-logs-agent{"AWS<br>CloudWatch<br>Agent"}
       nragent{"New Relic Agent"}
       snort{"Snort IDS<br>(Intrusion Detection)"}
+      boshagent["Bosh Agent"]
+      collectd["collectd"]
+    end
+    subgraph Cloud Foundry Components
+      boshdirector{"Bosh Director"}
+      firehose{"Metrics"}
     end
   end
   subgraph GSA Responsibility
@@ -49,6 +56,13 @@ graph LR
   nessus--Sends Scanning Results-->gsanessus
   nessus--Reports-->email
   tenable-updates--Security Definition Updates-->nessus
+
+  collectd--System performance metrics-->riemann
+  firehose-->riemann
+  aws-api--AWS Metrics-->boshdirector
+  boshagent-->boshdirector
+  boshdirector--Health Monitor state changes-->riemann
+  boshdirector--AWS Metrics-->riemann
 
   tripwire--Sends Report-->logs
   logs--Reads Logs-->aws-logs-agent
