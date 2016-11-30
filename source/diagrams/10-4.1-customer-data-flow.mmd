@@ -18,7 +18,6 @@ graph LR
       Loggregator[Loggregator]
     end
     subgraph Customer Logs
-      Parser[Loggregator Parser]
       Q[Redis Queue]
       Logstash[Logstash]
       ES[Elasticsearch]
@@ -26,6 +25,8 @@ graph LR
     end
     ELB("Elastic Load Balancer (ELB)")
     CloudControllerDB(Cloud Controller<br>RDS DB)
+    CloudWatch[CloudWatch]
+    S3[S3]
   end
   subgraph Customer Responsibility
     SAML{"Single Sign-on (SSO)<br>providing MFA"}
@@ -47,10 +48,11 @@ graph LR
   AppContainer-->Loggregator
   Cell-.Container.->Dashboard
 
-  Parser-->Loggregator
-  Parser-->Q
+  Loggregator-->Logstash
   Logstash-->Q
-  Logstash-->ES
+  Q-->ES
+  Logstash-->CloudWatch
+  Logstash-->S3
   ES-->Kibana
 
   Customer--"Web request (HTTPS)"-->ELB
