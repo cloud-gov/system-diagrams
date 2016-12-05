@@ -32,6 +32,7 @@ graph LR
           end
           subgraph Private Subnet - Core Tier A
             prod-cf{"Cloud Foundry<br>Core Components"}
+            idp["Shibboleth IdP"]
           end
           subgraph Private Subnet - Core Tier B
             prod-diego{"Cloud Foundry<br>Container Management"}
