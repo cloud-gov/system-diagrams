@@ -24,7 +24,7 @@ graph LR
     iam-roles["IAM Roles"]
     aws-console["AWS Console"]
     subgraph Staging VPC
-      staging-vpc{Copy of Production VPC}
+      vpc-staging{Copy of Production VPC}
     end
     subgraph cloud.gov Authorization Boundary
       subgraph Production VPC
@@ -91,7 +91,7 @@ graph LR
 
   vpc-router-tooling-->vpc-peering
   vpc-router-prod-->vpc-peering
-  staging-vpc-->vpc-peering
+  vpc-staging-->vpc-peering
   aws-console-."Authentication/Authorization".->iam
   iam-.->iam-perms
   iam-perms-.->iam-roles
