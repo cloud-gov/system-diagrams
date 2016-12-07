@@ -23,6 +23,9 @@ graph LR
     iam-perms["IAM Permissions"]
     iam-roles["IAM Roles"]
     aws-console["AWS Console"]
+    subgraph Staging VPC
+      staging-vpc{Copy of Production VPC}
+    end
     subgraph cloud.gov Authorization Boundary
       subgraph Production VPC
         subgraph Availability Zones us-gov-west-1a/b
@@ -45,7 +48,7 @@ graph LR
         end
         vpc-router-prod["VPC Router"]
       end
-      vpc-peering["VPC Peering Connection<br>(Note: Also peered to Staging VPC,<br>which is architecturally a copy of Production VPC,<br>but outside the cloud.gov Authorization Boundary.)"]
+      vpc-peering["VPC Peering Connection"]
       subgraph Tooling VPC
         subgraph Tooling Availability Zones us-gov-west-1a/b
           subgraph Public Subnet
@@ -88,6 +91,7 @@ graph LR
 
   vpc-router-tooling-->vpc-peering
   vpc-router-prod-->vpc-peering
+  staging-vpc-->vpc-peering
   aws-console-."Authentication/Authorization".->iam
   iam-.->iam-perms
   iam-perms-.->iam-roles
