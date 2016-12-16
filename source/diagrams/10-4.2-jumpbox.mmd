@@ -2,14 +2,14 @@
 %% description: Section 10 - System Environment - Figure 10-4.2 Jumpbox Data Flow
 graph TD
 
-  subgraph AWS
+  subgraph AWS GovCloud
     UAA["User Authentication/Authorization (UAA)"]
     web["Concourse Web Server"]
     worker[Concourse Worker]
     Jumpbox{Ephemeral Jumpbox}
     BOSH[BOSH Director]
-    EC2[EC2 Instances]
-    ELB("Elastic Load Balancer (ELB)")
+    EC2[AWS EC2 Instances]
+    ELB("AWS Elastic Load Balancer (ELB)")
   end
   subgraph GSA Responsibility
     SAML{"Single Sign-on (SSO)<br>providing MFA"}
