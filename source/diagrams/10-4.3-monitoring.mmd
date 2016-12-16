@@ -1,10 +1,14 @@
 %% title: 10-4.3 Monitoring & Alerting Data Flow
 %% description: Section 10 - System Environment - Figure 10-4.3 Monitoring & Alerting Data Flow
 graph LR
-  subgraph AWS
-    elb["Elastic Load Balancer<br>(ELB)"]
+  subgraph AWS Oregon Region
+    kinesis["AWS Kinesis"]
+  end
+  subgraph AWS GovCloud
+    elb["AWS Elastic Load Balancer<br>(ELB)"]
     UAA["User Authentication/Authorization (UAA)"]
-    aws-logs["CloudWatch"]
+    aws-logs["AWS CloudWatch Logs"]
+    aws-cloudwatch["AWS CloudWatch"]
     aws-console["AWS Console"]
     aws-api["AWS API"]
     aws-iam("AWS IAM")
@@ -19,7 +23,7 @@ graph LR
       clamav{"ClamAV<br>(Virus/Malware)"}
       tripwire{"Tripwire<br>(Filesystem Integrity)"}
       logs("System Logs")
-      aws-logs-agent{"AWS<br>CloudWatch<br>Agent"}
+      aws-logs-agent{"AWS<br>CloudWatch<br>Logs Agent"}
       nragent{"New Relic Agent"}
       snort{"Snort IDS<br>(Intrusion Detection)"}
       boshagent["BOSH Agent"]
@@ -57,7 +61,7 @@ graph LR
   nessus--Reports-->email
   tenable-updates--Security Definition Updates-->nessus
 
-  collectd--System performance metrics-->riemann
+  collectd--System Performance Metrics-->riemann
   firehose-->riemann
   aws-api--AWS Metrics-->boshdirector
   boshagent-->boshdirector
@@ -65,14 +69,16 @@ graph LR
   boshdirector--AWS Metrics-->riemann
 
   tripwire--Sends Report-->logs
-  logs--Reads Logs-->aws-logs-agent
-  aws-logs-agent--Sends Logs-->aws-logs
+  logs--Sends Logs-->aws-logs-agent
+  logs--Sends Performance Metrics-->aws-cloudwatch
+  aws-logs-agent--Sends Encrypted Log Data Only-->kinesis
+  kinesis--Sends Encrypted Log Data Only-->aws-logs
   aws-logs--View Logs-->aws-console
 
   clamav-updates--Security Definition Updates-->clamav
   clamav--Sends Alerts-->riemann
   
-  logs--Sends logs-->riemann
+  logs--Sends Logs-->riemann
 
   snort-updates--Security Definition Updates-->snort
   snort--Sends Alerts-->riemann
