@@ -1,17 +1,17 @@
 %% title: 10-4.4 Software Deployment Data Flow
 %% description: Section 10 - System Environment - Figure 10-4.3 Software Deployment Data Flow
 graph TD
-  subgraph AWS
+  subgraph AWS GovCloud
     subgraph Concourse
       web["Concourse Web Server"]
       worker["Concourse Worker"]
       test-job("Test Build")
       deploy-job("Deployment Build")
     end
-    elb["Elastic Load Balancer (ELB)"]
+    elb["AWS Elastic Load Balancer (ELB)"]
     UAA["User Authentication/Authorization (UAA)"]
     bosh["BOSH Director"]
-    ec2["EC2 Instance"]
+    ec2["AWS EC2 Instance"]
   end
   subgraph External
     github["GitHub Repository"]
