@@ -23,13 +23,16 @@ graph LR
       ES[Elasticsearch]
       Kibana[Kibana<br>logs.fr.cloud.gov]
     end
+    subgraph SAML IDP
+      SAML[cloud.gov IDP<br>providing MFA]
+    end
     ELB("Elastic Load Balancer (ELB)")
     CloudControllerDB(Cloud Controller<br>RDS DB)
     CloudWatch[CloudWatch]
     S3[S3]
   end
   subgraph Customer Responsibility
-    SAML{"Single Sign-on (SSO)<br>providing MFA"}
+    CustomerSAML{"Single Sign-on (SSO)<br>providing MFA"}
   end
   Customer((Customer))
   statuspage["StatusPage<br>cloudgov.statuspage.io"]
@@ -64,6 +67,7 @@ graph LR
   ELB --API request--> CloudController
   ELB -- "Triggered by web request (HTTPS) only" --> Kibana
 
+  UAA-.Authentication.->CustomerSAML
   UAA-.Authentication.->SAML
   CloudController-.Authorization.->UAA
   SSHProxy-.Authorization.->UAA
