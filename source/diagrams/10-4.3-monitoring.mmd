@@ -14,8 +14,7 @@ graph LR
     aws-iam("AWS IAM")
     subgraph ""
       nessus["Nessus Manager"]
-      riemann["Riemann Event Processor"]
-      influxdb["InfluxDB<br>(Time Series Database)"]
+      prometheus["Prometheus Alerting/Storage"]
       grafana["Grafana<br>(Time Series Visualizations)"]
     end
     subgraph All EC2 Instances
@@ -27,7 +26,7 @@ graph LR
       nragent{"New Relic Agent"}
       snort{"Snort IDS<br>(Intrusion Detection)"}
       boshagent["BOSH Agent"]
-      collectd["collectd"]
+      node-exporter["Prometheus Node Exporter"]
     end
     subgraph Cloud Foundry Components
       boshdirector{"BOSH Director"}
@@ -61,12 +60,12 @@ graph LR
   nessus--Reports-->email
   tenable-updates--Security Definition Updates-->nessus
 
-  collectd--System Performance Metrics-->riemann
-  firehose-->riemann
+  node-exporter--System Performance Metrics-->prometheus
+  firehose-->prometheus
   aws-api--AWS Metrics-->boshdirector
   boshagent-->boshdirector
-  boshdirector--Health Monitor state changes-->riemann
-  boshdirector--AWS Metrics-->riemann
+  boshdirector--Health Monitor state changes-->prometheus
+  boshdirector--AWS Metrics-->prometheus
 
   tripwire--Sends Report-->logs
   logs--Sends Logs-->aws-logs-agent
@@ -76,17 +75,16 @@ graph LR
   aws-logs--View Logs-->aws-console
 
   clamav-updates--Security Definition Updates-->clamav
-  clamav--Sends Alerts-->riemann
+  clamav--Sends Alerts-->prometheus
   
-  logs--Sends Logs-->riemann
+  logs--Sends Logs-->prometheus
 
   snort-updates--Security Definition Updates-->snort
-  snort--Sends Alerts-->riemann
+  snort--Sends Alerts-->prometheus
 
-  riemann--Persists events-->influxdb
-  influxdb--Visualizes events-->grafana
+  prometheus--Visualizes events-->grafana
   elb-->grafana
-  riemann--Processed Alerts-->pagerduty
+  prometheus--Processes alerts-->pagerduty
   pagerduty-->email
   pagerduty-->sms
   pagerduty-->phone
@@ -108,4 +106,3 @@ graph LR
   Ops--HTTPS-->new-relic
   Ops--HTTPS-->statuspage
   Ops--HTTPS-->pagerduty
-
