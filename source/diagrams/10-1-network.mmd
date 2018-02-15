@@ -14,8 +14,8 @@ graph LR
     kinesis["AWS Kinesis"]
   end
   subgraph AWS US East/West
-    route53["AWS Route 53"]
     cloudfront["AWS CloudFront"]
+    route53["AWS Route 53"]
   end
   subgraph AWS GovCloud
     apps-elb["Customer ELB"]
@@ -31,6 +31,9 @@ graph LR
     aws-console["AWS Console"]
     subgraph Staging VPC
       vpc-staging{Copy of Production VPC}
+    end
+    subgraph Development VPC
+      vpc-development{Copy of Production VPC}
     end
     subgraph cloud.gov Authorization Boundary
       subgraph Production VPC
@@ -104,6 +107,7 @@ graph LR
   vpc-router-tooling-->vpc-peering
   vpc-router-prod-->vpc-peering
   vpc-staging-->vpc-peering
+  vpc-development-->vpc-peering
   aws-console-."Authentication/Authorization".->iam
   iam-.->iam-perms
   iam-perms-.->iam-roles
