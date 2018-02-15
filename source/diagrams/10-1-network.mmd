@@ -8,7 +8,7 @@ graph LR
     newrelic["New Relic"]
     statuspage["StatusPage"]
     codeclimate["Code Climate"]
-    travis["Travis CI"]
+    circle["Circle CI"]
   end
   subgraph AWS US West Oregon
     kinesis["AWS Kinesis"]
@@ -92,7 +92,7 @@ graph LR
   ops-->pagerduty
 
   codeclimate-- Static analysis --- github
-  travis-- Continuous Testing --- github
+  circle-- Continuous Testing --- github
   prod-nat--Monitoring-->newrelic
   tooling-nat--Alerting-->pagerduty
 
