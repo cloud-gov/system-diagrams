@@ -1,7 +1,7 @@
 %% title: 10-4.1 Customer Data Flow
 %% description: Section 10 - System Environment - Figure 10-4.1 Customer Data Flow
 graph LR
-  subgraph AWS
+  subgraph AWS GovCloud
     subgraph Cloud Foundry Components
       subgraph Container Management
         Cell["Cell"]
@@ -28,7 +28,7 @@ graph LR
     end
     ELB("Elastic Load Balancer (ELB)")
     CloudControllerDB(Cloud Controller<br>RDS DB)
-    CloudWatch[CloudWatch]
+    CloudWatch[AWS CloudWatch Logs]
     S3[S3]
   end
   subgraph Customer Responsibility

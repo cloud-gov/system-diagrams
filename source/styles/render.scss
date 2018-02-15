@@ -39,6 +39,8 @@
 
   text {
     @include h4;
+    font-family: "Source Sans Pro", "Helvetica Neue", "Helvetica", "Roboto", "Arial", sans-serif;
+    font-size: 17px;
   }
 
 }
@@ -50,6 +52,11 @@
   fill: $color-primary;
   stroke: $color-primary-darkest;
   stroke-width: 2px;
+}
+
+.node .label {
+  font-family: "Source Sans Pro", "Helvetica Neue", "Helvetica", "Roboto", "Arial", sans-serif;
+  color: rgb(255, 255, 255);
 }
 
 .edgePath .path {
@@ -68,6 +75,8 @@
   &:empty {
     border: none;
   }
+  font-family: "Source Sans Pro", "Helvetica Neue", "Helvetica", "Roboto", "Arial", sans-serif;
+  font-family: 17px;
 }
 
 rect {

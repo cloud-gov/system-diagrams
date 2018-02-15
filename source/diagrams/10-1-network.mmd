@@ -10,19 +10,28 @@ graph LR
     codeclimate["Code Climate"]
     travis["Travis CI"]
   end
-  subgraph AWS
+  subgraph AWS US West Oregon
+    kinesis["AWS Kinesis"]
+  end  
+  subgraph AWS US East/West
+    route53["AWS Route 53"]
+  end
+  subgraph AWS GovCloud
     apps-elb["Customer ELB"]
     ops-elb["UAA & Concourse ELB"]
-    s3["S3"]
-    cloudwatch["CloudWatch"]
-    advisor["Trusted Advisor"]
-    config["Config"]
-    cloudtrail["CloudTrail"]
-    route53["Route 53"]
-    iam["IAM"]
-    iam-perms["IAM Permissions"]
-    iam-roles["IAM Roles"]
+    s3["AWS S3"]
+    cloudwatch["AWS CloudWatch"]
+    cloudwatch-logs["AWS CloudWatch Logs"]
+    advisor["AWS Trusted Advisor"]
+    config["AWS Config"]
+    cloudtrail["AWS CloudTrail"]
+    iam["AWS IAM"]
+    iam-perms["AWS IAM Permissions"]
+    iam-roles["AWS IAM Roles"]
     aws-console["AWS Console"]
+    subgraph Staging VPC
+      vpc-staging{Copy of Production VPC}
+    end
     subgraph cloud.gov Authorization Boundary
       subgraph Production VPC
         subgraph Availability Zones us-gov-west-1a/b
@@ -38,7 +47,7 @@ graph LR
             prod-diego{"Cloud Foundry<br>Container Management"}
           end
           subgraph Private Subnet - Database Tier
-            prod-rds{"RDS instances"}
+            prod-rds{"AWS RDS instances"}
           end
           subgraph Private Subnet - Services Tier
             prod-services{"Service instances"}
@@ -46,7 +55,7 @@ graph LR
         end
         vpc-router-prod["VPC Router"]
       end
-      vpc-peering["VPC Peering Connection<br>(Note: Also peered to Staging VPC,<br>which is architecturally a copy of Production VPC,<br>but outside the cloud.gov Authorization Boundary.)"]
+      vpc-peering["VPC Peering Connection"]
       subgraph Tooling VPC
         subgraph Tooling Availability Zones us-gov-west-1a/b
           subgraph Public Subnet
@@ -57,7 +66,7 @@ graph LR
             tooling-ops["BOSH Director/UAA"]
           end
           subgraph Private Subnet - Database Tier
-            tooling-rds{"RDS instances"}
+            tooling-rds{"AWS RDS instances"}
           end
           subgraph Private Subnet - Concourse Tier
             tooling-concourse["Concourse - production"]
@@ -89,6 +98,7 @@ graph LR
 
   vpc-router-tooling-->vpc-peering
   vpc-router-prod-->vpc-peering
+  vpc-staging-->vpc-peering
   aws-console-."Authentication/Authorization".->iam
   iam-.->iam-perms
   iam-perms-.->iam-roles
@@ -105,3 +115,5 @@ graph LR
   tooling-nat---tooling-ops
   tooling-nat---tooling-rds
   tooling-nat---tooling-concourse
+  
+  cloudwatch-logs-- Encrypted log data only --- kinesis
