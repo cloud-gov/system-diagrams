@@ -86,7 +86,8 @@ graph LR
   customer-->statuspage
 
   cloudfront-->apps-elb
-  prod-services-.Provisioning.->cloudfront
+  prod-services-.create service instance.->cloudfront
+  prod-services-.create service instance.->s3
 
   ops-->ops-elb
   ops-->github
