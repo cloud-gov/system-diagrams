@@ -12,9 +12,10 @@ graph LR
   end
   subgraph AWS US West Oregon
     kinesis["AWS Kinesis"]
-  end  
+  end
   subgraph AWS US East/West
     route53["AWS Route 53"]
+    cloudfront["AWS CloudFront"]
   end
   subgraph AWS GovCloud
     apps-elb["Customer ELB"]
@@ -80,8 +81,13 @@ graph LR
   ops(("Cloud Operations"))
 
   customer-.DNS.->route53
+  customer--Web-->cloudfront
   customer--Web or CLI-->apps-elb
   customer-->statuspage
+
+  cloudfront-->apps-elb
+  prod-services-.create service instance.->cloudfront
+  prod-services-.create service instance.->s3
 
   ops-->ops-elb
   ops-->github
@@ -115,5 +121,5 @@ graph LR
   tooling-nat---tooling-ops
   tooling-nat---tooling-rds
   tooling-nat---tooling-concourse
-  
+
   cloudwatch-logs-- Encrypted log data only --- kinesis

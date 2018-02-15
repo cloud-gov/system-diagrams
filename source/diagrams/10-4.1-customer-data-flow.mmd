@@ -34,6 +34,10 @@ graph LR
   subgraph Customer Responsibility
     CustomerSAML{"Single Sign-on (SSO)<br>providing MFA"}
   end
+  subgraph AWS East/West
+    cloudfront["AWS CloudFront"]
+  end
+
   Customer((Customer))
   statuspage["StatusPage<br>cloudgov.statuspage.io"]
 
@@ -61,6 +65,9 @@ graph LR
   Customer--"Web request (HTTPS)"-->ELB
   Customer--SSH using temporary key-->ELB
   Customer--"Web request (HTTPS)"-->statuspage
+  Customer--"Web request (HTTPS)"-->cloudfront
+
+  cloudfront --"Web request (HTTPS)"--> ELB
 
   ELB --SSH using temporary key--> SSHProxy
   ELB --"Web request (HTTPS)"--> Router
