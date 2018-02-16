@@ -44,7 +44,7 @@ graph LR
           end
           subgraph Private Subnet - Core Tier A
             prod-cf{"Cloud Foundry<br>Core Components"}
-            idp["cloud.gov backup IdP"]
+            idp["cloud.gov fallback IDP"]
           end
           subgraph Private Subnet - Core Tier B
             prod-diego{"Cloud Foundry<br>Container Management"}
