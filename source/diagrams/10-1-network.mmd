@@ -17,7 +17,7 @@ graph LR
     cloudfront["AWS CloudFront"]
     route53["AWS Route 53"]
   end
-  subgraph AWS GovCloud
+  subgraph AWS GovCloud Production
     apps-elb["Customer ELB"]
     ops-elb["UAA & Concourse ELB"]
     s3["AWS S3"]
@@ -79,6 +79,26 @@ graph LR
       end
     end
   end
+
+  subgraph AWS GovCloud Development
+    dev-iam["AWS IAM"]
+    dev-iam-perms["AWS IAM Permissions"]
+    dev-iam-roles["AWS IAM Roles"]
+    dev-aws-console["AWS Console"]
+
+    dev-apps-elb["Customer ELB"]
+    dev-ops-elb["UAA & Concourse ELB"]
+
+    subgraph Development VPC
+      dev-vpc-development{Copy of Production VPC}
+    end
+    dev-vpc-peering["VPC Peering Connection"]
+    subgraph Tooling VPC
+      dev-vpc-tooling{Copy of Tooling VPC}
+    end
+
+  end
+
   customer(("Customer"))
   ops(("Cloud Operations"))
 
@@ -126,3 +146,12 @@ graph LR
   tooling-nat---tooling-concourse
 
   cloudwatch-logs-- Encrypted log data only --- kinesis
+
+  ops---dev-aws-console
+  dev-aws-console-."Authentication/Authorization".->dev-iam
+  dev-iam-.->dev-iam-perms
+  dev-iam-perms-.->dev-iam-roles
+  dev-apps-elb---dev-vpc-development
+  dev-ops-elb---dev-vpc-tooling
+  dev-vpc-development-->dev-vpc-peering
+  dev-vpc-tooling-->dev-vpc-peering
