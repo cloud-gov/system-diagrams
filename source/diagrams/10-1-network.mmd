@@ -15,7 +15,9 @@ graph LR
   end
   subgraph AWS US East/West
     cloudfront["AWS CloudFront"]
-    route53["AWS Route 53"]
+  end
+  subgraph Google Cloud Platform
+    gcpdns["Google Cloud DNS"]
   end
   subgraph AWS GovCloud
     apps-elb["Customer ELB"]
@@ -82,7 +84,7 @@ graph LR
   customer(("Customer"))
   ops(("Cloud Operations"))
 
-  customer-.DNS.->route53
+  customer-.DNS.->gcpdns
   customer--Web-->cloudfront
   customer--Web or CLI-->apps-elb
   customer-->statuspage
