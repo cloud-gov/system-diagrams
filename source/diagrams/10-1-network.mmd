@@ -4,10 +4,9 @@ graph LR
   subgraph External Services
     github["GitHub"]
     slack["Slack"]
-    pagerduty["PagerDuty"]
-    newrelic["New Relic"]
     statuspage["StatusPage"]
     codeclimate["Code Climate"]
+    googlegroups["Google Groups"]
     circle["Circle CI"]
   end
   subgraph AWS US West Oregon
@@ -95,14 +94,12 @@ graph LR
   ops-->github
   ops-->slack
   ops---aws-console
-  ops-->newrelic
   ops-->statuspage
-  ops-->pagerduty
+  ops-->googlegroups
 
   codeclimate-- Static analysis --- github
   circle-- Continuous Testing --- github
-  prod-nat--Monitoring-->newrelic
-  tooling-nat--Alerting-->pagerduty
+  tooling-nat--Alerting-->googlegroups
 
   vpc-router-tooling-->vpc-peering
   vpc-router-prod-->vpc-peering
