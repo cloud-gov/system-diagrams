@@ -41,16 +41,11 @@ graph LR
     statuspage["StatusPage"]
     sp-account["StatusPage Account"]
     clamav-updates>"ClamAV Updates"]
-    pagerduty["PagerDuty"]
-    pagerduty-account["PagerDuty Account"]
-    new-relic["New Relic"]
-    new-relic-account["New Relic Account"]
+    Googlegroups["Google Groups"]
     snort-updates>"Snort Network<br>Vulnerability Profiles"]
     tenable-updates>"Tenable Updates"]
   end
   email("Email")
-  sms("Text Messages")
-  phone("On Call Phone")
   Ops((Cloud Operations))
 
   nessusagent--Sends Scanning Results-->nessus
@@ -84,25 +79,15 @@ graph LR
 
   prometheus--Visualizes events-->grafana
   elb-->grafana
-  prometheus--Processes alerts-->pagerduty
-  pagerduty-->email
-  pagerduty-->sms
-  pagerduty-->phone
-
-  nragent-->new-relic
-  new-relic-."Authentication/Authorization".->new-relic-account
+  prometheus--Processes alerts-->googlegroups
+  Googlegroups-->email
 
   UAA-.Authentication.->SAML
   grafana-.Authorization.->UAA
 
   aws-console-."Authentication/Authorization".->aws-iam
   statuspage-."Authentication/Authorization".->sp-account
-  pagerduty-."Authentication/Authorization".->pagerduty-account
   email-->Ops
-  sms-->Ops
-  phone-->Ops
   Ops--HTTPS-->elb
   Ops--HTTPS-->aws-console
-  Ops--HTTPS-->new-relic
-  Ops--HTTPS-->statuspage
-  Ops--HTTPS-->pagerduty
+  Ops--HTTPS-->googlegroups
