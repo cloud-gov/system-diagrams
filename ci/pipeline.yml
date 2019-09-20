@@ -32,40 +32,40 @@ jobs:
       text: |
         :x: FAILED to deploy cg-diagrams to Production
         <$ATC_EXTERNAL_URL/teams/$BUILD_TEAM_NAME/pipelines/$BUILD_PIPELINE_NAME/jobs/$BUILD_JOB_NAME/builds/$BUILD_NAME|View build details>
-      channel: {{slack-channel}}
-      username: {{slack-username}}
-      icon_url: {{slack-icon-url}}
+      channel: ((slack-channel))
+      username: ((slack-username))
+      icon_url: ((slack-icon-url))
   on_success:
     put: slack
     params:
       text: |
         :white_check_mark: Successfully deployed cg-diagrams to Production
         <$ATC_EXTERNAL_URL/teams/$BUILD_TEAM_NAME/pipelines/$BUILD_PIPELINE_NAME/jobs/$BUILD_JOB_NAME/builds/$BUILD_NAME|View build details>
-      channel: {{slack-channel}}
-      username: {{slack-username}}
-      icon_url: {{slack-icon-url}}
+      channel: ((slack-channel))
+      username: ((slack-username))
+      icon_url: ((slack-icon-url))
 
 resources:
 - name: cg-diagrams-source
   type: git
   source:
-    uri: {{cg-diagrams-git-url}}
-    branch: {{cg-diagrams-branch}}
+    uri: ((cg-diagrams-git-url))
+    branch: ((cg-diagrams-branch))
 
 - name: cloud-gov-production
   type: cf
   source:
-    api: {{cf-api-url-production}}
-    username: {{cf-deploy-username-production}}
-    password: {{cf-deploy-password-production}}
-    organization: {{cf-organization}}
-    space: {{cf-space}}
+    api: ((cf-api-url-production))
+    username: ((cf-deploy-username-production))
+    password: ((cf-deploy-password-production))
+    organization: ((cf-organization))
+    space: ((cf-space))
     skip_cert_check: false
 
 - name: slack
   type: slack-notification
   source:
-    url: {{slack-webhook-url}}
+    url: ((slack-webhook-url))
 
 resource_types:
 - name: slack-notification
