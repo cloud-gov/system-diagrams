@@ -55,14 +55,14 @@ gulp.task( 'copy:fonts', () => {
  * @desc Compiles the Sass files under `source/stylesheets`.
  * @return { stream } - A stream of compiled CSS files.
  */
-gulp.task( 'stylesheets', [ 'copy:fonts' ], () => {
+gulp.task( 'stylesheets', gulp.series('copy:fonts', () => {
 
   return gulp.src( 'source/styles/render.scss' )
     .pipe( sass().on( 'error', sass.logError ) )
     .pipe( gulp.dest( 'public' ) )
     .pipe( browserSyncInstance.stream() );
 
-} );
+}));
 
 /**
  * @name javascript
@@ -71,25 +71,17 @@ gulp.task( 'stylesheets', [ 'copy:fonts' ], () => {
  */
 gulp.task( 'javascript', () => {
 
-  const bundler = browserify( {
-    entries: 'source/javascript/start.js',
-    debug: false,
-    transform: [
-      [
-        babelify,
-        {
-          presets: [
-            'es2015',
-            'es2016'
-          ],
-        }
-      ],
-    ]
-  } );
+  const bundler = browserify('source/javascript/start.js')
+    .transform('babelify', {
+      global: true,
+      sourceType: 'module',
+      presets: ['@babel/preset-env'],
+      plugins: ['@babel/plugin-transform-modules-commonjs']
+    });
 
   return bundler.bundle()
-    .pipe( source( 'render.js' ) )
-    .pipe( gulp.dest( 'public' ) );
+    .pipe(source('render.js'))
+    .pipe(gulp.dest('public'));
 
 } );
 
@@ -116,7 +108,7 @@ gulp.task( 'render', () => {
  * @see { @link render }
  * @param { function } done - Callback that signals the task is complete.
  */
-gulp.task( 'render:list', [ 'render' ], ( done ) => {
+gulp.task( 'render:list', gulp.series('render', ( done ) => {
 
   const htmlTemplate = fs.readFileSync( 'source/html/index.html', 'utf-8' );
 
@@ -154,7 +146,7 @@ gulp.task( 'render:list', [ 'render' ], ( done ) => {
 
   } );
 
-} );
+}));
 
 /**
  * @name server
@@ -162,7 +154,7 @@ gulp.task( 'render:list', [ 'render' ], ( done ) => {
  * @see { @link render:list }
  * @param { function } done - Callback that signals the task is complete.
  */
-gulp.task( 'server', [ 'stylesheets', 'javascript', 'render:list' ], ( done ) => {
+gulp.task( 'server', gulp.series('stylesheets', 'javascript', 'render:list', ( done ) => {
 
   var port = 1337;
 
@@ -170,7 +162,7 @@ gulp.task( 'server', [ 'stylesheets', 'javascript', 'render:list' ], ( done ) =>
     proxy: `localhost:${ port }`,
   } );
 
-  gulp.watch( 'source/diagrams/*.mmd', [ 'render:list' ] )
+  gulp.watch( 'source/diagrams/*.mmd', gulp.series('render:list'))
     .on( 'change', ( event ) => {
       if ( 'deleted' === event.type ) {
         let renderedFileName = `${ path.basename( event.path, '.mmd' ) }.html`;
@@ -179,9 +171,9 @@ gulp.task( 'server', [ 'stylesheets', 'javascript', 'render:list' ], ( done ) =>
       }
       browserSyncInstance.reload();
     } );
-  gulp.watch( 'source/html/*.html', [ 'render:list' ] );
-  gulp.watch( 'source/styles/**/*.scss', [ 'stylesheets' ] );
-  gulp.watch( 'source/javascript/**/*.js', [ 'javascript' ] )
+  gulp.watch( 'source/html/*.html', gulp.series('render:list'));
+  gulp.watch( 'source/styles/**/*.scss', gulp.series('stylesheets'));
+  gulp.watch( 'source/javascript/**/*.js', gulp.series('javascript'))
     .on( 'change', browserSyncInstance.reload );
 
   connect()
@@ -197,17 +189,17 @@ gulp.task( 'server', [ 'stylesheets', 'javascript', 'render:list' ], ( done ) =>
       logMessage( 'server', `Site available at http://localhost:${ port }/` );
     } );
 
-} );
+}));
 
 /**
  * @name build
  * @desc Exports the compiled diagrams and pages into the public/ directory.
  * @param { function } done - Callback that signals the task is complete.
  */
-gulp.task( 'build', [ 'stylesheets', 'javascript', 'render:list' ], ( done ) => {
+gulp.task( 'build', gulp.series('stylesheets', 'javascript', 'render:list', ( done ) => {
   logMessage( 'build', 'Build complete.' );
   done();
-} );
+}));
 
 /**
  * @name notify
@@ -303,7 +295,7 @@ const renderMermaid = function ( template ) {
     throw new PluginError( taskName, 'Missing a Mustache template.' );
   }
 
-  template = new Buffer( template );
+  template = new Buffer.from( template );
 
   return through.obj( function ( file, encoding, callback )  {
 
@@ -315,7 +307,7 @@ const renderMermaid = function ( template ) {
     logMessage( taskName, `Processing ${ file.path }`);
 
     if ( file.isBuffer() ) {
-      file.contents = new Buffer( Mustache.render( template.toString(), {
+      file.contents = new Buffer.from( Mustache.render( template.toString(), {
         'diagram-title': fileName,
         'diagram-contents': file.contents.toString(),
       } ) );
