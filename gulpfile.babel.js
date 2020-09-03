@@ -1,7 +1,8 @@
 import gulp from 'gulp';
-import gutil from 'gulp-util';
+import colors from 'ansi-colors';
+import log from 'fancy-log';
+import PluginError from 'plugin-error';
 import notifier from 'node-notifier';
-import http from 'http';
 import fs from 'fs';
 import path from 'path';
 import connect from 'connect';
@@ -10,8 +11,6 @@ import Mustache from 'mustache';
 import through from 'through2';
 import browserify from 'browserify';
 import source from 'vinyl-source-stream';
-import buffer from 'vinyl-buffer';
-import babelify from 'babelify';
 import sass from 'gulp-sass';
 import del from 'del';
 import figlet from 'figlet';
@@ -224,9 +223,9 @@ const notify = ( title, message ) => {
  * @param { string } data - The data for the task.
  */
 const logData = ( task, data ) => {
-  gutil.log(
-    gutil.colors.cyan( task ),
-    gutil.colors.white( data )
+  log(
+    colors.cyan( task ),
+    colors.white( data )
   );
 };
 
@@ -238,9 +237,9 @@ const logData = ( task, data ) => {
  */
 const logMessage = ( task, message ) => {
   notify( task, message );
-  gutil.log(
-    gutil.colors.cyan( task ),
-    gutil.colors.yellow( message )
+  log(
+    colors.cyan( task ),
+    colors.yellow( message )
   );
 };
 
@@ -251,9 +250,9 @@ const logMessage = ( task, message ) => {
  * @param { string } message - The error message for the task.
  */
 const logError = ( task, message ) => {
-  gutil.log(
-    gutil.colors.red( task ),
-    gutil.colors.yellow( message )
+  log(
+    colors.red( task ),
+    colors.yellow( message )
   );
 };
 
@@ -289,7 +288,6 @@ const logName = ( task, done ) => {
 const renderMermaid = function ( template ) {
 
   const taskName = 'render-mermaid';
-  const PluginError = gutil.PluginError;
 
   if ( ! template ) {
     throw new PluginError( taskName, 'Missing a Mustache template.' );
