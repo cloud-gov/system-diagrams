@@ -33,7 +33,7 @@
     "mermaid": "^6.0.0",
     "mustache": "^2.2.1",
     "node-notifier": "^4.6.0",
-    "node-sass": "^3.8.0",
+    "node-sass": "^4.14.1",
     "save-svg-as-png": "git://github.com/exupero/saveSvgAsPng#f56023b",
     "serve-static": "^1.11.1",
     "through2": "^2.0.1",
