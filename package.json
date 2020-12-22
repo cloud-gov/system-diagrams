@@ -34,7 +34,7 @@
     "gulp-sass": "^4.1.0",
     "mermaid": "^8.7.0",
     "mustache": "^2.2.1",
-    "node-notifier": "^4.6.0",
+    "node-notifier": "^8.0.1",
     "node-sass": "^4.14.1",
     "plugin-error": "^1.0.1",
     "save-svg-as-png": "git://github.com/exupero/saveSvgAsPng#f56023b",
