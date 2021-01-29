@@ -1,0 +1,65 @@
+@startuml
+!include https://raw.githubusercontent.com/davemcorwin/c4-plantuml-ssp/master/main.puml
+
+hide stereotype
+legend right
+| <color:$LEGEND_TITLE_COLOR>**Legend**</color>                             |
+|:------------------------------------------------------------------------- |
+| <$PERSON_BG_COLOR> privileged person                                      |
+| <$INHERITED_BG_COLOR> <color:$LEGEND_TITLE_COLOR>inherited system</color> |
+| <$SHARED_BG_COLOR> shared system                                          |
+| <$SYSTEM_BG_COLOR> Federalist system                                      |
+| <$EXTERNAL_SYSTEM_BG_COLOR> external system                               |
+| <color:$TLS_COLOR>encrypted connection</color>                            |
+| <color:$UNENCRYPTED_CONNECTION_COLOR>unencrypted connection</color>       |
+endlegend
+
+Person(pu, "Privileged User", "A Federalist Developer")
+
+Boundary(gsa, "GSA Authorized SaaS") {
+  System_Ext(gh, "Github", "Source Control")
+  System_Ext(cc, "Code Climate", "Static Analysis")
+}
+
+Boundary(awsgov, "AWS GovCloud") {
+  Boundary(cloudgov, "cloud.gov") {
+    System_Inherited(cg, "Control Plane", "cloud.gov")
+    System(core, "Federalist Application", "//[Node JS/Nginx]//")
+    Db_Shared(ecr, "Container Registry", "AWS ECR")
+  }
+  System_Ext(circle, "Concourse", "CI")
+}
+
+' Main flow
+HTTPS(pu, gh, "1. merges Pull Request")
+note on link
+  Auth: MFA
+end note
+
+HTTPS(gh, circle, "2. sends webhook notification")
+note on link
+  Auth: Token
+end note
+
+HTTPS(circle, cc, "sends analysis results")
+note on link
+  Auth: Token
+end note
+
+HTTPS(circle, cg, "3a. sends source")
+note on link
+  Auth: Credentials
+end note
+
+HTTPS(circle, ecr, "3b. sends image")
+note on link
+  Auth: Credentials
+end note
+
+cg -> core : **4a. builds and deploys application**
+
+HTTPS(cg, ecr, "4b. fetches image")
+note on link
+  Auth: Credentials
+end note
+@enduml

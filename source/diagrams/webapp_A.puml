@@ -1,0 +1,58 @@
+@startuml
+!include https://raw.githubusercontent.com/cloud-gov/cg-diagrams/puml/source/diagrams/ssp.puml
+
+hide stereotype
+legend right
+| <color:$LEGEND_TITLE_COLOR>**Legend**</color>                             |
+|:------------------------------------------------------------------------- |
+| <$EXTERNAL_PERSON_BG_COLOR> external person                               |
+| <$INHERITED_BG_COLOR> <color:$LEGEND_TITLE_COLOR>inherited system</color> |
+| <$SHARED_BG_COLOR> shared system                                          |
+| <$SYSTEM_BG_COLOR> Federalist system                                      |
+| <$EXTERNAL_SYSTEM_BG_COLOR> external system                               |
+| <color:$TLS_COLOR>encrypted connection</color>                            |
+| <color:$UNENCRYPTED_CONNECTION_COLOR>unencrypted connection</color>       |
+endlegend
+
+Person(npu, "Privileged / Nonprivileged User", "A Federalist Admin / Customer")
+
+note "Auth: OAuth 2.0 via Github MFA" as githubfederalistauth
+
+Boundary(awsgov, "AWS GovCloud") {
+  Boundary(cloudgov, "cloud.gov Platform") {
+    System_Inherited(elb, "Load Balancer / Router", "cloud.gov")
+    System(core, "Federalist Web", "//[Node JS]//")
+    Db_Shared(db, "Postgres", "AWS RDS")
+    Db_Shared(redis, "Redis", "cloud.gov Redis")
+  }
+}
+
+Boundary(gsa, "GSA Authorized SaaS") {
+  System_Ext(newrelic, "New Relic", "Monitoring SaaS")
+  System_Ext(dap, "DAP", "Analytics collection")
+}
+
+HTTPS(npu, elb, "1. requests content")
+HTTP_Variable(elb, core, "2. proxies request")
+
+TCPS_Variable(core, db, "3. reads/writes site metadata & configuration")
+note on link
+  Auth: Credentials/Network
+end note
+
+TCPS_Variable(core, redis, "reads/writes notifications")
+note on link
+  Auth: Credentials
+end note
+
+TCPS(core, newrelic, "reports telemetry")
+note on link
+  Auth: Token
+end note
+
+HTTPS(npu, dap, "reports usage")
+
+' Authentication annotations
+npu .. githubfederalistauth
+githubfederalistauth .. core
+@enduml

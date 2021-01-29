@@ -1,0 +1,51 @@
+@startuml
+!include https://raw.githubusercontent.com/cloud-gov/cg-diagrams/puml/source/diagrams/ssp.puml
+
+hide stereotype
+legend right
+| <color:$LEGEND_TITLE_COLOR>**Legend**</color>                             |
+|:------------------------------------------------------------------------- |
+| <$EXTERNAL_PERSON_BG_COLOR> external person                               |
+| <$INHERITED_BG_COLOR> <color:$LEGEND_TITLE_COLOR>inherited system</color> |
+| <$SHARED_BG_COLOR> shared system                                       |
+| <$SYSTEM_BG_COLOR> Pages system                                      |
+| <color:$TLS_COLOR>encrypted connection</color>                            |
+| <color:$UNENCRYPTED_CONNECTION_COLOR>unencrypted connection</color>       |                                           
+endlegend
+
+Person_Ext(public, "Public Viewer", "A member of the public")
+
+Boundary(awsgov, "AWS GovCloud") {
+  Boundary(cloudgov_gc, "cloud.gov Platform") {
+    Db_Shared(s3, "Object Store", "AWS S3")
+    Db_Shared(dynamodb, "Database", "AWS DynamoDB")
+  }
+}
+Boundary(awscom, "AWS Commercial") {
+  Boundary(cloudgov_ew, "cloud.gov Platform") {
+    System_Shared(cdn, "CDN", "AWS Cloudfront")    
+  }
+  Boundary(cloudgov_pages_ew, "cloud.gov Pages") {
+    System_Shared(lambda, "CDN", "AWS Cloudfront/Lambda@Edge")    
+  }
+}
+
+HTTPS(public, cdn, "1a. views static content")
+note on link
+  Custom Domains
+end note
+
+HTTPS(public, lambda, "1b. views static content")
+note on link
+  Preview Domains
+end note
+
+
+cdn -[#green,thickness=2]>> lambda : **2. proxies requests**\n//[https 443 (T)]//
+HTTPS(lambda, s3, "3a. proxies requests")
+
+TCPS_Variable(lambda, dynamodb, "reads site config")
+note on link
+  Auth: Network
+end note
+@enduml

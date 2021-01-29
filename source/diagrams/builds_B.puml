@@ -1,0 +1,130 @@
+@startuml
+!include https://raw.githubusercontent.com/cloud-gov/cg-diagrams/puml/source/diagrams/ssp.puml
+
+hide stereotype
+legend right
+| <color:$LEGEND_TITLE_COLOR>**Legend**</color>                             |
+|:------------------------------------------------------------------------- |
+| <$EXTERNAL_PERSON_BG_COLOR> external person                               |
+| <$INHERITED_BG_COLOR> <color:$LEGEND_TITLE_COLOR>inherited system</color> |
+| <$SHARED_BG_COLOR> shared system                                          |
+| <$SYSTEM_BG_COLOR> Pages system                                      |
+| <$EXTERNAL_SYSTEM_BG_COLOR> external system                               |
+| <color:$TLS_COLOR>encrypted connection</color>                            |
+| <color:$UNENCRYPTED_CONNECTION_COLOR>unencrypted connection</color>       |
+endlegend
+
+skinparam rectangle<<invisible>> {
+    backgroundColor #FFFFFF
+    borderColor Transparent
+    titleFontColor Red
+    stereotypeFontColor Transparent
+    shadowing false
+    fontColor grey
+}
+
+skinparam note {
+  BorderColor Green
+}
+
+Person(npu, "Nonprivileged User", "A cloud.gov Pages Customer")
+note "Auth: Token" as webhook
+
+Boundary(gsa, "Agency-authorized VCS") {
+  System_Ext(gh, "e.g., Github", "Customer Source Control")
+}
+
+Boundary(awsgov, "AWS GovCloud") {
+  Boundary(cloudgov, "cloud.gov") {
+    'This hidden rectangle keeps Auth near to each other while behing in d
+    'different boundaries
+    rectangle webhookconnect<<invisible>> [ 
+      / 
+    ]
+    System_Inherited(elb, "Load Balancer / Router", "cloud.gov")
+    note "Auth: OAuth 2.0 \n via cloud.gov Platform MFA" as githubfederalistauth
+    System_Inherited(cc, "Control Plane", "cloud.gov")
+    System(core, "Federalist Web", "//[Node JS]//")
+    System(builder, "Federalist Builder", "//[Node JS]//")
+    System(build, "Federalist Build Container", "//[Docker Image]//")
+    Db_Shared(db, "Postgres", "AWS RDS")
+    Db_Shared(redis, "Redis", "cloud.gov Redis")
+    Db_Shared(s3, "Object Storage", "AWS S3")
+    Db_Shared(dynamo, "Database", "AWS DynamoDB")
+    System_Inherited(queue, "Build Queue", "AWS SQS")
+  }
+}
+'make hidden connections to keep build queue,
+'newly brought into boundary, less associated
+'with other elements so it stays on the edge
+'This probably could have been cleaner with an invisible
+'boundary for DynamoDB and Queue
+core -[hidden]cc
+core -[hidden]db
+core -[hidden]redis
+redis -[hidden]s3
+redis -[hidden]db
+
+HTTPS(npu, gh, "1. commits code modification")
+note on link
+  Auth: MFA
+end note
+
+HTTPS(gh, elb, "2. sends webhook notification")
+note on link
+  Auth: Token
+end note
+
+HTTP(elb, core, "3. proxies request")
+
+HTTPS(core, queue, "4. sends build message")
+note on link
+  Auth: Credentials
+end note
+
+HTTPS(builder, queue, "5. requests build message")
+note on link
+  Auth: Credentials
+end note
+
+HTTPS(builder, cc, "6. requests build")
+note on link
+  Auth: Credentials
+end note
+
+cc -> build : **7. restages build container**
+
+HTTPS(build, gh, "8. checks out code")
+note on link
+  Auth: Credentials
+  (if private)
+end note
+
+HTTPS(build, s3, "9. sends build results")
+note on link
+  Auth: Credentials
+end note
+
+TCPS_Variable(core, dynamo, "10. sends build configuration")
+note on link
+  Auth: Credentials
+end note
+
+' Other flows
+TCPS_Variable(core, db, "reads/writes build metadata & configuration")
+note on link
+  Auth: Credentials/Network
+end note
+
+TCPS_Variable(core, redis, "reads/writes build notifications")
+note on link
+  Auth: Credentials
+end note
+
+' Authentication annotations
+npu .. githubfederalistauth
+githubfederalistauth .. core
+gh .. webhook
+webhook .. webhookconnect
+webhookconnect .. core
+@enduml

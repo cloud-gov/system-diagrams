@@ -1,0 +1,414 @@
+<?xml version="1.0" encoding="UTF-8" standalone="no"?><svg xmlns="http://www.w3.org/2000/svg" xmlns:xlink="http://www.w3.org/1999/xlink" contentScriptType="application/ecmascript" contentStyleType="text/css" height="949px" preserveAspectRatio="none" style="width:599px;height:949px;" version="1.1" viewBox="0 0 599 949" width="599px" zoomAndPan="magnify"><defs><filter height="300%" id="f1suci9b3fisgz" width="300%" x="-1" y="-1"><feGaussianBlur result="blurOut" stdDeviation="2.0"/><feColorMatrix in="blurOut" result="blurOut2" type="matrix" values="0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 .4 0"/><feOffset dx="4.0" dy="4.0" in="blurOut2" result="blurOut3"/><feBlend in="SourceGraphic" in2="blurOut3" mode="normal"/></filter></defs><g><!--MD5=[c581f873b5e02589a7ee658c328fa4de]
+cluster awsgov--><rect fill="#FFFFFF" height="521" style="stroke:#444444;stroke-width:1.0;stroke-dasharray:7.0,7.0;" width="258" x="326" y="255"/><text fill="#444444" font-family="sans-serif" font-size="16" font-weight="bold" lengthAdjust="spacing" textLength="133" x="388.5" y="271.8516">AWS GovCloud</text><!--MD5=[47d67b41d43ab365ce4e81405d177e8d]
+cluster cloudgov_gc--><rect fill="#FFFFFF" height="452" style="stroke:#444444;stroke-width:1.0;stroke-dasharray:7.0,7.0;" width="210" x="350" y="300"/><text fill="#444444" font-family="sans-serif" font-size="16" font-weight="bold" lengthAdjust="spacing" textLength="177" x="366.5" y="316.8516">cloud.gov Platform</text><!--MD5=[4e69dc4bb1ebb311a48d39f1cab1aaf8]
+cluster awscom--><rect fill="#FFFFFF" height="175" style="stroke:#444444;stroke-width:1.0;stroke-dasharray:7.0,7.0;" width="241" x="7" y="264"/><text fill="#444444" font-family="sans-serif" font-size="16" font-weight="bold" lengthAdjust="spacing" textLength="155" x="50" y="280.8516">AWS Commercial</text><!--MD5=[7f1c31650564a9cdde445e5bb7fdbbe2]
+cluster cloudgov_ew--><rect fill="#FFFFFF" height="106" style="stroke:#444444;stroke-width:1.0;stroke-dasharray:7.0,7.0;" width="193" x="31" y="309"/><text fill="#444444" font-family="sans-serif" font-size="16" font-weight="bold" lengthAdjust="spacing" textLength="177" x="39" y="325.8516">cloud.gov Platform</text><!--MD5=[117512aa0359cf3a6496e3d428eedba6]
+entity elb--><rect fill="#85BBF0" height="71.2188" style="stroke:#78A8D8;stroke-width:1.5;" width="167" x="366.5" y="337"/><text fill="#000000" font-family="sans-serif" font-size="16" font-weight="bold" lengthAdjust="spacing" textLength="141" x="376.5" y="361.8516">Load Balancer /</text><text fill="#000000" font-family="sans-serif" font-size="16" font-weight="bold" lengthAdjust="spacing" textLength="63" x="418.5" y="380.4766">Router</text><text fill="#000000" font-family="sans-serif" font-size="12" font-style="italic" lengthAdjust="spacing" textLength="69" x="415.5" y="395.3887">[cloud.gov]</text><!--MD5=[e937783d151d78c9e87fd4c0d99f7485]
+entity proxy--><rect fill="#1168BD" height="71.2188" style="stroke:#3C7FC0;stroke-width:1.5;" width="169" x="366.5" y="514"/><text fill="#FFFFFF" font-family="sans-serif" font-size="16" font-weight="bold" lengthAdjust="spacing" textLength="149" x="376.5" y="538.8516">Federalist Proxy</text><text fill="#FFFFFF" font-family="sans-serif" font-size="14" lengthAdjust="spacing" textLength="0" x="453" y="555.6201"/><text fill="#FFFFFF" font-family="sans-serif" font-size="14" lengthAdjust="spacing" textLength="0" x="428" y="571.917"/><text fill="#FFFFFF" font-family="sans-serif" font-size="14" font-style="italic" lengthAdjust="spacing" textLength="50" x="428" y="571.917">[Nginx]</text><!--MD5=[b165ca7cce796f881c879adda4a6bef9]
+entity s3--><path d="M366,684 C366,674 435,674 435,674 C435,674 504,674 504,684 L504,725.5938 C504,735.5938 435,735.5938 435,735.5938 C435,735.5938 366,735.5938 366,725.5938 L366,684 " fill="#438DD5" style="stroke:#3C7FC0;stroke-width:1.5;"/><path d="M366,684 C366,694 435,694 435,694 C435,694 504,694 504,684 " fill="none" style="stroke:#3C7FC0;stroke-width:1.5;"/><text fill="#FFFFFF" font-family="sans-serif" font-size="16" font-weight="bold" lengthAdjust="spacing" textLength="118" x="376" y="712.8516">Object Store</text><text fill="#FFFFFF" font-family="sans-serif" font-size="12" font-style="italic" lengthAdjust="spacing" textLength="58" x="406" y="727.7637">[AWS S3]</text><!--MD5=[8fb4f905147ca31c25b1e567ee08a5b2]
+entity cdn--><rect fill="#438DD5" height="52.5938" style="stroke:#3C7FC0;stroke-width:1.5;" width="125" x="64.5" y="346"/><text fill="#FFFFFF" font-family="sans-serif" font-size="16" font-weight="bold" lengthAdjust="spacing" textLength="38" x="108" y="370.8516">CDN</text><text fill="#FFFFFF" font-family="sans-serif" font-size="12" font-style="italic" lengthAdjust="spacing" textLength="105" x="74.5" y="385.7637">[AWS Cloudfront]</text><!--MD5=[06959a3f3cbea176f36acf10396f6fcf]
+entity public--><rect fill="#686868" height="119.2188" style="stroke:#8A8A8A;stroke-width:1.5;" width="196" x="206" y="7"/><image height="48" width="48" x="280" xlink:href="data:image/png;base64,iVBORw0KGgoAAAANSUhEUgAAADAAAAAwCAIAAADYYG7QAAAB6ElEQVR4Xu2YLY+EMBCG9+dWr0aj0Wg0Go1Go0+j8Xdv2uTCvv1gpt0ebHKPuhDaeW4605Z9mJvx4AdXUyTUdd08z+u6flmWZRnHsWkafk9DptAwDPu+f0eAYtu2PEaGWuj5fCIZrBAC2eLBAnRCsEkkxmeaJp7iDJ2QMDdHsLg8SxKFEJaAo8lAXnmuOFIhTMpxxKATebo4UiFknuNo4OniSIXQyRxEA3YsnjGCVEjVXD7yLUAqxBGUyPv/Y4W2beMgGuS7kVQIBycH0fD+oi5pezQETxdHKmQKGk1eQEYldK+jw5GxPfZ9z7Mk0Qnhf1W1m3w//EUn5BDmSZsbR44QQLBEqrBHqOrmSKaQAxdnLArCrxZcM7A7ZKs4ioRq8LFC+NpC3WCBJsvpVw5edm9iEXFuyNfxXAgSwfrFQ1c0iNda8AdejvUgnktOtJQQxmcfFzGglc5WVCj7oDgFqU18boeFSs52CUh8LE8BIVQDT1ABrB0HtgSEYlX5doJnCwv9TXocKCaKbnwhdDKPq4lf3SwU3HLq4V/+WYhHVMa/3b4IlfyikAduCkcBc7mQ3/z/Qq/cTuikhkzB12Ae/mcJC9U+Vo8Ej1gWAtgbeGgFsAMHr50BIWOLCbezvhpBFUdY6EJuJ/QDW0XoMX60zZ0AAAAASUVORK5CYII=" y="17"/><text fill="#FFFFFF" font-family="sans-serif" font-size="16" font-weight="bold" lengthAdjust="spacing" textLength="122" x="243" y="79.8516">Public Viewer</text><text fill="#FFFFFF" font-family="sans-serif" font-size="14" lengthAdjust="spacing" textLength="0" x="306" y="96.6201"/><text fill="#FFFFFF" font-family="sans-serif" font-size="14" lengthAdjust="spacing" textLength="172" x="220" y="112.917">A member of the public</text><!--MD5=[978ff4bafd359e6f8f546315baaec997]
+link public to cdn--><path d="M216.981,126.121 C207.281,135.276 198.29,145.288 191,156 C152.448,212.649 136.673,292.958 130.566,337.828 " fill="none" id="public-to-cdn" style="stroke:#008000;stroke-width:2.0;"/><polygon fill="#008000" points="129.535,345.78,133.5386,338.2321,127.5884,337.4607,129.535,345.78" style="stroke:#008000;stroke-width:2.0;"/><text fill="#000000" font-family="sans-serif" font-size="12" font-weight="bold" lengthAdjust="spacing" textLength="112" x="210.5" y="168.1387">1a. views static</text><text fill="#000000" font-family="sans-serif" font-size="12" font-weight="bold" lengthAdjust="spacing" textLength="58" x="239.5" y="182.1074">content</text><text fill="#000000" font-family="sans-serif" font-size="12" font-style="italic" lengthAdjust="spacing" textLength="91" x="223" y="196.0762">[https 443 (T)]</text><path d="M196,204.9063 L196,229.9063 L337,229.9063 L337,214.9063 L327,204.9063 L196,204.9063 " fill="#FBFB77" filter="url(#f1suci9b3fisgz)" style="stroke:#008000;stroke-width:1.0;"/><path d="M327,204.9063 L327,214.9063 L337,214.9063 L327,204.9063 " fill="#FBFB77" style="stroke:#008000;stroke-width:1.0;"/><text fill="#000000" font-family="sans-serif" font-size="13" lengthAdjust="spacing" textLength="111" x="211" y="221.9731">Custom Domains</text><!--MD5=[f38abc82e03cfc954e5fae6265fcb2a4]
+link public to elb--><path d="M338.141,126.107 C343.606,135.999 349.077,146.229 354,156 C383.726,215.006 414.108,285.217 432.516,329.082 " fill="none" id="public-to-elb" style="stroke:#008000;stroke-width:2.0;"/><polygon fill="#008000" points="435.699,336.69,435.3779,328.152,429.8431,330.4684,435.699,336.69" style="stroke:#008000;stroke-width:2.0;"/><text fill="#000000" font-family="sans-serif" font-size="12" font-weight="bold" lengthAdjust="spacing" textLength="112" x="412" y="168.1387">1b. views static</text><text fill="#000000" font-family="sans-serif" font-size="12" font-weight="bold" lengthAdjust="spacing" textLength="58" x="441" y="182.1074">content</text><text fill="#000000" font-family="sans-serif" font-size="12" font-style="italic" lengthAdjust="spacing" textLength="91" x="424.5" y="196.0762">[https 443 (T)]</text><path d="M397,204.9063 L397,229.9063 L539,229.9063 L539,214.9063 L529,204.9063 L397,204.9063 " fill="#FBFB77" filter="url(#f1suci9b3fisgz)" style="stroke:#008000;stroke-width:1.0;"/><path d="M529,204.9063 L529,214.9063 L539,214.9063 L529,204.9063 " fill="#FBFB77" style="stroke:#008000;stroke-width:1.0;"/><text fill="#000000" font-family="sans-serif" font-size="13" lengthAdjust="spacing" textLength="112" x="412" y="221.9731">Preview Domains</text><!--MD5=[022a8d652eb07416de072cba888fc701]
+link cdn to elb--><path d="M189.661,372.5 C237.561,372.5 304.309,372.5 358.226,372.5 " fill="none" id="cdn-to-elb" style="stroke:#008000;stroke-width:2.0;"/><polygon fill="#008000" points="366.424,372.5,358.424,369.5,358.424,375.5,366.424,372.5" style="stroke:#008000;stroke-width:2.0;"/><text fill="#000000" font-family="sans-serif" font-size="12" font-weight="bold" lengthAdjust="spacing" textLength="140" x="208" y="352.6387">2. proxies requests</text><text fill="#000000" font-family="sans-serif" font-size="12" font-style="italic" lengthAdjust="spacing" textLength="91" x="232.5" y="366.6074">[https 443 (T)]</text><!--MD5=[9d0dc92c819cc627352899363ea3864f]
+link elb to proxy--><path d="M450.198,408.074 C450.358,436.118 450.584,475.779 450.756,505.802 " fill="none" id="elb-to-proxy" style="stroke:#666666;stroke-width:1.0;"/><polygon fill="#666666" points="450.803,513.997,453.7572,505.98,447.7573,506.0143,450.803,513.997" style="stroke:#666666;stroke-width:1.0;"/><text fill="#000000" font-family="sans-serif" font-size="12" font-weight="bold" lengthAdjust="spacing" textLength="140" x="451" y="467.1387">3. proxies requests</text><text fill="#000000" font-family="sans-serif" font-size="12" font-style="italic" lengthAdjust="spacing" textLength="67" x="487.5" y="481.1074">[http * (T)]</text><!--MD5=[0e394f36ac41d137512e784e0bb56a53]
+link proxy to s3--><path d="M447.369,585.332 C444.868,609.332 441.544,641.221 438.972,665.898 " fill="none" id="proxy-to-s3" style="stroke:#008000;stroke-width:2.0;"/><polygon fill="#008000" points="438.13,673.968,441.9424,666.3217,435.9747,665.7003,438.13,673.968" style="stroke:#008000;stroke-width:2.0;"/><text fill="#000000" font-family="sans-serif" font-size="12" font-weight="bold" lengthAdjust="spacing" textLength="141" x="444" y="627.1387">4. proxies requests</text><text fill="#000000" font-family="sans-serif" font-size="12" font-style="italic" lengthAdjust="spacing" textLength="91" x="469" y="641.1074">[https 443 (T)]</text><rect fill="#FFFFFF" height="144.375" rx="5" ry="5" style="stroke:#FFFFFF;stroke-width:1.0;" width="403" x="174" y="789"/><text fill="#FFFFFF" font-family="sans-serif" font-size="14" lengthAdjust="spacing" textLength="0" x="184" y="808.9951"/><text fill="#000000" font-family="sans-serif" font-size="14" font-weight="bold" lengthAdjust="spacing" textLength="57" x="184" y="808.9951">Legend</text><text fill="#FFFFFF" font-family="sans-serif" font-size="14" lengthAdjust="spacing" textLength="0" x="357" y="808.9951"/><text fill="#FFFFFF" font-family="sans-serif" font-size="14" lengthAdjust="spacing" textLength="5" x="180" y="825.292">:</text><text fill="#FFFFFF" font-family="sans-serif" font-size="14" lengthAdjust="spacing" text-decoration="line-through" textLength="6" x="185" y="825.292">-</text><text fill="#FFFFFF" font-family="sans-serif" font-size="14" lengthAdjust="spacing" text-decoration="line-through" textLength="6" x="191" y="825.292">-</text><text fill="#FFFFFF" font-family="sans-serif" font-size="14" lengthAdjust="spacing" text-decoration="line-through" textLength="6" x="197" y="825.292">-</text><text fill="#FFFFFF" font-family="sans-serif" font-size="14" lengthAdjust="spacing" text-decoration="line-through" textLength="6" x="203" y="825.292">-</text><text fill="#FFFFFF" font-family="sans-serif" font-size="14" lengthAdjust="spacing" text-decoration="line-through" textLength="6" x="209" y="825.292">-</text><text fill="#FFFFFF" font-family="sans-serif" font-size="14" lengthAdjust="spacing" text-decoration="line-through" textLength="6" x="215" y="825.292">-</text><text fill="#FFFFFF" font-family="sans-serif" font-size="14" lengthAdjust="spacing" text-decoration="line-through" textLength="6" x="221" y="825.292">-</text><text fill="#FFFFFF" font-family="sans-serif" font-size="14" lengthAdjust="spacing" text-decoration="line-through" textLength="6" x="227" y="825.292">-</text><text fill="#FFFFFF" font-family="sans-serif" font-size="14" lengthAdjust="spacing" text-decoration="line-through" textLength="6" x="233" y="825.292">-</text><text fill="#FFFFFF" font-family="sans-serif" font-size="14" lengthAdjust="spacing" text-decoration="line-through" textLength="6" x="239" y="825.292">-</text><text fill="#FFFFFF" font-family="sans-serif" font-size="14" lengthAdjust="spacing" text-decoration="line-through" textLength="6" x="245" y="825.292">-</text><text fill="#FFFFFF" font-family="sans-serif" font-size="14" lengthAdjust="spacing" text-decoration="line-through" textLength="6" x="251" y="825.292">-</text><text fill="#FFFFFF" font-family="sans-serif" font-size="14" lengthAdjust="spacing" text-decoration="line-through" textLength="6" x="257" y="825.292">-</text><text fill="#FFFFFF" font-family="sans-serif" font-size="14" lengthAdjust="spacing" text-decoration="line-through" textLength="6" x="263" y="825.292">-</text><text fill="#FFFFFF" font-family="sans-serif" font-size="14" lengthAdjust="spacing" textLength="18" x="269" y="825.292">---</text><rect fill="#686868" height="16.2969" style="stroke:none;stroke-width:1.0;" width="283" x="180" y="828.5938"/><text fill="#FFFFFF" font-family="sans-serif" font-size="14" lengthAdjust="spacing" textLength="114" x="184" y="841.5889">external person</text><rect fill="#85BBF0" height="16.2969" style="stroke:none;stroke-width:1.0;" width="283" x="180" y="844.8906"/><text fill="#FFFFFF" font-family="sans-serif" font-size="14" lengthAdjust="spacing" textLength="0" x="184" y="857.8857"/><text fill="#000000" font-family="sans-serif" font-size="14" lengthAdjust="spacing" textLength="122" x="184" y="857.8857">inherited system</text><text fill="#FFFFFF" font-family="sans-serif" font-size="14" lengthAdjust="spacing" textLength="0" x="310" y="857.8857"/><rect fill="#438DD5" height="16.2969" style="stroke:none;stroke-width:1.0;" width="283" x="180" y="861.1875"/><text fill="#FFFFFF" font-family="sans-serif" font-size="14" lengthAdjust="spacing" textLength="104" x="184" y="874.1826">shared system</text><rect fill="#1168BD" height="16.2969" style="stroke:none;stroke-width:1.0;" width="283" x="180" y="877.4844"/><text fill="#FFFFFF" font-family="sans-serif" font-size="14" lengthAdjust="spacing" textLength="127" x="184" y="890.4795">Federalist system</text><text fill="#FFFFFF" font-family="sans-serif" font-size="14" lengthAdjust="spacing" textLength="0" x="184" y="906.7764"/><text fill="#008000" font-family="sans-serif" font-size="14" lengthAdjust="spacing" textLength="160" x="184" y="906.7764">encrypted connection</text><text fill="#FFFFFF" font-family="sans-serif" font-size="14" lengthAdjust="spacing" textLength="0" x="456" y="906.7764"/><line style="stroke:#FFFFFF;stroke-width:1.0;" x1="180" x2="463" y1="796" y2="796"/><line style="stroke:#FFFFFF;stroke-width:1.0;" x1="180" x2="463" y1="812.2969" y2="812.2969"/><line style="stroke:#FFFFFF;stroke-width:1.0;" x1="180" x2="463" y1="828.5938" y2="828.5938"/><line style="stroke:#FFFFFF;stroke-width:1.0;" x1="180" x2="463" y1="844.8906" y2="844.8906"/><line style="stroke:#FFFFFF;stroke-width:1.0;" x1="180" x2="463" y1="861.1875" y2="861.1875"/><line style="stroke:#FFFFFF;stroke-width:1.0;" x1="180" x2="463" y1="877.4844" y2="877.4844"/><line style="stroke:#FFFFFF;stroke-width:1.0;" x1="180" x2="463" y1="893.7813" y2="893.7813"/><line style="stroke:#FFFFFF;stroke-width:1.0;" x1="180" x2="463" y1="910.0781" y2="910.0781"/><line style="stroke:#FFFFFF;stroke-width:1.0;" x1="180" x2="180" y1="796" y2="910.0781"/><line style="stroke:#FFFFFF;stroke-width:1.0;" x1="463" x2="463" y1="796" y2="910.0781"/><text fill="#FFFFFF" font-family="sans-serif" font-size="14" lengthAdjust="spacing" textLength="5" x="180" y="925.0732">|</text><text fill="#666666" font-family="sans-serif" font-size="14" lengthAdjust="spacing" textLength="177" x="189" y="925.0732">unencrypted connection</text><text fill="#FFFFFF" font-family="sans-serif" font-size="14" lengthAdjust="spacing" textLength="5" x="394" y="925.0732">|</text><!--MD5=[a174cf96625d19310413e91b228755c5]
+@startuml
+!include https://raw.githubusercontent.com/cloud-gov/cg-diagrams/puml/source/diagrams/ssp.puml
+
+hide stereotype
+legend right
+| <color:$LEGEND_TITLE_COLOR>**Legend**</color>                             |
+|:- - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - |
+| <$EXTERNAL_PERSON_BG_COLOR> external person                               |
+| <$INHERITED_BG_COLOR> <color:$LEGEND_TITLE_COLOR>inherited system</color> |
+| <$SHARED_BG_COLOR> shared system                                       |
+| <$SYSTEM_BG_COLOR> Federalist system                                      |
+| <color:$TLS_COLOR>encrypted connection</color>                            |
+| <color:$UNENCRYPTED_CONNECTION_COLOR>unencrypted connection</color>       |                                           
+endlegend
+
+Person_Ext(public, "Public Viewer", "A member of the public")
+
+Boundary(awsgov, "AWS GovCloud") {
+  Boundary(cloudgov_gc, "cloud.gov Platform") {
+    System_Inherited(elb, "Load Balancer / Router", "cloud.gov")
+        System(proxy, "Federalist Proxy", "//[Nginx]//")
+        Db_Shared(s3, "Object Store", "AWS S3")
+  }
+}
+Boundary(awscom, "AWS Commercial") {
+  Boundary(cloudgov_ew, "cloud.gov Platform") {
+      System_Shared(cdn, "CDN", "AWS Cloudfront")    
+  }
+}
+
+HTTPS(public, cdn, "1a. views static content")
+note on link
+  Custom Domains
+end note
+
+HTTPS(public, elb, "1b. views static content")
+note on link
+  Preview Domains
+end note
+
+
+cdn -[#green,thickness=2]>> elb : **2. proxies requests**\n//[https 443 (T)]//
+HTTP_Variable(elb, proxy, "3. proxies requests")
+HTTPS(proxy, s3, "4. proxies requests")
+@enduml
+
+@startuml
+
+
+
+
+
+
+skinparam defaultTextAlignment center
+
+skinparam wrapWidth 200
+skinparam maxMessageSize 150
+
+skinparam LegendBorderColor transparent
+skinparam LegendBackgroundColor transparent
+skinparam LegendFontColor #FFFFFF
+
+skinparam rectangle {
+    StereotypeFontSize 12
+    shadowing false
+}
+
+skinparam database {
+    StereotypeFontSize 12
+    shadowing false
+}
+
+skinparam queue {
+    StereotypeFontSize 12
+    shadowing false
+}
+
+skinparam Arrow {
+    Color #666666
+    FontColor #666666
+    FontSize 12
+}
+
+skinparam rectangle<<boundary>> {
+    Shadowing false
+    StereotypeFontSize 0
+    FontColor #444444
+    BorderColor #444444
+    BorderStyle dashed
+}
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+skinparam rectangle<<person>> {
+    StereotypeFontColor #FFFFFF
+    FontColor #FFFFFF
+    BackgroundColor #08427B
+    BorderColor #073B6F
+}
+
+skinparam rectangle<<external_person>> {
+    StereotypeFontColor #FFFFFF
+    FontColor #FFFFFF
+    BackgroundColor #686868
+    BorderColor #8A8A8A
+}
+
+skinparam rectangle<<system>> {
+    StereotypeFontColor #FFFFFF
+    FontColor #FFFFFF
+    BackgroundColor #1168BD
+    BorderColor #3C7FC0
+}
+
+skinparam rectangle<<external_system>> {
+    StereotypeFontColor #FFFFFF
+    FontColor #FFFFFF
+    BackgroundColor #999999
+    BorderColor #8A8A8A
+}
+
+sprite $person [48x48/16] {
+000000000000000000000000000000000000000000000000
+000000000000000000000000000000000000000000000000
+0000000000000000000049BCCA7200000000000000000000
+0000000000000000006EFFFFFFFFB3000000000000000000
+00000000000000001CFFFFFFFFFFFF700000000000000000
+0000000000000001EFFFFFFFFFFFFFF80000000000000000
+000000000000000CFFFFFFFFFFFFFFFF6000000000000000
+000000000000007FFFFFFFFFFFFFFFFFF100000000000000
+00000000000001FFFFFFFFFFFFFFFFFFF900000000000000
+00000000000006FFFFFFFFFFFFFFFFFFFF00000000000000
+0000000000000BFFFFFFFFFFFFFFFFFFFF40000000000000
+0000000000000EFFFFFFFFFFFFFFFFFFFF70000000000000
+0000000000000FFFFFFFFFFFFFFFFFFFFF80000000000000
+0000000000000FFFFFFFFFFFFFFFFFFFFF80000000000000
+0000000000000DFFFFFFFFFFFFFFFFFFFF60000000000000
+0000000000000AFFFFFFFFFFFFFFFFFFFF40000000000000
+00000000000006FFFFFFFFFFFFFFFFFFFE00000000000000
+00000000000000EFFFFFFFFFFFFFFFFFF800000000000000
+000000000000007FFFFFFFFFFFFFFFFFF100000000000000
+000000000000000BFFFFFFFFFFFFFFFF5000000000000000
+0000000000000001DFFFFFFFFFFFFFF70000000000000000
+00000000000000000BFFFFFFFFFFFF500000000000000000
+0000000000000000005DFFFFFFFFA1000000000000000000
+0000000000000000000037ABB96100000000000000000000
+000000000000000000000000000000000000000000000000
+000000000000000000000000000000000000000000000000
+000000000000025788300000000005886410000000000000
+000000000007DFFFFFFD9643347BFFFFFFFB400000000000
+0000000004EFFFFFFFFFFFFFFFFFFFFFFFFFFB1000000000
+000000007FFFFFFFFFFFFFFFFFFFFFFFFFFFFFD200000000
+00000006FFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFE10000000
+0000003FFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFB0000000
+000000BFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFF5000000
+000003FFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFD000000
+000009FFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFF200000
+00000DFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFF600000
+00000FFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFF800000
+00001FFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFA00000
+00001FFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFB00000
+00001FFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFB00000
+00001FFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFB00000
+00001FFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFA00000
+00000EFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFF700000
+000006FFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFE100000
+0000008FFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFD3000000
+000000014555555555555555555555555555555300000000
+000000000000000000000000000000000000000000000000
+000000000000000000000000000000000000000000000000
+}
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+skinparam rectangle<<container>> {
+    StereotypeFontColor #FFFFFF
+    FontColor #FFFFFF
+    BackgroundColor #438DD5
+    BorderColor #3C7FC0
+}
+
+skinparam database<<container>> {
+    StereotypeFontColor #FFFFFF
+    FontColor #FFFFFF
+    BackgroundColor #438DD5
+    BorderColor #3C7FC0
+}
+
+skinparam queue<<container>> {
+    StereotypeFontColor #FFFFFF
+    FontColor #FFFFFF
+    BackgroundColor #438DD5
+    BorderColor #3C7FC0
+}
+
+skinparam rectangle<<external_container>> {
+    StereotypeFontColor #FFFFFF
+    FontColor #FFFFFF
+    BackgroundColor #B3B3B3
+    BorderColor #A6A6A6
+}
+
+skinparam database<<external_container>> {
+    StereotypeFontColor #FFFFFF
+    FontColor #FFFFFF
+    BackgroundColor #B3B3B3
+    BorderColor #A6A6A6
+}
+
+skinparam queue<<external_container>> {
+    StereotypeFontColor #FFFFFF
+    FontColor #FFFFFF
+    BackgroundColor #B3B3B3
+    BorderColor #A6A6A6
+}
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+skinparam rectangle<<component>> {
+    StereotypeFontColor #000000
+    FontColor #000000
+    BackgroundColor #85BBF0
+    BorderColor #78A8D8
+}
+
+skinparam database<<component>> {
+    StereotypeFontColor #000000
+    FontColor #000000
+    BackgroundColor #85BBF0
+    BorderColor #78A8D8
+}
+
+skinparam queue<<component>> {
+    StereotypeFontColor #000000
+    FontColor #000000
+    BackgroundColor #85BBF0
+    BorderColor #78A8D8
+}
+
+skinparam rectangle<<external_component>> {
+    StereotypeFontColor #000000
+    FontColor #000000
+    BackgroundColor #CCCCCC
+    BorderColor #BFBFBF
+}
+
+skinparam database<<external_component>> {
+    StereotypeFontColor #000000
+    FontColor #000000
+    BackgroundColor #CCCCCC
+    BorderColor #BFBFBF
+}
+
+skinparam queue<<external_component>> {
+    StereotypeFontColor #000000
+    FontColor #000000
+    BackgroundColor #CCCCCC
+    BorderColor #BFBFBF
+}
+
+
+
+
+
+
+
+
+
+
+
+
+skinparam arrow {
+  FontColor #black
+}
+
+skinparam rectangle<<ato_boundary>> {
+  BorderColor FireBrick
+  BorderStyle dashed
+  BorderThickness 2
+  FontColor FireBrick
+}
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+hide stereotype
+legend right
+| <color:#000000>**Legend**</color>                             |
+|:- - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - |
+| <#686868> external person                               |
+| <#85BBF0> <color:#000000>inherited system</color> |
+| <#438DD5> shared system                                       |
+| <#1168BD> Federalist system                                      |
+| <color:#green>encrypted connection</color>                            |
+| <color:#666666>unencrypted connection</color>       |                                           
+endlegend
+
+rectangle "<$person>\n==Public Viewer\n\n A member of the public" <<external_person>> as public
+
+rectangle "==AWS GovCloud" <<boundary>> as awsgov {
+  rectangle "==cloud.gov Platform" <<boundary>> as cloudgov_gc {
+rectangle "==Load Balancer / Router\n//<size:12>[cloud.gov]</size>//" <<component>> as elb
+        rectangle "==Federalist Proxy\n\n //[Nginx]//" <<system>> as proxy
+database "==Object Store\n//<size:12>[AWS S3]</size>//" <<container>> as s3
+  }
+}
+rectangle "==AWS Commercial" <<boundary>> as awscom {
+  rectangle "==cloud.gov Platform" <<boundary>> as cloudgov_ew {
+rectangle "==CDN\n//<size:12>[AWS Cloudfront]</size>//" <<container>> as cdn    
+  }
+}
+
+public - -[#green,thickness=2]>> cdn : **1a. views static content**\n//<size:12>[https 443 (T)]</size>//
+note on link
+  Custom Domains
+end note
+
+public - -[#green,thickness=2]>> elb : **1b. views static content**\n//<size:12>[https 443 (T)]</size>//
+note on link
+  Preview Domains
+end note
+
+
+cdn -[#green,thickness=2]>> elb : **2. proxies requests**\n//[https 443 (T)]//
+elb - ->> proxy : **3. proxies requests**\n//<size:12>[http * (T)]</size>//
+proxy - -[#green,thickness=2]>> s3 : **4. proxies requests**\n//<size:12>[https 443 (T)]</size>//
+@enduml
+
+PlantUML version 1.2021.01beta7(Unknown compile time)
+(GPL source distribution)
+Java Runtime: Java(TM) SE Runtime Environment
+JVM: Java HotSpot(TM) 64-Bit Server VM
+Default Encoding: UTF-8
+Language: en
+Country: US
+--></g></svg>
