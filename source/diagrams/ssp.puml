@@ -46,8 +46,12 @@ $from --[$TLS_COLOR,thickness=2]>> $to : **$label**\n//<size:$TECHN_FONT_SIZE>[h
 $from -->> $to : **$label**\n//<size:$TECHN_FONT_SIZE>[tcp 80 (T)]</size>//
 !endprocedure
 
-!unquoted procedure TCPS($from, $to, $label)
+!unquoted procedure TCPS($from, $to, $label, $forward=%true())
+!if ($forward == %true())
 $from --[$TLS_COLOR,thickness=2]>> $to : **$label**\n//<size:$TECHN_FONT_SIZE>[tcp 443 (T)]</size>//
+!else 
+$from <<--[$TLS_COLOR,thickness=2] $to : **$label**\n//<size:$TECHN_FONT_SIZE>[tcp 443 (T)]</size>//
+!endif
 !endprocedure
 
 !unquoted procedure TCP_Variable($from, $to, $label)

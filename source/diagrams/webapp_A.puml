@@ -3,16 +3,6 @@
 
 hide stereotype
 legend right
-| <color:$LEGEND_TITLE_COLOR>**Legend**</color>                             |
-|:------------------------------------------------------------------------- |
-| <$EXTERNAL_PERSON_BG_COLOR> external person                               |
-| <$INHERITED_BG_COLOR> <color:$LEGEND_TITLE_COLOR>inherited system</color> |
-| <$SHARED_BG_COLOR> shared system                                          |
-| <$SYSTEM_BG_COLOR> Federalist system                                      |
-| <$EXTERNAL_SYSTEM_BG_COLOR> external system                               |
-| <color:$TLS_COLOR>encrypted connection</color>                            |
-| <color:$UNENCRYPTED_CONNECTION_COLOR>unencrypted connection</color>       |
-endlegend
 
 skinparam note {
   BorderColor Green
@@ -20,7 +10,7 @@ skinparam note {
 
 Person(npu, "Privileged / Nonprivileged User", "A Federalist Admin / Customer")
 
-note "Auth: OAuth 2.0 via Github MFA" as githubfederalistauth
+note "Auth: OAuth 2.0\nvia Github MFA" as githubfederalistauth
 
 Boundary(awsgov, "AWS GovCloud") {
   Boundary(cloudgov, "cloud.gov Platform") {
