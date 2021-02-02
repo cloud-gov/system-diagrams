@@ -18,7 +18,6 @@ Person_Ext(public, "Public Viewer", "A member of the public")
 Boundary(awsgov, "AWS GovCloud") {
     Boundary(cloudgov_gc, "cloud.gov Platform") {
       Db_Shared(s3, "Object Store", "AWS S3")
-      Db_Shared(dynamodb, "Database", "AWS DynamoDB")
     }
 }
 Boundary(awscom, "AWS Commercial") {
@@ -44,8 +43,4 @@ end note
 cdn -[#green,thickness=2]>> lambda : **2. proxies requests**\n//[https 443 (T)]//
 HTTPS(lambda, s3, "3a. proxies requests")
 
-TCPS_Variable(lambda, dynamodb, "reads site config")
-note on link
-  Auth: Network
-end note
 @enduml
