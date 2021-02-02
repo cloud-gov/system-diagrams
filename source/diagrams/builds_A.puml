@@ -90,7 +90,7 @@ note on link
 end note
 
 ' Other flows
-TCP_Variable(core, db, "reads/writes build metadata & configuration")
+TCPS_Variable(core, db, "reads/writes build metadata & configuration")
 note on link
   Auth: Credentials/Network
 end note
