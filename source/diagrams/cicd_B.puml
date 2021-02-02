@@ -1,33 +1,24 @@
 @startuml
-!include https://raw.githubusercontent.com/davemcorwin/c4-plantuml-ssp/master/main.puml
+!include ssp.puml
 
 hide stereotype
-legend right
-| <color:$LEGEND_TITLE_COLOR>**Legend**</color>                             |
-|:------------------------------------------------------------------------- |
-| <$PERSON_BG_COLOR> privileged person                                      |
-| <$INHERITED_BG_COLOR> <color:$LEGEND_TITLE_COLOR>inherited system</color> |
-| <$SHARED_BG_COLOR> shared system                                          |
-| <$SYSTEM_BG_COLOR> Federalist system                                      |
-| <$EXTERNAL_SYSTEM_BG_COLOR> external system                               |
-| <color:$TLS_COLOR>encrypted connection</color>                            |
-| <color:$UNENCRYPTED_CONNECTION_COLOR>unencrypted connection</color>       |
-endlegend
 
 Person(pu, "Privileged User", "A Federalist Developer")
 
-Boundary(gsa, "GSA Authorized SaaS") {
+Boundary(gsa, "GSA-Authorized SaaS") {
   System_Ext(gh, "Github", "Source Control")
-  System_Ext(cc, "Code Climate", "Static Analysis")
 }
 
 Boundary(awsgov, "AWS GovCloud") {
-  Boundary(cloudgov, "cloud.gov") {
-    System_Inherited(cg, "Control Plane", "cloud.gov")
-    System(core, "Federalist Application", "//[Node JS/Nginx]//")
-    Db_Shared(ecr, "Container Registry", "AWS ECR")
+  Boundary(cloudgov_boundary, "cloud.gov"){ 
+  System(sq, "SonarQube", "Static Analysis")
+  System(circle, "Concourse", "CI")
+    Boundary(cloudgov, "cloud.gov Platform") {
+      System_Inherited(cg, "Control Plane", "cloud.gov")
+      System(core, "Federalist Application", "//[Node JS/Nginx]//")
+    }
+  Db_Shared(ecr, "Container Registry", "AWS ECR")
   }
-  System_Ext(circle, "Concourse", "CI")
 }
 
 ' Main flow
@@ -41,7 +32,7 @@ note on link
   Auth: Token
 end note
 
-HTTPS(circle, cc, "sends analysis results")
+HTTPS_Tight(circle, sq, "sends analysis results")
 note on link
   Auth: Token
 end note

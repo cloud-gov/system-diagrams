@@ -16,16 +16,16 @@ endlegend
 Person_Ext(public, "Public Viewer", "A member of the public")
 
 Boundary(awsgov, "AWS GovCloud") {
-  Boundary(cloudgov_gc, "cloud.gov Platform") {
-    Db_Shared(s3, "Object Store", "AWS S3")
-    Db_Shared(dynamodb, "Database", "AWS DynamoDB")
-  }
+    Boundary(cloudgov_gc, "cloud.gov Platform") {
+      Db_Shared(s3, "Object Store", "AWS S3")
+      Db_Shared(dynamodb, "Database", "AWS DynamoDB")
+    }
 }
 Boundary(awscom, "AWS Commercial") {
-  Boundary(cloudgov_ew, "cloud.gov Platform") {
-    System_Shared(cdn, "CDN", "AWS Cloudfront")    
-  }
-  Boundary(cloudgov_pages_ew, "cloud.gov Pages") {
+  Boundary(cloud_gov_core, "cloud.gov") {
+    Boundary(cloudgov_ew, "cloud.gov Platform") {
+      System_Shared(cdn, "CDN", "AWS Cloudfront")    
+    }
     System_Shared(lambda, "CDN", "AWS Cloudfront/Lambda@Edge")    
   }
 }

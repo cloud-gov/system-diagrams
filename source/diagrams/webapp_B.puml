@@ -14,9 +14,13 @@ legend right
 | <color:$UNENCRYPTED_CONNECTION_COLOR>unencrypted connection</color>       |
 endlegend
 
+skinparam note {
+  BorderColor Green
+}
+
 Person(npu, "Privileged / Nonprivileged User", "A Federalist Admin / Customer")
 
-note "Auth: OAuth 2.0 via Github MFA" as githubfederalistauth
+note "Auth: OAuth 2.0 \n via cloud.gov MFA" as githubfederalistauth
 
 Boundary(awsgov, "AWS GovCloud") {
   Boundary(cloudgov, "cloud.gov Platform") {

@@ -1,33 +1,22 @@
 @startuml
-!include https://raw.githubusercontent.com/davemcorwin/c4-plantuml-ssp/master/main.puml
+!include ssp.puml
 
 hide stereotype
-legend right
-| <color:$LEGEND_TITLE_COLOR>**Legend**</color>                             |
-|:------------------------------------------------------------------------- |
-| <$PERSON_BG_COLOR> privileged person                                      |
-| <$INHERITED_BG_COLOR> <color:$LEGEND_TITLE_COLOR>inherited system</color> |
-| <$SHARED_BG_COLOR> shared system                                          |
-| <$SYSTEM_BG_COLOR> Federalist system                                      |
-| <$EXTERNAL_SYSTEM_BG_COLOR> external system                               |
-| <color:$TLS_COLOR>encrypted connection</color>                            |
-| <color:$UNENCRYPTED_CONNECTION_COLOR>unencrypted connection</color>       |
-endlegend
 
 Person(pu, "Privileged User", "A Federalist Developer")
 
-Boundary(gsa, "GSA Authorized SaaS") {
+Boundary(gsa, "GSA-\nAuthorized\nSaaS") {
   System_Ext(gh, "Github", "Source Control")
   System_Ext(circle, "Circle", "CI")
   System_Ext(cc, "Code Climate", "Static Analysis")
 }
 
 Boundary(awsgov, "AWS GovCloud") {
-  Boundary(cloudgov, "cloud.gov") {
+  Boundary(cloudgov, "cloud.gov Platform") {
     System_Inherited(cg, "Control Plane", "cloud.gov")
     System(core, "Federalist Application", "//[Node JS/Nginx]//")
-    Db_Shared(ecr, "Container Registry", "AWS ECR")
   }
+  Db_Shared(ecr, "Container Registry", "AWS ECR")
 }
 
 ' Main flow
@@ -36,12 +25,12 @@ note on link
   Auth: MFA
 end note
 
-HTTPS(gh, circle, "2. sends webhook notification")
+HTTPS_Tight(gh, circle, "2. sends webhook notification")
 note on link
   Auth: Token
 end note
 
-HTTPS(circle, cc, "sends analysis results")
+HTTPS_Tight(circle, cc, "sends analysis results")
 note on link
   Auth: Token
 end note
@@ -62,4 +51,5 @@ HTTPS(cg, ecr, "4b. fetches image")
 note on link
   Auth: Credentials
 end note
+
 @enduml

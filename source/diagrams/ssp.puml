@@ -25,6 +25,11 @@ skinparam rectangle<<ato_boundary>> {
 $from --[$TLS_COLOR,thickness=2]>> $to : **$label**\n//<size:$TECHN_FONT_SIZE>[https 443 (T)]</size>//
 !endprocedure
 
+'Use 1 dash, -, instead of 2, to components closer
+!unquoted procedure HTTPS_Tight($from, $to, $label)
+$from -[$TLS_COLOR,thickness=2]>> $to : **$label**\n//<size:$TECHN_FONT_SIZE>[https 443 (T)]</size>//
+!endprocedure
+
 !unquoted procedure HTTP($from, $to, $label)
 $from -->> $to : **$label**\n//<size:$TECHN_FONT_SIZE>[http 80 (T)]</size>//
 !endprocedure
