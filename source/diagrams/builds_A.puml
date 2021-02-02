@@ -2,17 +2,6 @@
 !include ssp.puml
 
 hide stereotype
-legend right
-| <color:$LEGEND_TITLE_COLOR>**Legend**</color>                             |
-|:------------------------------------------------------------------------- |
-| <$EXTERNAL_PERSON_BG_COLOR> external person                               |
-| <$INHERITED_BG_COLOR> <color:$LEGEND_TITLE_COLOR>inherited system</color> |
-| <$SHARED_BG_COLOR> shared system                                          |
-| <$SYSTEM_BG_COLOR> Federalist system                                      |
-| <$EXTERNAL_SYSTEM_BG_COLOR> external system                               |
-| <color:$TLS_COLOR>encrypted connection</color>                            |
-| <color:$UNENCRYPTED_CONNECTION_COLOR>unencrypted connection</color>       |
-endlegend
 
 skinparam rectangle<<invisible>> {
     backgroundColor #FFFFFF
@@ -41,12 +30,12 @@ Boundary(awsgov, "AWS GovCloud") {
   Boundary(cloudgov, "cloud.gov") {
     'This hidden rectangle keeps Auth near to each other while behing in d
     'different boundaries
-    rectangle gfaconnect<<invisible>> [ 
-      | 
-    ]
-    rectangle webhookconnect<<invisible>> [ 
-      / 
-    ]
+'    rectangle gfaconnect<<invisible>> [ 
+'      | 
+'    ]
+'    rectangle webhookconnect<<invisible>> [ 
+'      / 
+'    ]
     System_Inherited(elb, "Load Balancer / Router", "cloud.gov")
     System_Inherited(cc, "Control Plane", "cloud.gov")
     System(core, "Federalist Web", "//[Node JS]//")
@@ -112,11 +101,9 @@ note on link
 end note
 
 ' Authentication annotations
-npu .. githubfederalistauth
-githubfederalistauth .. gfaconnect
-gfaconnect .. core
+npu . githubfederalistauth
+githubfederalistauth . core
 
-gh .r. webhook
-webhook .. webhookconnect
-webhookconnect .. core
+gh .. webhook
+webhook .. core
 @enduml
