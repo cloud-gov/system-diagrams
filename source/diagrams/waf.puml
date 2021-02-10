@@ -6,10 +6,64 @@ hide stereotype
 skinparam note {
   BorderColor Green
 }
+skinparam interface {
+  BorderColor Green
+  BackgroundColor White
+  FontColor White
+}
 
 Person_Ext(public, "Public Viewer", "A member of the public")
 Person(dev, "Tenant Developer", "A cloud.gov Tenant")
 
+Boundary(awsgov, "AWS GovCloud") {
+  Boundary(cloudgov, "cloud.gov Platform") {
+'    () "." as waf_0
+'    () "." as waf_1
+'    () "." as waf_2
+
+    System_Inherited(alb_0, "ALB 0", "")
+    System_Inherited(alb_1, "ALB 1", "")
+    System_Inherited(alb_2, "ALB 2", "")
+
+    System(cf, "CF Router", "")
+
+    System(login, "Login", "")
+    System(dashboard, "Dashboard", "")
+    System(app, "Customer App", "")
+    }
+  }
+
+
+HTTPS(public, alb_0, "App Request")
+'HTTPS(waf_0, alb_0, "App Request")
+HTTPS(alb_0, cf, "App Request")
+HTTP(cf, app, "App Request")
+
+HTTPS(dev, alb_1, "App Update")
+'HTTPS(waf_1, alb_1, "App Update")
+HTTPS(alb_1, cf, "App Update")
+HTTP(cf, dashboard, "App Update")
+
+HTTPS(dev, alb_2, "Login request")
+'HTTPS(waf_2, alb_2, "Login request")
+HTTPS(alb_2, cf, "Login request")
+HTTP(cf, login, "Login request")
+
+app .[hidden]r. dashboard
+dashboard .[hidden]r. login
+
+@enduml
+@startuml
+!include ssp.puml
+
+hide stereotype
+
+skinparam note {
+  BorderColor Green
+}
+
+Person_Ext(public, "Public Viewer", "A member of the public")
+Person(dev, "Tenant Developer", "A cloud.gov Tenant")
 
 Boundary(awsgov, "AWS GovCloud") {
   Boundary(cloudgov, "cloud.gov Platform") {
@@ -31,18 +85,21 @@ Boundary(awsgov, "AWS GovCloud") {
 
 
 HTTPS(public, waf_0, "App Request")
-HTTPS(waf_0, alb_0, "App Request")
+HTTPS_Tight(waf_0, alb_0, "App Request")
 HTTPS(alb_0, cf, "App Request")
 HTTP(cf, app, "App Request")
 
 HTTPS(dev, waf_1, "App Update")
-HTTPS(waf_1, alb_1, "App Update")
+HTTPS_Tight(waf_1, alb_1, "App Update")
 HTTPS(alb_1, cf, "App Update")
 HTTP(cf, dashboard, "App Update")
 
 HTTPS(dev, waf_2, "Login request")
-HTTPS(waf_2, alb_2, "Login request")
+HTTPS_Tight(waf_2, alb_2, "Login request")
 HTTPS(alb_2, cf, "Login request")
 HTTP(cf, login, "Login request")
+
+app .[hidden]r. dashboard
+dashboard .[hidden]r. login
 
 @enduml
