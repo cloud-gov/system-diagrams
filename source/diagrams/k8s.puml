@@ -1,0 +1,86 @@
+@startuml
+!include ssp.puml
+
+hide stereotype
+
+skinparam note {
+  BorderColor Green
+}
+
+Person_Ext(public, "Public Viewer", "A member of the public")
+'Person(npu, "Privileged / Nonprivileged User", "A Federalist Admin / Customer")
+'note "Auth: OAuth 2.0\nvia Github MFA" as githubfederalistauth
+
+Boundary(awsgov, "AWS GovCloud") {
+  Boundary(cloudgov, "cloud.gov Platform") {
+    System_Inherited(alb, "Load Balancer / Router", "cloud.gov")
+    Boundary(customer_a_org, "Org A") {
+      System(a, "App A", "")
+    }
+    Boundary(customer_b_org, "Org B") {
+      System(b, "App B", "")
+    }
+  }
+
+  Boundary(k8s, "cloud.gov Kubernetes") {
+    Db_Inherited(k8_redis_a, "Redis A", "redis")
+    Db_Inherited(k8_redis_b, "Redis B", "redis")
+    Db_Inherited(k8_es_a, "ElasticSearch A", "elasticsearch")
+    Db_Inherited(k8_es_b, "ElasticSearch B", "elasticsearch")
+  }
+
+  Boundary(aws_rds, "AWS RDS VPC") {
+    Db_Inherited(rds_a, "RDS A", "PostgreSQL")
+    Db_Inherited(rds_b, "RDS B", "MySQL")
+  }
+
+  Boundary(aws_es, "AWS Elasticsearch VPC") {
+    Db_Inherited(aws_es_a, "ElasticSearch A", "AWS Elasticsearch")
+    Db_Inherited(aws_es_b, "ElasticSearch B", "AWS Elasticsearch")
+  }
+
+  Boundary(aws_redis, "AWS ElasticCache VPC") {
+    Db_Inherited(aws_redis_a, "Redis A", "AWS ElasticCache")
+    Db_Inherited(aws_redis_b, "Redis B", "AWS ElasticCache")
+  }
+}
+
+HTTPS(public,alb, "Request A")
+HTTP(alb,a, "Request A")
+
+HTTPS(public,alb, "Request B")
+HTTP(alb,b, "Request B")
+
+'TCP_Variable(a, k8_redis_a, "read/write")
+
+TCP_Variable(a, k8_es_a, "read/write")
+TCPS_Variable(a, rds_a, "read/write")
+TCPS_Variable(a, aws_es_a, "read/write")
+
+TCP_Variable(b, k8_es_b, "read/write")
+TCPS_Variable(b, rds_b, "read/write")
+TCPS_Variable(b, aws_es_b, "read/write")
+
+k8s .[hidden]r. aws_rds
+aws_rds .[hidden]r. aws_es
+k8_es_a .[hidden]d. k8_redis_a
+k8_es_b .[hidden]d. k8_redis_b
+
+aws_es_a .[hidden]d. aws_redis_a
+aws_es_b .[hidden]d. aws_redis_b
+
+
+'HTTPS(npu, elb, "1. requests content")
+'HTTP_Variable(elb, core, "2. proxies request")
+
+'TCPS_Variable(core, db, "3. reads/writes site metadata & configuration")
+'note on link
+'  Auth: Credentials/Network
+'end note
+
+'TCPS_Variable(core, redis, "reads/writes notifications")
+'note on link
+'  Auth: Credentials
+'end note
+
+@enduml
