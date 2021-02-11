@@ -21,13 +21,21 @@ skinparam rectangle<<ato_boundary>> {
   FontColor $ATO_COLOR
 }
 
-!unquoted procedure HTTPS($from, $to, $label)
-$from --[$TLS_COLOR,thickness=2]>> $to : **$label**\n//<size:$TECHN_FONT_SIZE>[https 443 (T)]</size>//
+!unquoted procedure HTTPS($from, $to, $label, $hidden=%false())
+  !if ($hidden == %false())
+    $from --[$TLS_COLOR,thickness=2]>> $to : **$label**\n//<size:$TECHN_FONT_SIZE>[https 443 (T)]</size>//
+  !else
+    $from --[hidden]>> $to : **$label**\n//<size:$TECHN_FONT_SIZE>[https 443 (T)]</size>//
+  !endif
 !endprocedure
 
 'Use 1 dash, -, instead of 2, to components closer
-!unquoted procedure HTTPS_Tight($from, $to, $label)
-$from -[$TLS_COLOR,thickness=2]>> $to : **$label**\n//<size:$TECHN_FONT_SIZE>[https 443 (T)]</size>//
+!unquoted procedure HTTPS_Tight($from, $to, $label, $hidden=%false())
+  !if ($hidden == %false())
+    $from -[$TLS_COLOR,thickness=2]>> $to : **$label**\n//<size:$TECHN_FONT_SIZE>[https 443 (T)]</size>//
+  !else
+    $from -[hidden]>> $to : **$label**\n//<size:$TECHN_FONT_SIZE>[https 443 (T)]</size>//
+  !endif
 !endprocedure
 
 !unquoted procedure HTTP($from, $to, $label)

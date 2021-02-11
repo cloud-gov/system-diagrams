@@ -1,15 +1,11 @@
 @startuml
 !include ssp.puml
 
+title Pre-SCR example traffic to cloud.gov apps/services
 hide stereotype
 
 skinparam note {
   BorderColor Green
-}
-skinparam interface {
-  BorderColor Green
-  BackgroundColor White
-  FontColor White
 }
 
 Person_Ext(public, "Public Viewer", "A member of the public")
@@ -17,13 +13,13 @@ Person(dev, "Tenant Developer", "A cloud.gov Tenant")
 
 Boundary(awsgov, "AWS GovCloud") {
   Boundary(cloudgov, "cloud.gov Platform") {
-'    () "." as waf_0
-'    () "." as waf_1
-'    () "." as waf_2
+    System_Inherited(waf_0, "App WAF", "AWS WAFv2")
+    System_Inherited(waf_1, "Mgmt WAF", "AWS WAFv2")
+    System_Inherited(waf_2, "Auth WAF", "AWS WAFv2")
 
-    System_Inherited(alb_0, "ALB 0", "")
-    System_Inherited(alb_1, "ALB 1", "")
-    System_Inherited(alb_2, "ALB 2", "")
+    System_Inherited(alb_0, "App ALB ", "AWS ALB")
+    System_Inherited(alb_1, "Mgmt ALB", "AWS ALB")
+    System_Inherited(alb_2, "Auth ALB", "AWS ALB")
 
     System(cf, "CF Router", "")
 
@@ -33,29 +29,45 @@ Boundary(awsgov, "AWS GovCloud") {
     }
   }
 
-
+'App flow
+HTTPS(public, waf_0, "App Request", "hide")
+HTTPS_Tight(waf_0, alb_0, "App Request", "hide")
 HTTPS(public, alb_0, "App Request")
-'HTTPS(waf_0, alb_0, "App Request")
 HTTPS(alb_0, cf, "App Request")
 HTTP(cf, app, "App Request")
 
-HTTPS(dev, alb_1, "App Update")
-'HTTPS(waf_1, alb_1, "App Update")
-HTTPS(alb_1, cf, "App Update")
-HTTP(cf, dashboard, "App Update")
+'Mgmt flow
+HTTPS(dev, waf_1, "Mgmt Request", "hide")
+HTTPS_Tight(waf_1, alb_1, "Mgmt Request", "hide")
+HTTPS(dev, alb_1, "Mgmt Request")
+HTTPS(alb_1, cf, "Mgmt Request")
+HTTP(cf, dashboard, "Mgmt Request")
 
+'Login fly
+HTTPS(dev,alb_1, "Login request")
+HTTPS(alb_1, cf,  "Login request")
+
+HTTPS(dev, waf_2, "Login request", "hide")
+HTTPS_Tight(waf_2, alb_2, "Login request", "hide")
 HTTPS(dev, alb_2, "Login request")
-'HTTPS(waf_2, alb_2, "Login request")
 HTTPS(alb_2, cf, "Login request")
 HTTP(cf, login, "Login request")
 
+'Organize or Hide
+hide waf_2
+hide alb_2
 app .[hidden]r. dashboard
 dashboard .[hidden]r. login
+alb_1 -[norank,hidden]- cf
+hide waf_0
+hide waf_1
+hide waf_2
 
 @enduml
 @startuml
 !include ssp.puml
 
+title Post-SCR example traffic to cloud.gov apps/services
 hide stereotype
 
 skinparam note {
@@ -67,13 +79,13 @@ Person(dev, "Tenant Developer", "A cloud.gov Tenant")
 
 Boundary(awsgov, "AWS GovCloud") {
   Boundary(cloudgov, "cloud.gov Platform") {
-    System_Inherited(waf_0, "WAF 0", "")
-    System_Inherited(waf_1, "WAF 1", "")
-    System_Inherited(waf_2, "WAF 2", "")
+    System_Inherited(waf_0, "App WAF", "AWS WAFv2")
+    System_Inherited(waf_1, "Mgmt WAF", "AWS WAFv2")
+    System_Inherited(waf_2, "Auth WAF", "AWS WAFv2")
 
-    System_Inherited(alb_0, "ALB 0", "")
-    System_Inherited(alb_1, "ALB 1", "")
-    System_Inherited(alb_2, "ALB 2", "")
+    System_Inherited(alb_0, "App ALB ", "AWS ALB")
+    System_Inherited(alb_1, "Mgmt ALB", "AWS ALB")
+    System_Inherited(alb_2, "Auth ALB", "AWS ALB")
 
     System(cf, "CF Router", "")
 
@@ -86,20 +98,25 @@ Boundary(awsgov, "AWS GovCloud") {
 
 HTTPS(public, waf_0, "App Request")
 HTTPS_Tight(waf_0, alb_0, "App Request")
+HTTPS(public, alb_0, "App Request", "hide")
 HTTPS(alb_0, cf, "App Request")
 HTTP(cf, app, "App Request")
 
-HTTPS(dev, waf_1, "App Update")
-HTTPS_Tight(waf_1, alb_1, "App Update")
-HTTPS(alb_1, cf, "App Update")
-HTTP(cf, dashboard, "App Update")
+cf -[norank,hidden]- dashboard
+
+HTTPS(dev, waf_1, "Mgmt Request")
+HTTPS_Tight(waf_1, alb_1, "Mgmt Request")
+HTTPS(dev, alb_1, "Mgmt Request", "hide")
+HTTPS(alb_1, cf, "Mgmt Request")
+HTTP(cf, dashboard, "Mgmt Request")
 
 HTTPS(dev, waf_2, "Login request")
 HTTPS_Tight(waf_2, alb_2, "Login request")
+HTTPS(dev, alb_2, "Login request", "hide")
 HTTPS(alb_2, cf, "Login request")
 HTTP(cf, login, "Login request")
 
-app .[hidden]r. dashboard
+'Organize or Hide
 dashboard .[hidden]r. login
-
+app .[hidden]r. dashboard
 @enduml
