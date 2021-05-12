@@ -1,0 +1,46 @@
+@startuml
+!include ssp.puml
+
+hide stereotypes
+skinparam note {
+  BorderColor Green
+}
+
+ATO_Boundary(atob, "ATO Boundary") {
+  Boundary(awsgov, "AWS GovCloud") {
+    Boundary(cloudgov, "cloud.gov Provider") {
+      Boundary(cg_platform, "cloud.gov Platform") {
+        Boundary(cg_cf, "Cloud Foundry") {
+        System_Shared(pages, "Pages", "custom")
+        System(uaa, "UAA")
+        System(dashboard, "Dashboard")
+        uaa -[hidden]r- dashboard
+        }
+        System(elk_customer, "Customer logs", "ELK")
+        System(shibboleth, "cloud.gov IDP")
+        Db_Inherited(s3logs, "Logs", "S3")
+      }
+      Boundary(cg_mgmt, "cloud.gov Mgmt Plane") {
+        System(concourse, "Concourse", "CI/CD")
+        System(elk_platform, "Platform Logs", "ELK")
+        System(bosh, "Tooling Bosh")
+        System(nessus, "Nessus")
+        
+      }
+    }
+' show the cg_mgmt as down (foundational) to cg_platform
+    cg_platform --[hidden]d- cg_mgmt
+  }
+  Boundary(awsew, "AWS E/W") {
+    System_Inherited(r53, "Route 53", "DNS")
+    System_Inherited(cloudfrount, "CDN", "CloudFront")
+
+  }
+}
+
+Boundary(gsa, "GSA systems")
+Boundary(external, "External systems")
+gsa -[hidden]d- external
+
+@enduml
+
