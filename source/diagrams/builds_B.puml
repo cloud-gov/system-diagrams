@@ -34,9 +34,9 @@ Boundary(awsgov, "AWS GovCloud") {
     System_Inherited(elb, "Load Balancer / Router", "cloud.gov")
     note "Auth: OAuth 2.0 \n via cloud.gov Platform MFA" as githubfederalistauth
     System_Inherited(cc, "Control Plane", "cloud.gov")
-    System(core, "Federalist Web", "//[Node JS]//")
-    System(builder, "Federalist Builder", "//[Node JS]//")
-    System(build, "Federalist Build Container", "//[Docker Image]//")
+    System(core, "Pages Web", "//[Node JS]//")
+    System(builder, "Pages Builder", "//[Node JS]//")
+    System(build, "Pages Build Container", "//[Docker Image]//")
     Db_Shared(db, "Postgres", "AWS RDS")
     Db_Shared(redis, "Redis", "cloud.gov Redis")
     Db_Shared(s3, "Object Storage", "AWS S3")

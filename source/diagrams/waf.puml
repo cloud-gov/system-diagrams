@@ -13,10 +13,6 @@ Person(dev, "Tenant Developer", "A cloud.gov Tenant")
 
 Boundary(awsgov, "AWS GovCloud") {
   Boundary(cloudgov, "cloud.gov Platform") {
-    System_Inherited(waf_0, "App WAF", "AWS WAFv2")
-    System_Inherited(waf_1, "Mgmt WAF", "AWS WAFv2")
-    System_Inherited(waf_2, "Auth WAF", "AWS WAFv2")
-
     System_Inherited(alb_0, "App ALB ", "AWS ALB")
     System_Inherited(alb_1, "Mgmt ALB", "AWS ALB")
     System_Inherited(alb_2, "Auth ALB", "AWS ALB")
@@ -30,15 +26,15 @@ Boundary(awsgov, "AWS GovCloud") {
   }
 
 'App flow
-HTTPS(public, waf_0, "App Request", "hide")
-HTTPS_Tight(waf_0, alb_0, "App Request", "hide")
+'HTTPS(public, waf_0, "App Request", "hide")
+'HTTPS_Tight(waf_0, alb_0, "App Request", "hide")
 HTTPS(public, alb_0, "App Request")
 HTTPS(alb_0, cf, "App Request")
 HTTP(cf, app, "App Request")
 
 'Mgmt flow
-HTTPS(dev, waf_1, "Mgmt Request", "hide")
-HTTPS_Tight(waf_1, alb_1, "Mgmt Request", "hide")
+'HTTPS(dev, waf_1, "Mgmt Request", "hide")
+'HTTPS_Tight(waf_1, alb_1, "Mgmt Request", "hide")
 HTTPS(dev, alb_1, "Mgmt Request")
 HTTPS(alb_1, cf, "Mgmt Request")
 HTTP(cf, dashboard, "Mgmt Request")
@@ -47,8 +43,8 @@ HTTP(cf, dashboard, "Mgmt Request")
 HTTPS(dev,alb_1, "Login request")
 HTTPS(alb_1, cf,  "Login request")
 
-HTTPS(dev, waf_2, "Login request", "hide")
-HTTPS_Tight(waf_2, alb_2, "Login request", "hide")
+'HTTPS(dev, waf_2, "Login request", "hide")
+'HTTPS_Tight(waf_2, alb_2, "Login request", "hide")
 HTTPS(dev, alb_2, "Login request")
 HTTPS(alb_2, cf, "Login request")
 HTTP(cf, login, "Login request")
@@ -79,13 +75,9 @@ Person(dev, "Tenant Developer", "A cloud.gov Tenant")
 
 Boundary(awsgov, "AWS GovCloud") {
   Boundary(cloudgov, "cloud.gov Platform") {
-    System_Inherited(waf_0, "App WAF", "AWS WAFv2")
-    System_Inherited(waf_1, "Mgmt WAF", "AWS WAFv2")
-    System_Inherited(waf_2, "Auth WAF", "AWS WAFv2")
-
-    System_Inherited(alb_0, "App ALB ", "AWS ALB")
-    System_Inherited(alb_1, "Mgmt ALB", "AWS ALB")
-    System_Inherited(alb_2, "Auth ALB", "AWS ALB")
+    System_Inherited(alb_0, "App ALB __//+WAF//__", "AWS ALB")
+    System_Inherited(alb_1, "Mgmt ALB __//+WAF//__", "AWS ALB")
+    System_Inherited(alb_2, "Auth ALB + __//+WAF//__", "AWS ALB")
 
     System(cf, "CF Router", "")
 
@@ -96,23 +88,23 @@ Boundary(awsgov, "AWS GovCloud") {
   }
 
 
-HTTPS(public, waf_0, "App Request")
-HTTPS_Tight(waf_0, alb_0, "App Request")
+HTTPS(public, alb_0, "App Request")
+'HTTPS_Tight(waf_0, alb_0, "App Request")
 HTTPS(public, alb_0, "App Request", "hide")
 HTTPS(alb_0, cf, "App Request")
 HTTP(cf, app, "App Request")
 
 cf -[norank,hidden]- dashboard
 
-HTTPS(dev, waf_1, "Mgmt Request")
-HTTPS_Tight(waf_1, alb_1, "Mgmt Request")
-HTTPS(dev, alb_1, "Mgmt Request", "hide")
+HTTPS(dev, alb_1, "Mgmt Request")
+'HTTPS_Tight(waf_1, alb_1, "Mgmt Request")
+'HTTPS(dev, alb_1, "Mgmt Request", "hide")
 HTTPS(alb_1, cf, "Mgmt Request")
 HTTP(cf, dashboard, "Mgmt Request")
 
-HTTPS(dev, waf_2, "Login request")
-HTTPS_Tight(waf_2, alb_2, "Login request")
-HTTPS(dev, alb_2, "Login request", "hide")
+HTTPS(dev, alb_2, "Login request")
+'HTTPS_Tight(waf_2, alb_2, "Login request")
+'HTTPS(dev, alb_2, "Login request", "hide")
 HTTPS(alb_2, cf, "Login request")
 HTTP(cf, login, "Login request")
 

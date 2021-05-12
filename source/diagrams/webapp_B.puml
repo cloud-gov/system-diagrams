@@ -6,7 +6,7 @@ skinparam note {
   BorderColor Green
 }
 
-Person(npu, "Privileged / Nonprivileged User", "A Federalist Admin / Customer")
+Person(npu, "Privileged / Nonprivileged User", "A Pages Admin / Customer")
 
 
 Boundary(awsgov, "AWS GovCloud") {
