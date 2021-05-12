@@ -6,62 +6,98 @@ skinparam note {
   BorderColor Green
 }
 
-ATO_Boundary(atob, "ATO Boundary") {
-  Boundary(awsgov, "AWS GovCloud") {
+Boundary(awsgov, "AWS GovCloud") {
+  ATO_Boundary(atob, "ATO Boundary") {
     Boundary(cloudgov, "cloud.gov CSP") {
       Boundary(cg_platform, "cloud.gov Platform") {
-        Boundary(cg_cf, "Cloud Foundry") {
-        System_Shared(pages, "Pages", "custom")
-        System(uaa, "UAA")
-        System(dashboard, "Dashboard")
-        uaa -[hidden]r- dashboard
+        Boundary(cg_prod, "cloud.gov Prod VPC") {
+          Boundary(cg_cf, "cloud.gov Foundry") {
+          System(pages, "Pages", "custom") #line:IndianRed;line.bold
+          System(cg_max_app, "Max WebApp", "node?") #line:Orange;line.bold
+          System(cg_forms_app, "Forms WebApp", "form.io") #line:LimeGreen;line.bold
+          System_Shared(dashboard, "Dashboard", "Stratos")
+          }
+          System_Shared(uaa, "UAA", "uaa")
+          System_Shared(elk_customer, "Customer logs", "ELK")
+          System_Shared(shibboleth, "cloud.gov IDP", "shibboleth")
+          Db_Inherited(s3logs, "Logs\n(backup)", "S3")
         }
-        System(elk_customer, "Customer logs", "ELK")
-        System(shibboleth, "cloud.gov IDP")
-        Db_Inherited(s3logs, "Logs", "S3")
-      }
-      Boundary(cg_max, "cloud.gov Max") {
-        System(max_identity, "Max Identity")
-      }
       Boundary(cg_tool, "cloud.gov Platform Tooling") {
         System(concourse, "Concourse", "CI/CD")
         System(bosh, "Tooling Bosh")
       }
-      Boundary(cg_common,"cloud.gov Commons") {
-        System(gitlab, "GitLab")
-        System(elk_platform, "Platform Logs", "ELK")
-        System(cg_monitor, "Monitoring")
-        System(nessus, "Nessus")
-      }
     }
+    ' ### Arrange cloud.gov Platform
+    elk_customer -d- s3logs
+    cg_cf --d- cg_tool
+    uaa -d- shibboleth
+
+    Boundary(cg_max, "cloud.gov Max") {
+      System(max_identity, "Max Identity", "K8s") #line:Orange;line.bold
+    }
+    ' ### 
+    max_identity - cg_max_app
+
+    Boundary(cg_forms,"cloud.gov Forms"){
+      Db_Inherited(cg_forms_db, "FormsDB", "CosmoDB?") #line:LimeGreen;line.bold
+    }
+    cg_forms_app - cg_forms_db
+
+    Boundary(cg_mgmt,"cloud.gov Management") {
+    '  System_Shared(gitlab, "CICD", "GitLab")
+      System_Shared(elk_platform, "Platform Logs", "ELK")
+      System_Shared(cg_monitor, "Monitoring", "Prometheus")
+      System_Shared(nessus, "Vuln Scan", "Nessus")
+      System_Shared(sonarqube, "Static Code", "SonarQube")
+    }
+    elk_platform -[hidden]l- cg_monitor
+  }
+  }
+}
+
+' #####################################
+' ### Set up ordering/relationships ###
+' #####################################
+cg_platform --d-- cg_mgmt
+'      cg_forms_app -[hidden]- cg_forms_db
+'uaa -[hidden]r- dashboard
+'      max_identity - cg_max_app
+'      cg_max_app -d cg_forms_app
 ' show the cg_mgmt as down (foundational) to cg_platform
-    cg_platform --[hidden]d- cg_tool
-    cg_platform --[hidden]d- cg_common
-    cg_max -[#blue]->> elk_platform
-    cg_max -[#blue]->> gitlab
-    cg_platform -[#brown]->> concourse
-    cg_platform -[#brown]->> elk_platform
-
-  }
-  Boundary(awsew, "AWS E/W") {
-    System_Inherited(r53, "Route 53", "DNS")
-    System_Inherited(cloudfront, "CDN", "CloudFront")
-    r53 -[hidden]d- cloudfront
-
-  }
-}
-
-Boundary(gsa, "GSA systems") {
-  System(gsa_email, "SMTP relay")
-}
-Boundary(external, "External systems"){
-  System(github, "GitHub")
-}
+'    cg_platform --[hidden]d- cg_tool
+'    cg_max -[#blue]->> elk_platform
+'    cg_max -[#blue]->> gitlab
+'    cg_platform -[#brown]->> concourse
+'    cg_platform -[#brown]->> elk_platform
 gsa -[hidden]d- external
 ' cg_cf -->> gsa_email :**transactional_email**\n//<size:$TECHN_FONT_SIZE>[tcp 465 (T)]</size>//
 
+'
+' ########## more externally-ish stuff ############
+'
+Boundary(awsew, "AWS E/W") {
+  ATO_Boundary(atob_ew, "ATO Bound") {
+    Boundary(cloudgov_ew, "cloud.gov CSP") {
+      System_Inherited(r53, "Route 53", "DNS")
+      System_Inherited(cloudfront, "CDN", "CloudFront")
+    r53 -[hidden]d- cloudfront
+    }
+  }
+}
 
-
+' Completely external systems
+Boundary(gsa, "GSA systems") {
+  System_Ext(gsa_email, "SMTP relay, Gmail, ...")
+'  System_Ext(gsa_google, "Drive")
+'  System_Ext(gsa_gmail, "GMail")
+}
+Boundary(external, "External systems"){
+  System_Ext(github, "GitHub, Pagerduty, ...")
+'  System_Ext(pagerduty, "PagerDuty")
+'  System_Ext(opsgenie, "OpsGenie")
+'  System_Ext(etc, "[et cetera]")
+}
+gsa_email -[hidden]d- github
 
 @enduml
 
