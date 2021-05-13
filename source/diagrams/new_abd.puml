@@ -15,7 +15,12 @@ Boundary(awsgov, "AWS GovCloud") {
           System(pages, "Pages", "custom") #line:IndianRed;line.bold
           System(cg_max_app, "Max WebApp", "node?") #line:Orange;line.bold
           System(cg_forms_app, "Forms WebApp", "form.io") #line:LimeGreen;line.bold
+          System(cg_appA, "Customer A")
+          System(cg_appB, "Customer B")
           System_Shared(dashboard, "Dashboard", "Stratos")
+          dashboard -r- cg_appA
+          cg_appA -r- cg_appB
+          pages -d- dashboard
           }
           System_Shared(uaa, "UAA", "uaa")
           System_Shared(elk_customer, "Customer logs", "ELK")
@@ -25,6 +30,14 @@ Boundary(awsgov, "AWS GovCloud") {
       Boundary(cg_tool, "cloud.gov Platform Tooling") {
         System(concourse, "Concourse", "CI/CD")
         System(bosh, "Tooling Bosh")
+        System(xelk_platform, "Platform Logs", "ELK")
+        System(xcg_monitor, "Monitoring", "Prometheus")
+        System(xnessus, "Vuln Scan", "Nessus")
+        bosh -l- concourse
+        concourse -l- xelk_platform
+        hide xnessus
+        hide xelk_platform
+        hide xcg_monitor
       }
     }
     ' ### Arrange cloud.gov Platform
@@ -44,13 +57,12 @@ Boundary(awsgov, "AWS GovCloud") {
     cg_forms_app - cg_forms_db
 
     Boundary(cg_mgmt,"cloud.gov Management") {
-    '  System_Shared(gitlab, "CICD", "GitLab")
+      System_Shared(gitlab, "CICD", "GitLab")
       System_Shared(elk_platform, "Platform Logs", "ELK")
       System_Shared(cg_monitor, "Monitoring", "Prometheus")
       System_Shared(nessus, "Vuln Scan", "Nessus")
       System_Shared(sonarqube, "Static Code", "SonarQube")
     }
-    elk_platform -[hidden]l- cg_monitor
   }
   }
 }
@@ -58,20 +70,9 @@ Boundary(awsgov, "AWS GovCloud") {
 ' #####################################
 ' ### Set up ordering/relationships ###
 ' #####################################
-cg_platform --d-- cg_mgmt
-'      cg_forms_app -[hidden]- cg_forms_db
-'uaa -[hidden]r- dashboard
-'      max_identity - cg_max_app
-'      cg_max_app -d cg_forms_app
-' show the cg_mgmt as down (foundational) to cg_platform
-'    cg_platform --[hidden]d- cg_tool
-'    cg_max -[#blue]->> elk_platform
-'    cg_max -[#blue]->> gitlab
-'    cg_platform -[#brown]->> concourse
-'    cg_platform -[#brown]->> elk_platform
-gsa -[hidden]d- external
-' cg_cf -->> gsa_email :**transactional_email**\n//<size:$TECHN_FONT_SIZE>[tcp 465 (T)]</size>//
-
+cg_tool -d- cg_mgmt
+gitlab -l- elk_platform
+elk_platform -l- cg_monitor
 '
 ' ########## more externally-ish stuff ############
 '
@@ -97,7 +98,10 @@ Boundary(external, "External systems"){
 '  System_Ext(opsgenie, "OpsGenie")
 '  System_Ext(etc, "[et cetera]")
 }
+'### arrange external services ###
 gsa_email -[hidden]d- github
+cloudfront -d- gsa_email
+gsa_email -d- github
 
 @enduml
 
