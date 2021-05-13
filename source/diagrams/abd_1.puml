@@ -9,70 +9,69 @@ skinparam note {
 Boundary(awsgov, "AWS GovCloud") {
   ATO_Boundary(atob, "ATO Boundary") {
     Boundary(cloudgov, "cloud.gov CSP") {
-      Boundary(cg_platform, "cloud.gov Platform") {
+      Boundary(cg_platform, "cloud.gov Platform") #line:Orange {
         Boundary(cg_prod, "cloud.gov Prod VPC") {
           Boundary(cg_cf, "cloud.gov Foundry") {
-          System(pages, "Pages", "custom") #line:IndianRed;line.bold
-          System(cg_max_app, "Max WebApp", "node?") #line:Orange;line.bold
-          System(cg_forms_app, "Forms WebApp", "form.io") #line:LimeGreen;line.bold
-          System(cg_appA, "Customer A")
-          System(cg_appB, "Customer B")
-          System_Shared(dashboard, "Dashboard", "Stratos")
-          dashboard -r- cg_appA
-          cg_appA -r- cg_appB
-          pages -d- dashboard
+            System(pages, "Pages", "custom") #line:IndianRed;line.bold
+            System(cg_max_app, "Max WebApp", "node?") #line:Orange;line.bold
+            System(cg_forms_app, "Forms WebApp", "form.io") #line:LimeGreen;line.bold
+            System(cg_appA, "Customer A")
+            System(cg_appB, "Customer B")
+            System_Shared(dashboard, "Dashboard", "Stratos")
+            ' ARRANGE:
+            dashboard -[hidden]r- cg_appA
+            cg_appA -[hidden]r- cg_appB
+            pages -[hidden]d- dashboard
           }
           System_Shared(uaa, "UAA", "uaa")
           System_Shared(elk_customer, "Customer logs", "ELK")
           System_Shared(shibboleth, "cloud.gov IDP", "shibboleth")
           Db_Inherited(s3logs, "Logs\n(backup)", "S3")
+          ' Arrange:
+          uaa -[hidden]d- shibboleth
+          elk_customer -[hidden]d- s3logs
         }
-      Boundary(cg_tool, "cloud.gov Platform Tooling") {
-        System(concourse, "Concourse", "CI/CD")
-        System(bosh, "Tooling Bosh")
-        System(xelk_platform, "Platform Logs", "ELK")
-        System(xcg_monitor, "Monitoring", "Prometheus")
-        System(xnessus, "Vuln Scan", "Nessus")
-        bosh -l- concourse
-        concourse -l- xelk_platform
-        hide xnessus
-        hide xelk_platform
-        hide xcg_monitor
+        Boundary(cg_tool, "cloud.gov Platform Tooling") {
+          System(concourse, "Concourse", "CI/CD")
+          System(bosh, "Tooling Bosh")
+          System(xelk_platform, "Platform Logs", "ELK")
+          System(xcg_monitor, "Monitoring", "Prometheus")
+          System(xnessus, "Vuln Scan", "Nessus")
+          xelk_platform -[hidden]r- bosh
+          bosh -[hidden]r- concourse
+          hide xnessus
+          hide xelk_platform
+          hide xcg_monitor
+        }
+      }
+      ' ### Arrange cloud.gov Platform
+      cg_cf --[hidden]d- cg_tool
+
+      Boundary(cg_max, "cloud.gov Max") {
+        System(max_identity, "Max Identity", "K8s") #line:Orange;line.bold
+      }
+
+      Boundary(cg_forms,"cloud.gov Forms"){
+        Db_Inherited(cg_forms_db, "FormsDB", "CosmoDB?") #line:LimeGreen;line.bold
+      }
+
+      Boundary(cg_mgmt,"cloud.gov Management") {
+        System_Shared(gitlab, "CICD", "GitLab")
+        System_Shared(elk_platform, "Platform Logs", "ELK")
+        System_Shared(cg_monitor, "Monitoring", "Prometheus")
+        System_Shared(nessus, "Vuln Scan", "Nessus")
+        System_Shared(sonarqube, "Static Code", "SonarQube")
       }
     }
-    ' ### Arrange cloud.gov Platform
-    elk_customer -d- s3logs
-    cg_cf --d- cg_tool
-    uaa -d- shibboleth
-
-    Boundary(cg_max, "cloud.gov Max") {
-      System(max_identity, "Max Identity", "K8s") #line:Orange;line.bold
-    }
-    ' ### 
-    max_identity - cg_max_app
-
-    Boundary(cg_forms,"cloud.gov Forms"){
-      Db_Inherited(cg_forms_db, "FormsDB", "CosmoDB?") #line:LimeGreen;line.bold
-    }
-    cg_forms_app - cg_forms_db
-
-    Boundary(cg_mgmt,"cloud.gov Management") {
-      System_Shared(gitlab, "CICD", "GitLab")
-      System_Shared(elk_platform, "Platform Logs", "ELK")
-      System_Shared(cg_monitor, "Monitoring", "Prometheus")
-      System_Shared(nessus, "Vuln Scan", "Nessus")
-      System_Shared(sonarqube, "Static Code", "SonarQube")
-    }
-  }
   }
 }
 
 ' #####################################
 ' ### Set up ordering/relationships ###
 ' #####################################
-cg_tool -d- cg_mgmt
-gitlab -l- elk_platform
-elk_platform -l- cg_monitor
+cg_tool -[hidden]d- cg_mgmt
+gitlab -[hidden]r- elk_platform
+elk_platform -[hidden]r- cg_monitor
 '
 ' ########## more externally-ish stuff ############
 '
@@ -100,8 +99,8 @@ Boundary(external, "External systems"){
 }
 '### arrange external services ###
 gsa_email -[hidden]d- github
-cloudfront -d- gsa_email
-gsa_email -d- github
+cloudfront -[hidden]d- gsa_email
+gsa_email -[hidden]d- github
 
 @enduml
 
