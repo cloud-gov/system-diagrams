@@ -10,7 +10,7 @@ let btn = document.getElementById( 'save-png-button' );
 btn.addEventListener('click', function() {
   let svgList = ss.getElementsByTagName('svg');
   let options = {
-    scale: 5,
+    scale: 2,
     backgroundColor: '#ffffff',
   };
   if (svgList.length) {
