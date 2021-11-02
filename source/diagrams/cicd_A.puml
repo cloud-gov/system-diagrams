@@ -1,0 +1,55 @@
+@startuml
+!include ssp.puml
+
+hide stereotype
+
+Person(pu, "Privileged User", "A Federalist Developer")
+
+Boundary(gsa, "GSA-\nAuthorized\nSaaS") {
+  System_Ext(gh, "Github", "Source Control")
+  System_Ext(circle, "Circle", "CI")
+  System_Ext(cc, "Code Climate", "Static Analysis")
+}
+
+Boundary(awsgov, "AWS GovCloud") {
+  Boundary(cloudgov, "cloud.gov Platform") {
+    System_Inherited(cg, "Control Plane", "cloud.gov")
+    System(core, "Federalist Application", "//[Node JS/Nginx]//")
+  }
+  Db_Shared(ecr, "Container Registry", "AWS ECR")
+}
+
+' Main flow
+HTTPS(pu, gh, "1. merges Pull Request")
+note on link
+  Auth: MFA
+end note
+
+HTTPS_Tight(gh, circle, "2. sends webhook notification")
+note on link
+  Auth: Token
+end note
+
+HTTPS_Tight(circle, cc, "sends analysis results")
+note on link
+  Auth: Token
+end note
+
+HTTPS(circle, cg, "3a. sends source")
+note on link
+  Auth: Credentials
+end note
+
+HTTPS(circle, ecr, "3b. sends image")
+note on link
+  Auth: Credentials
+end note
+
+cg -> core : **4a. builds and deploys application**
+
+HTTPS(cg, ecr, "4b. fetches image")
+note on link
+  Auth: Credentials
+end note
+
+@enduml

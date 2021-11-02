@@ -1,0 +1,68 @@
+@startuml web
+!include https://raw.githubusercontent.com/plantuml-stdlib/C4-PlantUML/master/C4_Container.puml
+'https://github.com/plantuml-stdlib/C4-PlantUML
+
+title Web Application
+
+AddRelTag("TLS", $textColor="grey", $lineColor="green", $lineStyle=BoldLine())
+
+Person(npu, "Nonprivileged User", "A Pages Customer")
+Person(pu, "Privileged User", "A Pages Operator")
+
+Boundary(awsgov2, "AWS GovCloud") {
+  Boundary(cloudgov2, "cloud.gov platform") {
+    System(uaa, "Authentication Provider", "UAA")
+  }
+}
+
+Boundary(awsgov, "AWS GovCloud") {
+  Boundary(cloudgov, "cloud.gov platform") {
+    System(elb, "Load Balancer / Router", "cloud.gov")
+    System(prom, "Monitoring Service", "Prometheus")
+    Container(web, "Pages Web", "Node JS/static")
+    SystemDb(db, "Database", "AWS RDS Postgres")
+    SystemDb(redis, "Key/Value Store", "AWS Elasticache Redis")
+  }
+}
+
+Boundary(gsa1, "GSA Authorized SaaS") {
+  System_Ext(gh, "Authorization Provider", "Github")
+}
+
+Boundary(gsa2, "GSA Authorized SaaS") {
+  System_Ext(dap, "Analytics", "DAP")
+  System_Ext(newrelic, "Monitoring", "New Relic")
+}
+
+Rel(npu, uaa, "authenticates with", "HTTPS 443 (T)", $tags="TLS")
+Rel(npu, gh, "authorizes with", "HTTPS 443 (T)", $tags="TLS")
+Rel(pu, uaa, "authenticates with", "HTTPS 443 (T)", $tags="TLS")
+
+Rel(npu, elb, "1. requests content", "HTTPS 443 (T)", $tags="TLS")
+Rel(pu, elb, "1. requests content", "HTTPS 443 (T)", $tags="TLS")
+Rel(elb, web, "2. proxies request", "HTTP * (T)")
+
+Rel(web, db, "3. reads/writes site metadata & configuration", "HTTP * (T)")
+note on link
+  Auth: Credentials/Network
+end note
+
+Rel(web, redis, "reads/writes notifications/messages", "HTTP * (T)")
+note on link
+  Auth: Credentials
+end note
+
+Rel(prom, web, "monitors health", "TCP (T)", $tags="TLS")
+note on link
+  Auth: Token
+end note
+
+Rel(npu, dap, "reports usage", "HTTPS 443 (T)", $tags="TLS")
+
+Rel(web, newrelic, "reports metrics", "HTTPS 443 (T)", $tags="TLS")
+note on link
+  Auth: Token
+end note
+
+SHOW_LEGEND()
+@enduml

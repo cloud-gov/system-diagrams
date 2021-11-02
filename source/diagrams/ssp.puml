@@ -1,0 +1,83 @@
+' C4-PlantUML-SSP
+' https://github.com/davemcorwin/c4-plantuml-ssp/
+' Inspired by and borrowed heavily from https://github.com/adrianvlupu/C4-PlantUML
+
+!include https://raw.githubusercontent.com/adrianvlupu/C4-PlantUML/latest/C4_Component.puml
+
+!global $TLS_COLOR = "#green"
+!global $ATO_COLOR = "FireBrick"
+!global $UNENCRYPTED_CONNECTION_COLOR = "#666666"
+!global $INHERITED_BG_COLOR = $COMPONENT_BG_COLOR
+!global $SHARED_BG_COLOR = $CONTAINER_BG_COLOR
+
+skinparam arrow {
+  FontColor #black
+}
+
+skinparam rectangle<<ato_boundary>> {
+  BorderColor $ATO_COLOR
+  BorderStyle dashed
+  BorderThickness 2
+  FontColor $ATO_COLOR
+}
+
+!unquoted procedure HTTPS($from, $to, $label)
+$from --[$TLS_COLOR,thickness=2]>> $to : **$label**\n//<size:$TECHN_FONT_SIZE>[https 443 (T)]</size>//
+!endprocedure
+
+'Use 1 dash, -, instead of 2, to components closer
+!unquoted procedure HTTPS_Tight($from, $to, $label)
+$from -[$TLS_COLOR,thickness=2]>> $to : **$label**\n//<size:$TECHN_FONT_SIZE>[https 443 (T)]</size>//
+!endprocedure
+
+!unquoted procedure HTTP($from, $to, $label)
+$from -->> $to : **$label**\n//<size:$TECHN_FONT_SIZE>[http 80 (T)]</size>//
+!endprocedure
+
+!unquoted procedure HTTP_Variable($from, $to, $label)
+$from -->> $to : **$label**\n//<size:$TECHN_FONT_SIZE>[http * (T)]</size>//
+!endprocedure
+
+!unquoted procedure HTTPS_Variable($from, $to, $label)
+$from --[$TLS_COLOR,thickness=2]>> $to : **$label**\n//<size:$TECHN_FONT_SIZE>[https * (T)]</size>//
+!endprocedure
+
+!unquoted procedure TCP($from, $to, $label)
+$from -->> $to : **$label**\n//<size:$TECHN_FONT_SIZE>[tcp 80 (T)]</size>//
+!endprocedure
+
+!unquoted procedure TCPS($from, $to, $label, $forward=%true())
+!if ($forward == %true())
+$from --[$TLS_COLOR,thickness=2]>> $to : **$label**\n//<size:$TECHN_FONT_SIZE>[tcp 443 (T)]</size>//
+!else 
+$from <<--[$TLS_COLOR,thickness=2] $to : **$label**\n//<size:$TECHN_FONT_SIZE>[tcp 443 (T)]</size>//
+!endif
+!endprocedure
+
+!unquoted procedure TCP_Variable($from, $to, $label)
+$from -->> $to : **$label**\n//<size:$TECHN_FONT_SIZE>[tcp * (T)]</size>//
+!endprocedure
+
+!unquoted procedure TCPS_Variable($from, $to, $label)
+$from --[$TLS_COLOR,thickness=2]>> $to : **$label**\n//<size:$TECHN_FONT_SIZE>[tcp * (T)]</size>//
+!endprocedure
+
+!unquoted function ATO_Boundary($alias, $label)
+!return 'rectangle "=='+$label+'" <<ato_boundary>> as '+$alias
+!endfunction
+
+!unquoted procedure System_Inherited($alias, $label, $techn)
+Component($alias, $label, $techn)
+!endprocedure
+
+!unquoted procedure Db_Inherited($alias, $label, $techn)
+ComponentDb($alias, $label, $techn)
+!endprocedure
+
+!unquoted procedure System_Shared($alias, $label, $techn)
+Container($alias, $label, $techn)
+!endprocedure
+
+!unquoted procedure Db_Shared($alias, $label, $techn)
+ContainerDb($alias, $label, $techn)
+!endprocedure

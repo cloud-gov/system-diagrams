@@ -1,0 +1,56 @@
+@startuml
+!include ssp.puml
+
+hide stereotypes
+skinparam note {
+  BorderColor Green
+}
+
+Person(npu, "Privileged / Nonprivileged User", "A Federalist Admin / Customer")
+
+
+Boundary(awsgov, "AWS GovCloud") {
+  Boundary(cloudgov, "cloud.gov Platform") {
+note "Auth: OAuth 2.0 \n via cloud.gov MFA" as githubfederalistauth
+    System_Inherited(elb, "Load Balancer / Router", "cloud.gov")
+    System_Inherited(prom, "Prometheus", "Monitoring Service")
+    System(core, "Pages WebApp", "//[Node JS]//")
+    Db_Shared(db, "Postgres", "AWS RDS")
+    Db_Shared(redis, "Redis", "cloud.gov Redis")
+  }
+}
+
+Boundary(gsa, "GSA Authorized SaaS") {
+  System_Ext(dap, "DAP", "Analytics collection")
+  System_Ext(newrelic, "New Relic", "Monitoring SaaS")
+}
+
+HTTPS(npu, elb, "1. requests content")
+HTTP_Variable(elb, core, "2. proxies request")
+
+TCPS_Variable(core, db, "3. reads/writes site metadata & configuration")
+note on link
+  Auth: Credentials/Network
+end note
+
+TCPS_Variable(core, redis, "reads/writes notifications")
+note on link
+  Auth: Credentials
+end note
+
+TCPS(prom, core, "monitors health")
+note on link
+  Auth: Token
+end note
+
+HTTPS(npu, dap, "reports usage")
+
+HTTPS(core, newrelic, "Uptime monitor")
+note on link
+  No Auth Needed
+end note
+
+' Authentication annotations
+npu .. githubfederalistauth
+githubfederalistauth .. core
+@enduml
