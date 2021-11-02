@@ -1,0 +1,89 @@
+@startuml builds
+!include https://raw.githubusercontent.com/plantuml-stdlib/C4-PlantUML/master/C4_Container.puml
+'https://github.com/plantuml-stdlib/C4-PlantUML
+
+title Customer Site Builds
+
+AddRelTag("TLS", $textColor="grey", $lineColor="green", $lineStyle=BoldLine())
+
+Person(npu, "Nonprivileged User", "A cloud.gov Pages Customer")
+'note "Auth: Token" as webhook
+
+Boundary(gsa, "Agency-authorized VCS") {
+  System_Ext(gh, "Customer Source Control", "e.g., Github")
+}
+
+Boundary(awsgov, "AWS GovCloud") {
+  Boundary(cloudgov, "cloud.gov") {
+    Boundary(cloudgovplat, "cloud.gov platform") {
+      System(elb, "Load Balancer / Router", "cloud.gov")
+      System(cc, "Control Plane", "cloud.gov")
+      Container(core, "Federalist Web", "Node JS")
+      Container(builder, "Federalist Builder", "Node JS")
+      Container(build, "Federalist Build Container", "Docker Image")
+      SystemDb(db, "Database", "AWS RDS Postgres")
+      SystemDb(redis, "Key/Value Store", "AWS Elasticache Redis")
+      SystemDb(s3, "Object Storage", "AWS S3")
+    }
+  }
+}
+
+Rel(npu, gh, "1. commits code modification", "HTTPS 443 (T)", $tags="TLS")
+note on link
+  Auth: MFA
+end note
+
+Rel(gh, elb, "2. sends webhook notification", "HTTPS 443 (T)", $tags="TLS")
+note on link
+  Auth: Token
+end note
+
+Rel(elb, core, "3. proxies request", "HTTP * (T)")
+
+Rel(core, redis, "4. sends build message", "HTTPS 443 (T)", $tags="TLS")
+note on link
+  Auth: Credentials
+end note
+
+Rel(builder, redis, "5. requests build message", "HTTPS 443 (T)", $tags="TLS")
+note on link
+  Auth: Credentials
+end note
+
+Rel(builder, cc, "6. requests build", "HTTPS 443 (T)", $tags="TLS")
+note on link
+  Auth: Credentials
+end note
+
+Rel(cc, build, "7. starts build task")
+
+Rel(build, gh, "8. checks out code", "HTTPS 443 (T)", $tags="TLS")
+note on link
+  Auth: Credentials
+end note
+
+Rel(build, s3, "9a. sends build results", "HTTPS 443 (T)", $tags="TLS")
+note on link
+  Auth: Credentials
+end note
+
+Rel(build, db, "9b. sends build logs", "HTTPS 443 (T)", $tags="TLS")
+Rel(build, core, "9c. updates status", "HTTPS 443 (T)", $tags="TLS")
+
+' Other flows
+Rel(core, db, "reads/writes build metadata & configuration", "TCP * (T)", $tags="TLS")
+note on link
+  Auth: Credentials/Network
+end note
+
+Rel(core, redis, "reads/writes build notifications", "TCP * (T)", $tags="TLS")
+note on link
+  Auth: Credentials
+end note
+
+' Authentication annotations
+'npu .. githubfederalistauth
+'githubfederalistauth .. core
+'gh . webhook
+'webhook ... core
+@enduml
