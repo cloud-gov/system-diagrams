@@ -33,7 +33,7 @@ note on link
 end note
 
 Rel(cdn, proxy, "2. proxies requests", "HTTPS 443 (T)", $tags="TLS")
-Rel(proxy, s3, "3a. proxies requests", "HTTPS 443 (T)", $tags="TLS")
+Rel(proxy, s3, "3a. proxies requests", "HTTP 80 (T)")
 
 SHOW_LEGEND()
 @enduml
