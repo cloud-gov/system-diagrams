@@ -11,17 +11,20 @@ Person(pu, "Privileged User", "A Pages Operator")
 
 Boundary(awsgov2, "AWS GovCloud") {
   Boundary(cloudgov2, "cloud.gov platform") {
+    System(elb, "Load Balancer / Router", "cloud.gov")
     System(uaa, "Authentication Provider", "UAA")
   }
 }
 
 Boundary(awsgov, "AWS GovCloud") {
-  Boundary(cloudgov, "cloud.gov platform") {
-    System(elb, "Load Balancer / Router", "cloud.gov")
-    System(prom, "Monitoring Service", "Prometheus")
+  Boundary(cloudgov, "cloud.gov") {
+    System(smtp, "SMTP Server", "postfix")
     Container(web, "Pages Web", "Node JS/static")
-    SystemDb(db, "Database", "AWS RDS Postgres")
-    SystemDb(redis, "Key/Value Store", "AWS Elasticache Redis")
+    Container(mailer, "Pages Mailer", "Node JS")
+    Boundary(cloudgovp, "cloud.gov platform") {
+      SystemDb(db, "Database", "AWS RDS Postgres")
+      SystemDb(redis, "Key/Value Store", "AWS Elasticache Redis")
+    }
   }
 }
 
@@ -34,27 +37,24 @@ Boundary(gsa2, "GSA Authorized SaaS") {
   System_Ext(newrelic, "Monitoring", "New Relic")
 }
 
+Rel(web, mailer, "requests email send", "HTTPS 443 (T)", $tags="TLS")
+Rel(mailer, smtp, "sends email", "SMTP (T)", $tags="TLS")
 Rel(npu, uaa, "authenticates with", "HTTPS 443 (T)", $tags="TLS")
 Rel(npu, gh, "authorizes with", "HTTPS 443 (T)", $tags="TLS")
 Rel(pu, uaa, "authenticates with", "HTTPS 443 (T)", $tags="TLS")
 
 Rel(npu, elb, "1. requests content", "HTTPS 443 (T)", $tags="TLS")
 Rel(pu, elb, "1. requests content", "HTTPS 443 (T)", $tags="TLS")
-Rel(elb, web, "2. proxies request", "HTTP * (T)")
+Rel(elb, web, "2. proxies request", "HTTPS 443 (T)", $tags="TLS")
 
-Rel(web, db, "3. reads/writes site metadata & configuration", "HTTP * (T)")
+Rel(web, db, "3. reads/writes site metadata & configuration", "TCP * (T)", $tags="TLS")
 note on link
   Auth: Credentials/Network
 end note
 
-Rel(web, redis, "reads/writes notifications/messages", "HTTP * (T)")
+Rel(web, redis, "reads/writes notifications/messages", "TCP * (T)", $tags="TLS")
 note on link
   Auth: Credentials
-end note
-
-Rel(prom, web, "monitors health", "TCP (T)", $tags="TLS")
-note on link
-  Auth: Token
 end note
 
 Rel(npu, dap, "reports usage", "HTTPS 443 (T)", $tags="TLS")

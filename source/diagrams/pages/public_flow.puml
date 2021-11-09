@@ -13,10 +13,12 @@ Boundary(awsgov, "AWS GovCloud") {
       SystemDb(s3, "Object Store", "AWS S3")
     }
 }
+
 Boundary(awscom, "AWS Commercial") {
   Boundary(cg, "cloud.gov") {
     Boundary(cgp_ew, "cloud.gov platform") {
       System(cdn, "CDN", "AWS Cloudfront")
+      System(elb, "Load Balancer / Router", "cloud.gov")
     }
     Container(proxy, "Pages Proxy", "nginx")    
   }
@@ -26,14 +28,15 @@ Rel(public, cdn, "1a. views static content", "HTTPS 443 (T)", $tags="TLS")
 note on link
   Custom Domains
 end note
+Rel(cdn, elb, "2. proxies requests", "HTTPS 443 (T)", $tags="TLS")
 
-Rel(public, proxy, "1b. views static content", "HTTPS 443 (T)", $tags="TLS")
+Rel(public, elb, "1b. views static content", "HTTPS 443 (T)", $tags="TLS")
 note on link
   Preview Domains
 end note
+Rel(elb, proxy, "3. proxies requests", "HTTPS 443 (T)", $tags="TLS")
 
-Rel(cdn, proxy, "2. proxies requests", "HTTPS 443 (T)", $tags="TLS")
-Rel(proxy, s3, "3a. proxies requests", "HTTPS 443 (T)", $tags="TLS")
+Rel(proxy, s3, "4. proxies requests", "HTTP 80 (T)")
 
 SHOW_LEGEND()
 @enduml
