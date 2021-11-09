@@ -17,11 +17,11 @@ Boundary(aws, "AWS GovCloud") {
   }
 }
 
-Boundary(gsa1, "GSA-Authorized SaaS") {
+Boundary(gsa1, "GSA Authorized SaaS") {
   System_Ext(gh, "Source Control", "Github")
 }
 
-Boundary(gsa2, "GSA-Authorized SaaS") {
+Boundary(gsa2, "GSA Authorized SaaS") {
   System_Ext(dh, "Container Registry", "DockerHub")
   System_Ext(cc, "Static Analysis", "Code Climate")
 }

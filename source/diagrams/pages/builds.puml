@@ -9,24 +9,32 @@ AddRelTag("TLS", $textColor="grey", $lineColor="green", $lineStyle=BoldLine())
 Person(npu, "Nonprivileged User", "A cloud.gov Pages Customer")
 'note "Auth: Token" as webhook
 
-Boundary(gsa, "Agency-authorized VCS") {
+Boundary(gsa, "Agency Authorized VCS") {
   System_Ext(gh, "Customer Source Control", "e.g., Github")
+}
+
+Boundary(gsa2, "GSA Authorized SaaS") {
+  System_Ext(nr, "Monitoring", "New Relic")
 }
 
 Boundary(awsgov, "AWS GovCloud") {
   Boundary(cloudgov, "cloud.gov") {
+    Container(core, "Federalist Web", "Node JS")
+    Container(builder, "Federalist Builder", "Node JS")
+    Container(build, "Federalist Build Container", "Docker Image")    
     Boundary(cloudgovplat, "cloud.gov platform") {
       System(elb, "Load Balancer / Router", "cloud.gov")
       System(cc, "Control Plane", "cloud.gov")
-      Container(core, "Federalist Web", "Node JS")
-      Container(builder, "Federalist Builder", "Node JS")
-      Container(build, "Federalist Build Container", "Docker Image")
       SystemDb(db, "Database", "AWS RDS Postgres")
       SystemDb(redis, "Key/Value Store", "AWS Elasticache Redis")
       SystemDb(s3, "Object Storage", "AWS S3")
     }
   }
 }
+Rel(core, nr, "reports telemetry", "HTTPS 443 (T)", $tags="TLS")
+note on link
+  Auth: Token
+end note
 
 Rel(npu, gh, "1. commits code modification", "HTTPS 443 (T)", $tags="TLS")
 note on link
@@ -38,7 +46,7 @@ note on link
   Auth: Token
 end note
 
-Rel(elb, core, "3. proxies request", "HTTP * (T)")
+Rel(elb, core, "3. proxies request", "HTTPS 443 (T)", $tags="TLS")
 
 Rel(core, redis, "4. sends build message", "HTTPS 443 (T)", $tags="TLS")
 note on link
@@ -86,4 +94,5 @@ end note
 'githubfederalistauth .. core
 'gh . webhook
 'webhook ... core
+SHOW_LEGEND()
 @enduml
