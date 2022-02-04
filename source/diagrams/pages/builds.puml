@@ -22,8 +22,10 @@ Boundary(awsgov, "AWS GovCloud") {
     Container(core, "Federalist Web", "Node JS")
     Container(builder, "Federalist Builder", "Node JS")
     Container(build, "Federalist Build Container", "Docker Image")    
-    Boundary(cloudgovplat, "cloud.gov platform") {
+    Boundary(cloudgovnetwork, "cloud.gov platform - network") {
       System(elb, "Load Balancer / Router", "cloud.gov")
+    }
+    Boundary(cloudgovplat, "cloud.gov platform") {
       System(cc, "Control Plane", "cloud.gov")
       SystemDb(db, "Database", "AWS RDS Postgres")
       SystemDb(redis, "Key/Value Store", "AWS Elasticache Redis")
@@ -63,7 +65,7 @@ note on link
   Auth: Credentials
 end note
 
-Rel(cc, build, "7. starts build task")
+Rel(cc, build, "7. starts build task", $tags="TLS")
 
 Rel(build, gh, "8. checks out code", "HTTPS 443 (T)", $tags="TLS")
 note on link

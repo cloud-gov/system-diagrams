@@ -36,7 +36,7 @@ note on link
 end note
 Rel(elb, proxy, "3. proxies requests", "HTTPS 443 (T)", $tags="TLS")
 
-Rel(proxy, s3, "4. proxies requests", "HTTP 80 (T)")
+Rel(proxy, s3, "4. proxies requests", "HTTPS 443 (T)", $tags="TLS")
 
 SHOW_LEGEND()
 @enduml
