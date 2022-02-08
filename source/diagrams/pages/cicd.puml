@@ -64,7 +64,7 @@ note on link
   Auth: Credentials
 end note
 
-Rel(cp, app, "5b. deploys application", "internal")
+Rel(cp, app, "5b. deploys application", "internal", $tags="TLS")
 
 SHOW_LEGEND()
 @enduml
