@@ -113,7 +113,7 @@ gulp.task( 'render:list', gulp.series('render', ( done ) => {
 
   fs.readdir( 'source/diagrams', ( error, files ) => {
 
-    let diagrams = files.map( ( file ) => {
+    let diagrams = files.filter(file => file.includes('.mmd')).map( ( file ) => {
       let content = fs.readFileSync('source/diagrams/' + file, 'utf-8');
       let metadata = content.split('\n').filter(function(line) {
 	return line.match(/^%%/) !== null;

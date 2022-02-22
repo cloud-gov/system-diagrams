@@ -3,7 +3,7 @@ html {
 }
 
 body {
-  background-color: $theme-color-base-lightest;
+  background-color: color('base-lightest');
   margin: 5%;
   padding: 2.5%;
 }

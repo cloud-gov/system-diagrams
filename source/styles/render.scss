@@ -15,9 +15,7 @@
 
     overflow-wrap: break-word;
     word-break: break-word;
-
   }
-
 }
 
 .scuttle-stage {
@@ -30,7 +28,6 @@
 }
 
 .cluster {
-
   rect {
     fill: $theme-color-base-lightest !important;
     stroke: $theme-color-primary !important;
@@ -39,10 +36,10 @@
 
   text {
     @include h4;
-    font-family: "Source Sans Pro", "Helvetica Neue", "Helvetica", "Roboto", "Arial", sans-serif;
+    font-family: 'Source Sans Pro', 'Helvetica Neue', 'Helvetica', 'Roboto',
+      'Arial', sans-serif;
     font-size: 17px;
   }
-
 }
 
 .node rect,
@@ -55,99 +52,82 @@
 }
 
 .node .label {
-  font-family: "Source Sans Pro", "Helvetica Neue", "Helvetica", "Roboto", "Arial", sans-serif;
+  font-family: 'Source Sans Pro', 'Helvetica Neue', 'Helvetica', 'Roboto',
+    'Arial', sans-serif;
   color: rgb(255, 255, 255);
 }
 
 .edgePath .path {
-  stroke: $theme-color-primary-darker !important;
+  stroke: color('primary-darker') !important;
   stroke-width: 2px !important;
 }
 
 .edgePath marker path {
-  fill: $theme-color-primary-darker !important;
+  fill: color('primary-darker') !important;
 }
 
 .edgeLabel {
   background-color: #ffffff;
   border: #ffffff 5px solid;
-  color: $theme-color-base-ink;
+  color: color('ink');
   &:empty {
     border: none;
   }
-  font-family: "Source Sans Pro", "Helvetica Neue", "Helvetica", "Roboto", "Arial", sans-serif;
+  font-family: 'Source Sans Pro', 'Helvetica Neue', 'Helvetica', 'Roboto',
+    'Arial', sans-serif;
   font-family: 17px;
 }
 
 rect {
-
-  fill: $theme-color-primary;
-  stroke: $theme-color-primary-darker;
+  fill: color('primary');
+  stroke: color('primary-darker');
   stroke-width: 2px;
 
   &.note {
-
-    fill: $theme-color-primary-lighter;
-    stroke: $theme-color-primary-light;
+    fill: color('primary-lighter');
+    stroke: color('primary-light');
     stroke-width: 2px;
-
   }
 
   &.labelBox {
-    fill: $theme-color-primary-dark;
-    stroke: $theme-color-primary;
+    fill: color('primary-dark');
+    stroke: color('primary');
   }
 
   &.actor {
-
-    fill: $theme-color-primary;
-    stroke: $theme-color-primary-darker;
-
+    fill: color('primary');
+    stroke: color('primary-darker');
   }
-
 }
 
 #crosshead,
-#arrowhead{
-
+#arrowhead {
   path {
-
-    fill: $theme-color-primary-darker;
-
+    fill: color('primary-darker');
   }
-
 }
 
 line {
-
-  &[class^=messageLine],
+  &[class^='messageLine'],
   &.actor-line {
-
-    fill: $theme-color-primary-darker;
-    stroke: $theme-color-primary-darker;
+    fill: color('primary-darker');
+    stroke: color('primary-darker');
     stroke-width: 2px;
-
   }
 
   &.loopLine {
-
-    fill: $theme-color-primary-darker;
-    stroke: $theme-color-primary;
+    fill: color('primary-darker');
+    stroke: color('primary');
     stroke-width: 2px;
-
   }
-
 }
 
 text {
-
   &.messageText {
-
     font-family: $theme-font-role-code;
-    text-shadow: 2px 2px 0 #ffffff, 1px 1px 0 $theme-color-base-light;
-    fill: $theme-color-primary-darker;
+    text-shadow: 2px 2px 0 #ffffff, 1px 1px 0 color('base-light');
+    fill: color('primary-darker');
     font-size: 1rem;
-
   }
 
   &.actor {
@@ -155,13 +135,13 @@ text {
   }
 
   &.noteText {
-    fill: $theme-color-base;
+    fill: color('base');
     font-size: 1.25rem;
   }
 
   &.labelText {
     font-family: $theme-font-role-alt;
-    fill: $theme-color-base-lighter;
+    fill: color('base-lighter');
     font-size: 1.25rem;
     text-transform: uppercase;
   }
@@ -171,5 +151,4 @@ text {
     font-size: 1rem;
     font-style: oblique;
   }
-
 }
