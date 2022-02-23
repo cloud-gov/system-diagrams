@@ -8,14 +8,14 @@ skinparam note {
   BorderColor Green
 }
 
-Person(npu, "Privileged / Nonprivileged User", "A Federalist Admin / Customer")
+Person(npu, "Privileged / Nonprivileged User", "A Pages Admin / Customer")
 
-note "Auth: OAuth 2.0\nvia Github MFA" as githubfederalistauth
+note "Auth: OAuth 2.0\nvia Github MFA" as githubpagesauth
 
 Boundary(awsgov, "AWS GovCloud") {
   Boundary(cloudgov, "cloud.gov Platform") {
     System_Inherited(elb, "Load Balancer / Router", "cloud.gov")
-    System(core, "Federalist Web", "//[Node JS]//")
+    System(core, "Pages Web", "//[Node JS]//")
     Db_Shared(db, "Postgres", "AWS RDS")
     Db_Shared(redis, "Redis", "cloud.gov Redis")
   }
@@ -47,6 +47,6 @@ end note
 HTTPS(npu, dap, "reports usage")
 
 ' Authentication annotations
-npu .. githubfederalistauth
-githubfederalistauth .. core
+npu .. githubpagesauth
+githubpagesauth .. core
 @enduml

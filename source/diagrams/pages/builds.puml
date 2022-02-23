@@ -19,9 +19,9 @@ Boundary(gsa2, "GSA Authorized SaaS") {
 
 Boundary(awsgov, "AWS GovCloud") {
   Boundary(cloudgov, "cloud.gov") {
-    Container(core, "Federalist Web", "Node JS")
-    Container(builder, "Federalist Builder", "Node JS")
-    Container(build, "Federalist Build Container", "Docker Image")    
+    Container(core, "Pages Web", "Node JS")
+    Container(builder, "Pages Builder", "Node JS")
+    Container(build, "Pages Build Container", "Docker Image")    
     Boundary(cloudgovnetwork, "cloud.gov platform - network") {
       System(elb, "Load Balancer / Router", "cloud.gov")
     }
@@ -92,8 +92,8 @@ note on link
 end note
 
 ' Authentication annotations
-'npu .. githubfederalistauth
-'githubfederalistauth .. core
+'npu .. githubpagesauth
+'githubpagesauth .. core
 'gh . webhook
 'webhook ... core
 SHOW_LEGEND()

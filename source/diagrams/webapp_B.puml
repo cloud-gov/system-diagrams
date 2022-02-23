@@ -6,12 +6,12 @@ skinparam note {
   BorderColor Green
 }
 
-Person(npu, "Privileged / Nonprivileged User", "A Federalist Admin / Customer")
+Person(npu, "Privileged / Nonprivileged User", "A Pages Admin / Customer")
 
 
 Boundary(awsgov, "AWS GovCloud") {
   Boundary(cloudgov, "cloud.gov Platform") {
-note "Auth: OAuth 2.0 \n via cloud.gov MFA" as githubfederalistauth
+note "Auth: OAuth 2.0 \n via cloud.gov MFA" as githubpagesauth
     System_Inherited(elb, "Load Balancer / Router", "cloud.gov")
     System_Inherited(prom, "Prometheus", "Monitoring Service")
     System(core, "Pages WebApp", "//[Node JS]//")
@@ -51,6 +51,6 @@ note on link
 end note
 
 ' Authentication annotations
-npu .. githubfederalistauth
-githubfederalistauth .. core
+npu .. githubpagesauth
+githubpagesauth .. core
 @enduml
