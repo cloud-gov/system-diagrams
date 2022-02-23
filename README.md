@@ -24,7 +24,7 @@ For the cloud.gov team, deploy to GovCloud with:
 npm run deploy
 ```
 
-# Federalist/Pages diagrams
+# Pages diagrams
 
 These are drawn using PlantUML, and are not yet (TODO) rendered at
 https://diagrams.fr.cloud.gov. The source code is in ./source/diagrams.

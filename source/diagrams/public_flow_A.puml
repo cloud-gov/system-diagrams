@@ -8,7 +8,7 @@ Person_Ext(public, "Public Viewer", "A member of the public")
 Boundary(awsgov, "AWS GovCloud") {
   Boundary(cloudgov_gc, "cloud.gov Platform") {
     System_Inherited(elb, "Load Balancer / Router", "cloud.gov")
-        System(proxy, "Federalist Proxy", "//[Nginx]//")
+        System(proxy, "Pages Proxy", "//[Nginx]//")
         Db_Shared(s3, "Object Store", "AWS S3")
   }
 }

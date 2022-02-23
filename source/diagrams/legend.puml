@@ -7,7 +7,7 @@ legend right
 | <$EXTERNAL_PERSON_BG_COLOR> external person                               |
 | <$INHERITED_BG_COLOR> <color:$LEGEND_TITLE_COLOR>inherited system</color> |
 | <$SHARED_BG_COLOR> shared system                                          |
-| <$SYSTEM_BG_COLOR> Federalist system                                      |
+| <$SYSTEM_BG_COLOR> Pages system                                      |
 | <$EXTERNAL_SYSTEM_BG_COLOR> external system                               |
 | <color:$TLS_COLOR>encrypted connection</color>                            |
 | <color:$UNENCRYPTED_CONNECTION_COLOR>unencrypted connection</color>       |

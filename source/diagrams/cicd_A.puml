@@ -3,7 +3,7 @@
 
 hide stereotype
 
-Person(pu, "Privileged User", "A Federalist Developer")
+Person(pu, "Privileged User", "A Pages Developer")
 
 Boundary(gsa, "GSA-\nAuthorized\nSaaS") {
   System_Ext(gh, "Github", "Source Control")
@@ -14,7 +14,7 @@ Boundary(gsa, "GSA-\nAuthorized\nSaaS") {
 Boundary(awsgov, "AWS GovCloud") {
   Boundary(cloudgov, "cloud.gov Platform") {
     System_Inherited(cg, "Control Plane", "cloud.gov")
-    System(core, "Federalist Application", "//[Node JS/Nginx]//")
+    System(core, "Pages Application", "//[Node JS/Nginx]//")
   }
   Db_Shared(ecr, "Container Registry", "AWS ECR")
 }
