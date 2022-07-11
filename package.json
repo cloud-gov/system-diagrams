@@ -37,7 +37,7 @@
     "node-notifier": "^8.0.1",
     "node-sass": "^4.14.1",
     "plugin-error": "^1.0.1",
-    "save-svg-as-png": "git://github.com/exupero/saveSvgAsPng#f56023b",
+    "save-svg-as-png": "^1.4.17",
     "serve-static": "^1.11.1",
     "through2": "^2.0.1",
     "uswds": "^2.8.1",
