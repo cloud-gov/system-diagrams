@@ -51,6 +51,7 @@ resources:
   source:
     uri: ((cg-diagrams-git-url))
     branch: ((cg-diagrams-branch))
+    commit_verification_keys: ((cloud-gov-pgp-keys))
 
 - name: cloud-gov-production
   type: cf
