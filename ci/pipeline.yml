@@ -11,7 +11,7 @@ jobs:
         type: docker-image
         source:
           repository: node
-          tag: "12"
+          tag: "18"
       inputs:
       - name: cg-diagrams-source
       outputs:
