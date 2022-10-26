@@ -11,15 +11,17 @@ import Mustache from 'mustache';
 import through from 'through2';
 import browserify from 'browserify';
 import source from 'vinyl-source-stream';
-import sass from 'gulp-sass';
+import nodeSass from 'node-sass';
 import del from 'del';
 import figlet from 'figlet';
 import pkg from './package';
 import browserSync from 'browser-sync';
+import gulpSass from 'gulp-sass';
 
 // Create browserSync instance
 //
 const browserSyncInstance = browserSync.create();
+const sass = gulpSass(nodeSass);
 
 /**
  * @name default
