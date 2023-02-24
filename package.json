@@ -23,7 +23,7 @@
     "@babel/register": "^7.11.5",
     "ansi-colors": "^4.1.1",
     "babelify": "^10.0.0",
-    "browser-sync": "^2.15.0",
+    "browser-sync": "^2.27.12",
     "browserify": "^13.0.1",
     "connect": "^3.4.1",
     "del": "^2.2.1",
