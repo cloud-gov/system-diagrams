@@ -23,6 +23,15 @@ jobs:
       COPY_OUTPUT: 1
   - put: cloud-gov-production
     params:
+      platform: linux
+      image_resource:
+        type: registry-image
+        source:
+          aws_access_key_id: ((ecr_aws_key))
+          aws_secret_access_key: ((ecr_aws_secret))
+          repository: harden-concourse-task
+          aws_region: us-gov-west-1
+          tag: ((harden-concourse-task-tag))
       manifest: cg-diagrams-compiled/manifest.yml
       path: cg-diagrams-compiled
       current_app_name: diagrams
