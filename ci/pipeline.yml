@@ -8,10 +8,13 @@ jobs:
     config:
       platform: linux
       image_resource:
-        type: docker-image
+        type: registry-image
         source:
-          repository: node
-          tag: "18"
+          aws_access_key_id: ((ecr_aws_key))
+          aws_secret_access_key: ((ecr_aws_secret))
+          repository: harden-concourse-task
+          aws_region: us-gov-west-1
+          tag: ((harden-concourse-task-tag))
       inputs:
       - name: cg-diagrams-source
       outputs:
