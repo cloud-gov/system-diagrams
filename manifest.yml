@@ -5,7 +5,6 @@ applications:
   disk_quota: 1024M
   routes:
   - route: diagrams.fr.cloud.gov
-  buildpacks: 
+  buildpacks:
   - staticfile_buildpack
-  stack: cflinuxfs3
   path: public
