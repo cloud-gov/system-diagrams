@@ -12,11 +12,16 @@ graph TD
     ELB("AWS Elastic Load Balancer (ELB)")
   end
   subgraph GSA Responsibility
-    SAML{"Single Sign-on (SSO)<br>providing MFA"}
+    SAML{"Single Sign-on (SSO)<br>providing MFA - SecureAuth"}
   end
+  subgraph GSA VPN and Internet Egress
+    ZScalerDNS("ZScaler DNS")
+    GSAProxy("GSA Internet Proxy")
+  end
+
   Ops((Cloud Operations))
 
-  Ops--"Concourse CLI (fly)"-->ELB
+  Ops--"Concourse CLI (fly): HTTPS/TCP 443"-->ZScalerVPN-->ZScalerDNS-->GSAProxy-->ELB
   ELB-->web
   UAA-.Authentication.->SAML
   web-.Authorization.->UAA
