@@ -1,0 +1,58 @@
+flowchart TB
+  %% Styles
+  classDef userStyle stroke:#167CC5,stroke-width:4px
+  classDef processStyle stroke:#bc0061,stroke-width:4px
+  classDef decisionStyle stroke:#ea8d02,stroke-width:4px
+  classDef dbStyle stroke:#010daf,stroke-width:4px
+
+  %% Component Defintions
+
+  %% Users
+  user["👤  <br/> Public User <br/> *A member of the public"]:::userStyle
+
+  %% Processors
+  aws_cdn[CDN <br/> AWS CloudFront]:::processStyle
+  aws_load_balancer[Load Balancer / Router <br/> AWS Application Load Balancer]:::processStyle
+  pages_proxy[Pages Proxy Application <br/> *NGINX]:::processStyle
+
+  %% Decisions
+  is_cached{Is request cached}:::decisionStyle
+
+  %% Databases
+  s3[(Object Store <br/> *AWS S3)]:::dbStyle
+
+  %% Flow
+  user -- Views Static Content <br/> HTTPS/443 --> is_cached
+  is_cached -- Yes --> aws_cdn
+  is_cached -- No --> aws_load_balancer
+  aws_cdn -- Proxy Request <br /> HTTPS/443 --> aws_load_balancer
+  aws_load_balancer -- Proxy Request <br /> HTTPS/443 --> pages_proxy
+
+  pages_proxy -- Proxy Site Requests <br /> HTTPS/443  --> s3
+
+  %% Layout
+  subgraph AWS Commercial Cloud
+    subgraph cloud.gov platform
+      aws_cdn
+    end
+  end
+
+  subgraph AWS Gov Cloud
+    subgraph cloud.gov platform
+      aws_load_balancer
+      subgraph Pages cloud.gov production space
+        pages_proxy
+        subgraph cloud.gov space services
+          s3
+        end
+      end
+    end
+  end
+
+  subgraph Legend
+    direction BT
+    legend_user["👤 User"]:::userStyle
+    legend_process[Process]:::processStyle
+    legend_db[(Database)]:::dbStyle
+    legend_decision{Decision}:::decisionStyle
+  end
