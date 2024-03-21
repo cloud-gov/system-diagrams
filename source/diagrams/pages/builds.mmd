@@ -1,0 +1,70 @@
+flowchart TB
+  %% Styles
+  classDef userStyle stroke:#167CC5,stroke-width:4px
+  classDef processStyle stroke:#bc0061,stroke-width:4px
+  classDef processSuccessStyle stroke:#bc0061,stroke-width:4px
+  classDef decisionStyle stroke:#ea8d02,stroke-width:4px
+  classDef saasStyle stroke:#f2ff07,stroke-width:4px
+  classDef dbStyle stroke:#010daf,stroke-width:4px
+
+  %% Component Defintions
+
+  %% Users
+  user["👤  <br/> UnPrivileged User <br/> *A Pages customer"]:::userStyle
+
+  %% Processors
+  aws_load_balancer[Load Balancer / Router]:::processStyle
+  pages_app[Pages Web Application <br/> *Node.js]:::processStyle
+  pages_builder[Pages Builder <br/> Starts a site build <br/> *Node.js]:::processStyle
+  pages_build_container[Pages Build Container <br/> Builds and publishes site <br/> *Docker]:::processStyle
+  control_plane[Control Plane <br/> *CloudFoundry Task]:::processStyle
+
+  %% SaaS
+  gh_source[Customer Site Source Control <br/> *GitHub]:::saasStyle
+
+  %% Store
+  database[(Database <br/> *AWS RDS Postgres)]:::dbStyle
+  key_value_store[(Key/Value Store <br/> *AWS Elasticache Redis)]:::dbStyle
+  s3[(Object Store <br/> *AWS S3)]:::dbStyle
+
+  %% Flow
+  user -- Commits update to source code <br/> HTTPS/443 --> gh_source
+  gh_source -- Webhook request to start build <br/> HTTPS/443 --> aws_load_balancer
+  aws_load_balancer -- Proxy request <br/> HTTPS/443 --> pages_app
+  pages_app -- Creates site build record <br/> HTTPS/443 --> database
+  pages_app -- Starts site build event <br/> HTTPS/443 --> key_value_store
+  pages_builder -- Listens for new site build event <br/> HTTPS/443 --> key_value_store
+  pages_builder -- Sends site build task request <br/> HTTPS/443 --> control_plane
+  control_plane -- Starts site build task <br/> HTTPS/443 --> pages_build_container
+  pages_build_container -- Publishes site files <br/> HTTPS/443 --> s3
+  pages_build_container -- Sends build status <br/> HTTPS/443 --> pages_app
+  pages_build_container -- Sends build logs <br/> HTTPS/443 --> database
+
+  %% Layout
+  subgraph GSA Authorized SaaS Connection
+    gh_source
+  end
+
+  subgraph AWS Gov Cloud
+    aws_load_balancer
+    subgraph cloud.gov platform
+      subgraph Pages cloud.gov production space
+        pages_app
+        pages_build_container
+        pages_builder
+        control_plane
+        subgraph cloud.gov space services
+          database
+          key_value_store
+          s3
+        end
+      end
+    end
+  end
+
+  subgraph Legend
+    direction BT
+    legend_user["👤 User"]:::userStyle
+    legend_process[Process]:::processStyle
+    legend_db[(Database)]:::dbStyle
+  end

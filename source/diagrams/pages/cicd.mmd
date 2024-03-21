@@ -1,0 +1,77 @@
+flowchart TB
+  %% Styles
+  classDef userStyle stroke:#167CC5,stroke-width:4px
+  classDef processStyle stroke:#bc0061,stroke-width:4px
+  classDef processSuccessStyle stroke:#bc0061,stroke-width:4px
+  classDef decisionStyle stroke:#ea8d02,stroke-width:4px
+  classDef saasStyle stroke:#f2ff07,stroke-width:4px
+  classDef dbStyle stroke:#010daf,stroke-width:4px
+
+  %% Component Defintions
+
+  %% Users
+  user["👤  <br/> Privileged User <br/> *A Pages Operator"]:::userStyle
+
+  %% Processors
+  ci_test[Test Source Code <br/> *CI Task]:::processStyle
+  ci_deploy[Deploy Pages App <br/> *CI Tasks]:::processStyle
+  ci_notify_success["✅ <br/> Notify Success Status <br/> *CI Tasks"]:::processSuccessStyle
+  ci_notify_failure["❌ <br/> Notify Failure Status <br/> *CI Tasks"]:::processStyle
+  pages_app[Pages Web Application <br/> *Node.js]:::processStyle
+
+  %% Decisions
+  did_tests_pass{Are tests passing?}:::decisionStyle
+  did_deploy{Did Pages app deploy?}:::decisionStyle
+
+  %% SaaS
+  gh_source[Source Control <br/> *GitHub]:::saasStyle
+
+  %% Store
+  container_registry[(Container Registry Store <br/> *AWS ECR)]:::processStyle
+
+  %% Flow
+  user -- Merges Pull Request <br/> HTTPS/443 --> gh_source
+  ci_test <-- Polls Source Code For Update <br /> SSH/22 --> gh_source
+  ci_test <-- Pulls Test Container Image --> container_registry
+  ci_test -- Runs Tests --> did_tests_pass
+  did_tests_pass -- No --> ci_notify_failure
+  did_tests_pass -- Yes --> ci_deploy
+  ci_deploy <-- Pulls Deploy Container Image --> container_registry
+  ci_deploy --> did_deploy
+  did_deploy -- No --> ci_notify_failure
+  did_deploy -- Yes --> pages_app
+  did_deploy -- Yes --> ci_notify_success
+  ci_notify_success --> gh_source
+  ci_notify_failure --> gh_source
+
+  %% Layout
+  subgraph GSA Authorized SaaS Connection
+    gh_source
+  end
+
+  subgraph AWS Gov Cloud
+    subgraph cloud.gov tooling
+      subgraph CI: Concourse CI
+        ci_test
+        did_tests_pass
+        ci_deploy
+        ci_notify_success
+        ci_notify_failure
+        did_deploy
+      end
+      container_registry
+    end
+    subgraph cloud.gov platform
+      subgraph Pages cloud.gov production space
+        pages_app
+      end
+    end
+  end
+
+  subgraph Legend
+    direction BT
+    legend_user["👤 User"]:::userStyle
+    legend_process[Process]:::processStyle
+    legend_db[(Database)]:::dbStyle
+    legend_decision{Decision}:::decisionStyle
+  end

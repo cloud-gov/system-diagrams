@@ -1,0 +1,84 @@
+flowchart TB
+  %% Styles
+  classDef userStyle stroke:#167CC5,stroke-width:4px
+  classDef processStyle stroke:#bc0061,stroke-width:4px
+  classDef saasStyle stroke:#f2ff07,stroke-width:4px
+  classDef dbStyle stroke:#010daf,stroke-width:4px
+
+  %% Component Defintions
+
+  %% Users
+  user_privleged["👤  <br/> Privileged User <br/> *Pages Operator"]:::userStyle
+
+  user_unprivleged["👤  <br/> Unprivileged User <br/> *Pages Cusomter"]:::userStyle
+
+  %% SaaS
+  gh_auth_provider[Authorization Provider <br/> *GitHub]:::saasStyle
+  dap[Analytics <br/> *DAP]:::saasStyle
+
+  %% Processors
+  aws_load_balancer[Load Balancer / Router]:::processStyle
+  auth_provider[Authentication Provider <br/> *UAA]:::processStyle
+  pages_app[Pages Web Application <br/> *Node.js]:::processStyle
+  pages_mailer[Pages Mailer<br/>*Node.js]:::processStyle
+  smtp_server[SMTP Server <br/> *Postfix]:::processStyle
+
+  %% Databases
+  database[(Database <br/> *AWS RDS Postgres)]:::dbStyle
+  key_value_store[(Key/Value Store <br/> *AWS Elasticache Redis)]:::dbStyle
+
+  %% Flow
+  user_privleged -- Request Content <br/> HTTPS/443 --> aws_load_balancer
+  user_privleged -- Authenticates <br/> HTTPS/443 --> auth_provider
+
+  user_unprivleged -- Request Content <br/> HTTPS/443 --> aws_load_balancer
+  user_unprivleged -- Authenticates <br/> HTTPS/443 --> auth_provider
+  user_unprivleged -- Authorizes Oauth <br/> HTTPS/443 --> gh_auth_provider
+  gh_auth_provider -- Stores Oauth Token <br/> HTTPs/443 --> database
+  user_unprivleged -- Reports Usage <br/> HTTPS/4443 --> dap
+
+  aws_load_balancer -- Proxy Request <br /> HTTPS/443 --> pages_app
+
+  pages_app -- Read/Write Site Management <br /> Authenticated HTTPS/443  --> database
+  pages_app -- Read/Write Site Notifications <br /> Authenticated HTTPS/443  --> key_value_store
+  pages_app -- Request Send Email <br /> Authenticated HTTPS/443  --> pages_mailer
+
+  pages_mailer -- Sends Email <br /> SMTP --> smtp_server
+
+  %% Layout
+  subgraph GSA Authorized SaaS Connection
+    gh_auth_provider
+  end
+
+  subgraph GSA Authorized SaaS Monitoring
+    dap
+  end
+
+  subgraph AWS Gov Cloud
+    subgraph cloud.gov platform
+      aws_load_balancer
+      auth_provider
+    end
+  end
+
+  subgraph AWS Gov Cloud
+    subgraph cloud.gov platform
+      subgraph Pages cloud.gov production space
+        pages_app
+        pages_mailer
+        smtp_server
+        subgraph cloud.gov space services
+          database
+          key_value_store
+        end
+      end
+    end
+  end
+
+  subgraph Legend
+    direction BT
+    legend_user["👤 User"]:::userStyle
+    legend_process[Process]:::processStyle
+    legend_db[(Database)]:::dbStyle
+    legend_saas[Software as a service <br/> *SaaS]:::saasStyle
+  end
