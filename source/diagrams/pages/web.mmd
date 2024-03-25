@@ -1,4 +1,5 @@
 flowchart TB
+  direction BT
   %% Styles
   classDef userStyle stroke:#167CC5,stroke-width:4px
   classDef processStyle stroke:#bc0061,stroke-width:4px
@@ -9,7 +10,6 @@ flowchart TB
 
   %% Users
   user_privleged["👤  <br/> Privileged User <br/> *Pages Operator"]:::userStyle
-
   user_unprivleged["👤  <br/> Unprivileged User <br/> *Pages Cusomter"]:::userStyle
 
   %% SaaS
@@ -20,6 +20,7 @@ flowchart TB
   aws_load_balancer[Load Balancer / Router]:::processStyle
   auth_provider[Authentication Provider <br/> *UAA]:::processStyle
   pages_app[Pages Web Application <br/> *Node.js]:::processStyle
+  pages_admin[Pages Admin Application <br/> *Static]:::processStyle
   pages_mailer[Pages Mailer<br/>*Node.js]:::processStyle
   smtp_server[SMTP Server <br/> *Postfix]:::processStyle
 
@@ -28,21 +29,22 @@ flowchart TB
   key_value_store[(Key/Value Store <br/> *AWS Elasticache Redis)]:::dbStyle
 
   %% Flow
-  user_privleged -- Request Content <br/> HTTPS/443 --> aws_load_balancer
-  user_privleged -- Authenticates <br/> HTTPS/443 --> auth_provider
+  user_privleged -- Request Content <br/> HTTPS Port 443 --> aws_load_balancer
+  auth_provider -- Privleged Users <br/> HTTP Port 443--> pages_admin
+  auth_provider -- All Users <br/> HTTPS Port 443--> pages_app
 
-  user_unprivleged -- Request Content <br/> HTTPS/443 --> aws_load_balancer
-  user_unprivleged -- Authenticates <br/> HTTPS/443 --> auth_provider
-  user_unprivleged -- Authorizes Oauth <br/> HTTPS/443 --> gh_auth_provider
-  gh_auth_provider -- Stores Oauth Token <br/> HTTPs/443 --> database
-  user_unprivleged -- Reports Usage <br/> HTTPS/4443 --> dap
+  user_unprivleged -- Request Content <br/> HTTPS Port 443 --> aws_load_balancer
+  aws_load_balancer -- Request <br /> HTTPS Port 443 --> auth_provider
+  user_unprivleged -- Authorizes Oauth <br/> HTTPS Port 443 --> gh_auth_provider
+  gh_auth_provider -- Stores Oauth Token <br/> HTTPS Port 443 --> pages_app
+  user_unprivleged -- Reports Usage <br/> HTTPS Port 443 --> dap
 
-  aws_load_balancer -- Proxy Request <br /> HTTPS/443 --> pages_app
 
-  pages_app -- Read/Write Site Management <br /> Authenticated HTTPS/443  --> database
-  pages_app -- Read/Write Site Notifications <br /> Authenticated HTTPS/443  --> key_value_store
-  pages_app -- Request Send Email <br /> Authenticated HTTPS/443  --> pages_mailer
+  pages_app -- Read/Write Site Management <br /> Authenticated TLS Port 5432  --> database
+  pages_app -- Read/Write Site Notifications <br /> Authenticated TLS Port 6379  --> key_value_store
+  pages_app -- Request Send Email <br /> Authenticated HTTPS Port 443  --> pages_mailer
 
+  pages_admin -- Read/Write Site Management <br /> Authenticated HTTPS Port 443 --> pages_app
   pages_mailer -- Sends Email <br /> SMTP --> smtp_server
 
   %% Layout
@@ -55,16 +57,12 @@ flowchart TB
   end
 
   subgraph AWS Gov Cloud
+    aws_load_balancer
     subgraph cloud.gov platform
-      aws_load_balancer
       auth_provider
-    end
-  end
-
-  subgraph AWS Gov Cloud
-    subgraph cloud.gov platform
       subgraph Pages cloud.gov production space
         pages_app
+        pages_admin
         pages_mailer
         smtp_server
         subgraph cloud.gov space services
