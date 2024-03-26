@@ -28,17 +28,17 @@ flowchart TB
   s3[(Object Store <br/> *AWS S3)]:::dbStyle
 
   %% Flow
-  user -- Commits update to source code <br/> HTTPS/443 --> gh_source
-  gh_source -- Webhook request to start build <br/> HTTPS/443 --> aws_load_balancer
-  aws_load_balancer -- Proxy request <br/> HTTPS/443 --> pages_app
-  pages_app -- Creates site build record <br/> HTTPS/443 --> database
-  pages_app -- Starts site build event <br/> HTTPS/443 --> key_value_store
-  pages_builder -- Listens for new site build event <br/> HTTPS/443 --> key_value_store
-  pages_builder -- Sends site build task request <br/> HTTPS/443 --> control_plane
-  control_plane -- Starts site build task <br/> HTTPS/443 --> pages_build_container
-  pages_build_container -- Publishes site files <br/> HTTPS/443 --> s3
-  pages_build_container -- Sends build status <br/> HTTPS/443 --> pages_app
-  pages_build_container -- Sends build logs <br/> HTTPS/443 --> database
+  user -- Commits update to source code <br/> HTTPS Port 443 --> gh_source
+  gh_source -- Webhook request to start build <br/> HTTPS Port 443 --> aws_load_balancer
+  aws_load_balancer -- Proxy request <br/> HTTPS Port 443 --> pages_app
+  pages_app -- Creates site build record <br/> TLS Port 5432 --> database
+  pages_app -- Starts site build event <br/> TLS Port 6379 --> key_value_store
+  pages_builder -- Listens for new site build event <br/> TLS Port 6379 --> key_value_store
+  pages_builder -- Sends site build task request <br/> HTTPS Port 443 --> control_plane
+  control_plane -- Starts site build task <br/> HTTPS Port 443 --> pages_build_container
+  pages_build_container -- Publishes site files <br/> HTTPS Port 443 --> s3
+  pages_build_container -- Sends build status <br/> HTTPS Port 443 --> pages_app
+  pages_build_container -- Sends build logs <br/> TLS Port 5432 --> database
 
   %% Layout
   subgraph GSA Authorized SaaS Connection
