@@ -5,20 +5,15 @@ graph LR
     github["GitHub"]
     slack["Slack"]
     statuspage["StatusPage"]
-    codeclimate["Code Climate"]
     googlegroups["Google Groups"]
-    circle["Circle CI"]
-  end
-  subgraph AWS US West Oregon
-    kinesis["AWS Kinesis"]
   end
   subgraph AWS US East/West
     cloudfront["AWS CloudFront"]
-    route53["AWS Route 53"]
+    route53["AWS Route53"]
   end
   subgraph AWS GovCloud
-    apps-elb["Customer ELB"]
-    ops-elb["UAA & Concourse ELB"]
+    apps-alb["Customer ALB"]
+    ops-alb["UAA & Concourse ALB"]
     s3["AWS S3"]
     cloudwatch["AWS CloudWatch"]
     cloudwatch-logs["AWS CloudWatch Logs"]
@@ -39,7 +34,7 @@ graph LR
         subgraph Availability Zones us-gov-west-1a/b
           subgraph Public Subnet
             prod-nat["NAT Gateway"]
-            prod-elb-endpoint("ELB Endpoint")
+            prod-alb-endpoint("ALB Endpoint")
           end
           subgraph Private Subnet - Core Tier A
             prod-cf{"Cloud Foundry<br>Core Components"}
@@ -62,7 +57,7 @@ graph LR
         subgraph Tooling Availability Zones us-gov-west-1a/b
           subgraph Public Subnet
             tooling-nat["NAT Gateway"]
-            tooling-elb-endpoint("ELB Endpoint")
+            tooling-alb-endpoint("ALB Endpoint")
           end
           subgraph Private Subnet - Operations Tier
             tooling-ops["BOSH Director/UAA"]
@@ -83,22 +78,20 @@ graph LR
 
   customer-.DNS.->route53
   customer--Web-->cloudfront
-  customer--Web or CLI-->apps-elb
+  customer--Web or CLI-->apps-alb
   customer-->statuspage
 
-  cloudfront-->apps-elb
+  cloudfront-->apps-alb
   prod-services-.create service instance.->cloudfront
   prod-services-.create service instance.->s3
 
-  ops-->ops-elb
+  ops-->ops-alb
   ops-->github
   ops-->slack
   ops---aws-console
   ops-->statuspage
   ops-->googlegroups
 
-  codeclimate-- Static analysis --- github
-  circle-- Continuous Testing --- github
   tooling-nat--Alerting-->googlegroups
 
   vpc-router-tooling-->vpc-peering
@@ -109,17 +102,16 @@ graph LR
   iam-.->iam-perms
   iam-perms-.->iam-roles
 
-  apps-elb---prod-elb-endpoint
-  prod-elb-endpoint---prod-nat
+  apps-alb---prod-alb-endpoint
+  prod-alb-endpoint---prod-nat
   prod-nat---prod-cf
   prod-nat---prod-diego
   prod-nat---prod-rds
   prod-nat---prod-services
 
-  ops-elb---tooling-elb-endpoint
-  tooling-elb-endpoint---tooling-nat
+  ops-alb---tooling-alb-endpoint
+  tooling-alb-endpoint---tooling-nat
   tooling-nat---tooling-ops
   tooling-nat---tooling-rds
   tooling-nat---tooling-concourse
 
-  cloudwatch-logs-- Encrypted log data only --- kinesis
