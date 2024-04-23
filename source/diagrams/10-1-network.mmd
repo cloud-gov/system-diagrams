@@ -76,23 +76,23 @@ graph LR
   customer(("Customer"))
   ops(("Cloud Operations"))
 
-  customer-.DNS.->route53
-  customer--Web-->cloudfront
-  customer--Web or CLI-->apps-alb
-  customer-->statuspage
+  customer-.DNS UDP 53.->route53
+  customer--Web HTTP 80 or HTTPS 443-->cloudfront
+  customer--Web or CLI HTTPS 443-->apps-alb
+  customer--Web HTTPS 443-->statuspage
 
-  cloudfront-->apps-alb
-  prod-services-.create service instance.->cloudfront
-  prod-services-.create service instance.->s3
+  cloudfront--Web HTTPS 443-->apps-alb
+  prod-services-.create service instance TLS 443.->cloudfront
+  prod-services-.create service instance TLS 443.->s3
 
-  ops-->ops-alb
-  ops-->github
-  ops-->slack
-  ops---aws-console
-  ops-->statuspage
-  ops-->googlegroups
+  ops--Web HTTPS 443-->ops-alb
+  ops--Web HTTPS 443-->github
+  ops--Web HTTPS 443-->slack
+  ops--Web HTTPS 443-->aws-console
+  ops--Web HTTPS 443-->statuspage
+  ops--Web HTTPS 443-->googlegroups
 
-  tooling-nat--Alerting-->googlegroups
+  tooling-nat--Alerting TLS 587-->googlegroups
 
   vpc-router-tooling-->vpc-peering
   vpc-router-prod-->vpc-peering
