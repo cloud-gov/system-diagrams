@@ -78,7 +78,7 @@ graph LR
 
   customer-.DNS UDP 53.->route53
   customer--Web HTTP 80 or HTTPS 443-->cloudfront
-  customer--Web or CLI HTTPS 443-->apps-alb
+  customer--Web HTTP 80 or HTTPS 443-->apps-alb
   customer--Web HTTPS 443-->statuspage
 
   cloudfront--Web HTTPS 443-->apps-alb
