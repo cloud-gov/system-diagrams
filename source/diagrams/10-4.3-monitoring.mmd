@@ -13,7 +13,7 @@ graph LR
     subgraph Cloud Foundry Components
       boshdirector{"BOSH Director"}
       firehose{"Metrics"}
-      concourse{"Concourse<br>CI/CD Pipelines"}
+      concourse{"Concourse<br>(CI/CD Pipelines)"}
     end
     subgraph Centralized Monitoring Components
       nessus["Nessus Manager"]
@@ -28,6 +28,7 @@ graph LR
       snort{"Snort IDS<br>(Intrusion Detection)"}
       boshagent["BOSH Agent"]
       node-exporter["Prometheus Node Exporter"]
+      aide["AIDE<br>(Filesystem Integrity)"]
     end
 
   end
@@ -67,7 +68,7 @@ graph LR
 
   clamav-updates--Security Definition Updates-->clamav
   clamav--Sends Alerts-->prometheus
-  
+  aide--Sends Alerts-->logs
   logs--Sends Logs-->prometheus
 
   snort-updates--Security Definition Updates-->snort
