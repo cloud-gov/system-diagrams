@@ -1,17 +1,18 @@
 %% title: 10-4.3 Monitoring & Alerting Data Flow
 %% description: Section 10 - System Environment - Figure 10-4.3 Monitoring & Alerting Data Flow
 graph LR
-  subgraph AWS US West Oregon
-    kinesis["AWS Kinesis"]
-  end
   subgraph AWS GovCloud
-    elb["AWS Elastic Load Balancer<br>(ELB)"]
+    alb["AWS Application Load Balancer<br>(ALB)"]
     UAA["User Authentication/Authorization (UAA)"]
     aws-logs["AWS CloudWatch Logs"]
     aws-cloudwatch["AWS CloudWatch"]
     aws-console["AWS Console"]
     aws-api["AWS API"]
     aws-iam("AWS IAM")
+    subgraph Cloud Foundry Components
+      boshdirector{"BOSH Director"}
+      firehose{"Metrics"}
+    end
     subgraph Centralized Monitoring Components
       nessus["Nessus Manager"]
       prometheus["Prometheus Alerting/Storage"]
@@ -20,18 +21,13 @@ graph LR
     subgraph All EC2 Instances
       nessusagent{"Nessus<br>Scanning<br>Agent"}
       clamav{"ClamAV<br>(Virus/Malware)"}
-      tripwire{"Tripwire<br>(Filesystem Integrity)"}
       logs("System Logs")
       aws-logs-agent{"AWS<br>CloudWatch<br>Logs Agent"}
-      nragent{"New Relic Agent"}
       snort{"Snort IDS<br>(Intrusion Detection)"}
       boshagent["BOSH Agent"]
       node-exporter["Prometheus Node Exporter"]
     end
-    subgraph Cloud Foundry Components
-      boshdirector{"BOSH Director"}
-      firehose{"Metrics"}
-    end
+
   end
   subgraph GSA Responsibility
     SAML{"Single Sign-on (SSO)<br>providing MFA"}
@@ -57,16 +53,13 @@ graph LR
 
   node-exporter--System Performance Metrics-->prometheus
   firehose-->prometheus
-  aws-api--AWS Metrics-->boshdirector
   boshagent-->boshdirector
   boshdirector--Health Monitor state changes-->prometheus
   boshdirector--AWS Metrics-->prometheus
 
-  tripwire--Sends Report-->logs
   logs--Sends Logs-->aws-logs-agent
   logs--Sends Performance Metrics-->aws-cloudwatch
-  aws-logs-agent--Sends Encrypted Log Data Only-->kinesis
-  kinesis--Sends Encrypted Log Data Only-->aws-logs
+  aws-logs-agent--Sends Encrypted Log Data Only-->aws-logs
   aws-logs--View Logs-->aws-console
 
   clamav-updates--Security Definition Updates-->clamav
@@ -78,8 +71,8 @@ graph LR
   snort--Sends Alerts-->prometheus
 
   prometheus--Visualizes events-->grafana
-  elb-->grafana
-  prometheus--Processes alerts-->googlegroups
+  alb-->grafana
+  prometheus--Processes alerts-->Googlegroups
   Googlegroups-->email
 
   UAA-.Authentication.->SAML
@@ -88,6 +81,6 @@ graph LR
   aws-console-."Authentication/Authorization".->aws-iam
   statuspage-."Authentication/Authorization".->sp-account
   email-->Ops
-  Ops--HTTPS-->elb
+  Ops--HTTPS-->alb
   Ops--HTTPS-->aws-console
-  Ops--HTTPS-->googlegroups
+  Ops--HTTPS-->Googlegroups
