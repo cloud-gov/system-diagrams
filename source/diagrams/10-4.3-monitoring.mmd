@@ -7,11 +7,13 @@ graph LR
     aws-logs["AWS CloudWatch Logs"]
     aws-cloudwatch["AWS CloudWatch"]
     aws-console["AWS Console"]
-    aws-api["AWS API"]
     aws-iam("AWS IAM")
+    aws-guardduty["AWS GuardDuty"]
+    aws-cloudwatch-alarms["AWS Cloudwatch Alarms"]
     subgraph Cloud Foundry Components
       boshdirector{"BOSH Director"}
       firehose{"Metrics"}
+      concourse{"Concourse<br>CI/CD Pipelines"}
     end
     subgraph Centralized Monitoring Components
       nessus["Nessus Manager"]
@@ -40,9 +42,11 @@ graph LR
     Googlegroups["Google Groups"]
     snort-updates>"Snort Network<br>Vulnerability Profiles"]
     tenable-updates>"Tenable Updates"]
+    slack["GSA Slack"]
   end
   email("Email")
   Ops((Cloud Operations))
+  zscaler("Zscaler VPN")
 
   nessusagent--Sends Scanning Results-->nessus
   nessus--Monitors-->nessusagent
@@ -55,7 +59,6 @@ graph LR
   firehose-->prometheus
   boshagent-->boshdirector
   boshdirector--Health Monitor state changes-->prometheus
-  boshdirector--AWS Metrics-->prometheus
 
   logs--Sends Logs-->aws-logs-agent
   logs--Sends Performance Metrics-->aws-cloudwatch
@@ -81,6 +84,11 @@ graph LR
   aws-console-."Authentication/Authorization".->aws-iam
   statuspage-."Authentication/Authorization".->sp-account
   email-->Ops
-  Ops--HTTPS-->alb
+  Ops--HTTPS-->zscaler--HTTPS-->alb
   Ops--HTTPS-->aws-console
   Ops--HTTPS-->Googlegroups
+
+  aws-guardduty--Findings-->Googlegroups
+  aws-cloudwatch-alarms--Alarm Notifications-->Googlegroups
+  aws-cloudwatch-alarms--AWS Login Failure Alerts-->slack
+  concourse--Pipeline Status-->slack
