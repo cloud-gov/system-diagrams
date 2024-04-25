@@ -4,15 +4,16 @@ graph TD
 
   subgraph AWS GovCloud
     UAA["User Authentication/Authorization (UAA)"]
-    web["Concourse Web Server"]
+    concourse["Concourse Server"]
     worker[Concourse Worker]
     Jumpbox{Ephemeral Jumpbox}
     BOSH[BOSH Director]
     EC2[AWS EC2 Instances]
-    ELB("AWS Elastic Load Balancer (ELB)")
+    ALB("AWS Application Load Balancer (ALB)")
+    login["Login Web Server<br>(provides CLI authentication token)"]
   end
   subgraph GSA Responsibility
-    SAML{"Single Sign-on (SSO)<br>providing MFA - SecureAuth"}
+    SAML{"Single Sign-on (SSO)<br>providing MFA<br>SecureAuth"}
   end
   subgraph GSA VPN and Internet Egress
     ZScalerDNS("ZScaler DNS")
@@ -21,12 +22,16 @@ graph TD
 
   Ops((Cloud Operations))
 
-  Ops--"Concourse CLI (fly): HTTPS/TCP 443"-->ZScalerVPN-->ZScalerDNS-->GSAProxy-->ELB
-  ELB-->web
+  Ops--"Concourse Web UI HTTPS 443"-->ZScalerVPN-->ZScalerDNS-->GSAProxy-->ALB
+  Ops=="Concourse CLI (fly) HTTPS 443"==>ZScalerVPN==>ZScalerDNS==>GSAProxy==>ALB
+  ALB--Run Jumpbox pipeline-->concourse
+  ALB==Access via fly CLI<br>with token==>concourse
+  concourse==CLI routed to Jumpbox SSH 2222==>Jumpbox
+  ALB--Request token for CLI-->login-->UAA
   UAA-.Authentication.->SAML
-  web-.Authorization.->UAA
-  web--Run jumpbox job-->worker
-  worker-.Container.->Jumpbox
+  concourse-.Authorization.->UAA
+  concourse-.Run jumpbox job.->worker
+  worker-.Launch Container.->Jumpbox
   Jumpbox--BOSH SSH request-->BOSH
   BOSH-.BOSH Director sets up temporary SSH key.->EC2
-  Jumpbox--SSH using temporary key-->EC2
+  Jumpbox==Access EC2 via SSH 22 using temporary key==>EC2
