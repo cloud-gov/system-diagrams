@@ -1,41 +1,39 @@
 %% title: 10-4.3 Monitoring & Alerting Data Flow
 %% description: Section 10 - System Environment - Figure 10-4.3 Monitoring & Alerting Data Flow
 graph LR
-  subgraph AWS US West Oregon
-    kinesis["AWS Kinesis"]
-  end
   subgraph AWS GovCloud
-    elb["AWS Elastic Load Balancer<br>(ELB)"]
+    alb["AWS Application Load Balancer<br>(ALB)"]
     UAA["User Authentication/Authorization (UAA)"]
     aws-logs["AWS CloudWatch Logs"]
     aws-cloudwatch["AWS CloudWatch"]
     aws-console["AWS Console"]
-    aws-api["AWS API"]
     aws-iam("AWS IAM")
-    subgraph Centralized Monitoring Components
-      nessus["Nessus Manager"]
-      prometheus["Prometheus Alerting/Storage"]
-      grafana["Grafana<br>(Time Series Visualizations)"]
-    end
-    subgraph All EC2 Instances
-      nessusagent{"Nessus<br>Scanning<br>Agent"}
-      clamav{"ClamAV<br>(Virus/Malware)"}
-      tripwire{"Tripwire<br>(Filesystem Integrity)"}
-      logs("System Logs")
-      aws-logs-agent{"AWS<br>CloudWatch<br>Logs Agent"}
-      nragent{"New Relic Agent"}
-      snort{"Snort IDS<br>(Intrusion Detection)"}
-      boshagent["BOSH Agent"]
-      node-exporter["Prometheus Node Exporter"]
-    end
+    aws-guardduty["AWS GuardDuty"]
+    aws-cloudwatch-alarms["AWS Cloudwatch Alarms"]
     subgraph Cloud Foundry Components
       boshdirector{"BOSH Director"}
       firehose{"Metrics"}
+      concourse{"Concourse<br>(CI/CD Pipelines)"}
+    end
+    subgraph Centralized Monitoring Components
+      nessus{"Nessus Manager"}
+      prometheus{"Prometheus<br>Alerting/Storage"}
+      grafana{"Grafana<br>(Time Series Visualizations)"}
+      doomsday{"Doomsday<br>(Certificate Monitoring)"}
+    end
+    subgraph All EC2 Instances
+      nessusagent["Nessus<br>Scanning<br>Agent"]
+      clamav["ClamAV<br>(Virus/Malware)"]
+      logs["System Logs"]
+      aws-logs-agent["AWS<br>CloudWatch<br>Logs Agent"]
+      snort["Snort IDS<br>(Intrusion Detection)"]
+      boshagent["BOSH Agent"]
+      node-exporter["Prometheus Node Exporter"]
+      aide["AIDE<br>(Filesystem Integrity)"]
     end
   end
   subgraph GSA Responsibility
     SAML{"Single Sign-on (SSO)<br>providing MFA"}
-    gsanessus>"GSA Nessus Manager (Tenable Security Center)"]
   end
   subgraph External
     statuspage["StatusPage"]
@@ -44,50 +42,55 @@ graph LR
     Googlegroups["Google Groups"]
     snort-updates>"Snort Network<br>Vulnerability Profiles"]
     tenable-updates>"Tenable Updates"]
+    slack["GSA Slack"]
   end
   email("Email")
   Ops((Cloud Operations))
+  zscaler("Zscaler VPN")
 
   nessusagent--Sends Scanning Results-->nessus
   nessus--Monitors-->nessusagent
-  gsanessus--Sends Settings Updates-->nessus
-  nessus--Sends Scanning Results-->gsanessus
-  nessus--Reports-->email
+  nessus--Reports SMTP 587-->email
   tenable-updates--Security Definition Updates-->nessus
 
   node-exporter--System Performance Metrics-->prometheus
   firehose-->prometheus
-  aws-api--AWS Metrics-->boshdirector
   boshagent-->boshdirector
   boshdirector--Health Monitor state changes-->prometheus
-  boshdirector--AWS Metrics-->prometheus
 
-  tripwire--Sends Report-->logs
   logs--Sends Logs-->aws-logs-agent
   logs--Sends Performance Metrics-->aws-cloudwatch
-  aws-logs-agent--Sends Encrypted Log Data Only-->kinesis
-  kinesis--Sends Encrypted Log Data Only-->aws-logs
-  aws-logs--View Logs-->aws-console
+  aws-logs-agent--Sends Log Data-->aws-logs
+  aws-console--View Logs-->aws-logs
 
   clamav-updates--Security Definition Updates-->clamav
   clamav--Sends Alerts-->prometheus
-  
+  aide--Sends Alerts-->prometheus
   logs--Sends Logs-->prometheus
 
   snort-updates--Security Definition Updates-->snort
   snort--Sends Alerts-->prometheus
 
   prometheus--Visualizes events-->grafana
-  elb-->grafana
-  prometheus--Processes alerts-->googlegroups
+  alb-->grafana
+  alb-->doomsday
+  prometheus--Processes alerts SMTP 587-->Googlegroups
   Googlegroups-->email
 
   UAA-.Authentication.->SAML
   grafana-.Authorization.->UAA
+  doomsday-.Authorization.->UAA
 
   aws-console-."Authentication/Authorization".->aws-iam
   statuspage-."Authentication/Authorization".->sp-account
   email-->Ops
-  Ops--HTTPS-->elb
-  Ops--HTTPS-->aws-console
-  Ops--HTTPS-->googlegroups
+  Ops--HTTPS 443-->zscaler
+  zscaler--HTTPS 443-->alb
+  Ops--HTTPS 443-->aws-console
+  Ops--HTTPS 443-->Googlegroups
+
+  aws-guardduty--Findings SMTP 587-->Googlegroups
+  aws-cloudwatch-alarms--Alarm Notifications SMTP 587-->Googlegroups
+  aws-cloudwatch-alarms--AWS Login Failure Alerts HTTPS 443-->slack
+  concourse--Pipeline Status HTTPS 443-->slack
+  doomsday--Expiration Warnings HTTPS 443-->slack
