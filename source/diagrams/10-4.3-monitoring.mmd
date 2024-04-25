@@ -19,6 +19,7 @@ graph LR
       nessus["Nessus Manager"]
       prometheus["Prometheus Alerting/Storage"]
       grafana["Grafana<br>(Time Series Visualizations)"]
+      doomsday["Doomsday<br>(Certificate Monitoring)"]
     end
     subgraph All EC2 Instances
       nessusagent{"Nessus<br>Scanning<br>Agent"}
@@ -30,11 +31,9 @@ graph LR
       node-exporter["Prometheus Node Exporter"]
       aide["AIDE<br>(Filesystem Integrity)"]
     end
-
   end
   subgraph GSA Responsibility
     SAML{"Single Sign-on (SSO)<br>providing MFA"}
-    gsanessus>"GSA Nessus Manager (Tenable Security Center)"]
   end
   subgraph External
     statuspage["StatusPage"]
@@ -51,9 +50,7 @@ graph LR
 
   nessusagent--Sends Scanning Results-->nessus
   nessus--Monitors-->nessusagent
-  gsanessus--Sends Settings Updates-->nessus
-  nessus--Sends Scanning Results-->gsanessus
-  nessus--Reports-->email
+  nessus--Reports SMTP 587-->email
   tenable-updates--Security Definition Updates-->nessus
 
   node-exporter--System Performance Metrics-->prometheus
@@ -63,8 +60,8 @@ graph LR
 
   logs--Sends Logs-->aws-logs-agent
   logs--Sends Performance Metrics-->aws-cloudwatch
-  aws-logs-agent--Sends Encrypted Log Data Only-->aws-logs
-  aws-logs--View Logs-->aws-console
+  aws-logs-agent--Sends Log Data-->aws-logs
+  aws-console--View Logs-->aws-logs
 
   clamav-updates--Security Definition Updates-->clamav
   clamav--Sends Alerts-->prometheus
@@ -76,20 +73,24 @@ graph LR
 
   prometheus--Visualizes events-->grafana
   alb-->grafana
-  prometheus--Processes alerts-->Googlegroups
+  alb-->doomsday
+  prometheus--Processes alerts SMTP 587-->Googlegroups
   Googlegroups-->email
 
   UAA-.Authentication.->SAML
   grafana-.Authorization.->UAA
+  doomsday-.Authorization.->UAA
 
   aws-console-."Authentication/Authorization".->aws-iam
   statuspage-."Authentication/Authorization".->sp-account
   email-->Ops
-  Ops--HTTPS-->zscaler--HTTPS-->alb
-  Ops--HTTPS-->aws-console
-  Ops--HTTPS-->Googlegroups
+  Ops--HTTPS 443-->zscaler
+  zscaler--HTTPS 443-->alb
+  Ops--HTTPS 443-->aws-console
+  Ops--HTTPS 443-->Googlegroups
 
-  aws-guardduty--Findings-->Googlegroups
-  aws-cloudwatch-alarms--Alarm Notifications-->Googlegroups
-  aws-cloudwatch-alarms--AWS Login Failure Alerts-->slack
-  concourse--Pipeline Status-->slack
+  aws-guardduty--Findings SMTP 587-->Googlegroups
+  aws-cloudwatch-alarms--Alarm Notifications SMTP 587-->Googlegroups
+  aws-cloudwatch-alarms--AWS Login Failure Alerts HTTPS 443-->slack
+  concourse--Pipeline Status HTTPS 443-->slack
+  doomsday--Expiration Warnings HTTPS 443-->slack
