@@ -16,17 +16,17 @@ graph LR
       concourse{"Concourse<br>(CI/CD Pipelines)"}
     end
     subgraph Centralized Monitoring Components
-      nessus["Nessus Manager"]
-      prometheus["Prometheus Alerting/Storage"]
-      grafana["Grafana<br>(Time Series Visualizations)"]
-      doomsday["Doomsday<br>(Certificate Monitoring)"]
+      nessus{"Nessus Manager"}
+      prometheus{"Prometheus<br>Alerting/Storage"}
+      grafana{"Grafana<br>(Time Series Visualizations)"}
+      doomsday{"Doomsday<br>(Certificate Monitoring)"}
     end
     subgraph All EC2 Instances
-      nessusagent{"Nessus<br>Scanning<br>Agent"}
-      clamav{"ClamAV<br>(Virus/Malware)"}
-      logs("System Logs")
-      aws-logs-agent{"AWS<br>CloudWatch<br>Logs Agent"}
-      snort{"Snort IDS<br>(Intrusion Detection)"}
+      nessusagent["Nessus<br>Scanning<br>Agent"]
+      clamav["ClamAV<br>(Virus/Malware)"]
+      logs["System Logs"]
+      aws-logs-agent["AWS<br>CloudWatch<br>Logs Agent"]
+      snort["Snort IDS<br>(Intrusion Detection)"]
       boshagent["BOSH Agent"]
       node-exporter["Prometheus Node Exporter"]
       aide["AIDE<br>(Filesystem Integrity)"]
@@ -65,7 +65,7 @@ graph LR
 
   clamav-updates--Security Definition Updates-->clamav
   clamav--Sends Alerts-->prometheus
-  aide--Sends Alerts-->logs
+  aide--Sends Alerts-->prometheus
   logs--Sends Logs-->prometheus
 
   snort-updates--Security Definition Updates-->snort
