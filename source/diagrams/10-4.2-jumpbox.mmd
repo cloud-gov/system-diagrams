@@ -10,7 +10,7 @@ graph TD
     BOSH[BOSH Director]
     EC2[AWS EC2 Instances]
     ALB("AWS Application Load Balancer (ALB)")
-    login["Login Web Server<br>(provides CLI authentication token)"]
+    login["Authentication Web UI<br>login.fr.cloud.gov<br>(provides CLI authentication token)"]
   end
   subgraph GSA Responsibility
     SAML{"Single Sign-on (SSO)<br>providing MFA<br>SecureAuth"}
