@@ -24,12 +24,12 @@ graph LR
       Kibana[Kibana<br>logs.fr.cloud.gov]
     end
     subgraph AWS Brokered Services VPC
-      AWSService["AWS Service<br>e.g. RDS<br>Redis"]
+      AWSService["AWS Services<br>e.g. RDS<br>Redis"]
     end
     subgraph SAML IDP
       SAML[cloud.gov fallback IDP<br>providing MFA]
     end
-    ELB("Elastic Load Balancer (ELB)")
+    ALB("Application Load Balancer (ALB)")
     CloudControllerDB(Cloud Controller<br>RDS DB)
     CloudWatch[AWS CloudWatch Logs]
     S3[S3]
@@ -67,17 +67,17 @@ graph LR
   Logstash-->S3
   ES-->Kibana
 
-  Customer--"Web request (HTTPS)"-->ELB
-  Customer--SSH using temporary key-->ELB
-  Customer--"Web request (HTTPS)"-->statuspage
-  Customer--"Web request (HTTPS)"-->cloudfront
+  Customer--"Web HTTP 80 or HTTPS 443"-->ALB
+  Customer--SSH port 2222 using temporary key-->ALB
+  Customer--"Web request HTTPS 443"-->statuspage
+  Customer--"Web HTTP 80 or HTTPS 443"-->cloudfront
 
-  cloudfront --"Web request (HTTPS)"--> ELB
+  cloudfront --"Web request HTTPS 443"--> ALB
 
-  ELB --SSH using temporary key--> SSHProxy
-  ELB --"Web request (HTTPS)"--> Router
-  ELB --API request--> CloudController
-  ELB -- "Triggered by web request (HTTPS) only" --> Kibana
+  ALB --SSH port 2222 using temporary key--> SSHProxy
+  ALB --"Web HTTP 80 or HTTPS 443"--> Router
+  ALB --API request HTTPS 443--> CloudController
+  ALB -- "Triggered by web request HTTPS 443 only" --> Kibana
 
   UAA-.Authentication.->CustomerSAML
   UAA-.Authentication.->SAML
