@@ -10,7 +10,7 @@ graph TD
     BOSH[BOSH Director]
     EC2[AWS EC2 Instances]
     ALB("AWS Application Load Balancer (ALB)")
-    login["Authentication Web UI<br>login.fr.cloud.gov<br>(provides CLI authentication token)"]
+    opsuaaweb["UAA Web UI<br>login.fr.cloud.gov<br>(presents CLI authentication token)"]
   end
   subgraph GSA Responsibility
     SAML{"Single Sign-on (SSO)<br>providing MFA<br>SecureAuth"}
@@ -27,7 +27,7 @@ graph TD
   ALB--Run Jumpbox pipeline-->concourse
   ALB==Access via fly CLI<br>with token==>concourse
   concourse==CLI routed to Jumpbox SSH 2222==>Jumpbox
-  ALB--Request token for CLI-->login-->UAA
+  ALB--Request token for CLI-->opsuaaweb-->UAA
   UAA-.Authentication.->SAML
   concourse-.Authorization.->UAA
   concourse-.Run jumpbox job.->worker
