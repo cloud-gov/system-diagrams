@@ -8,10 +8,10 @@ graph TD
       test-job("Test Build")
       deploy-job("Deployment Build")
     end
-    elb["AWS Elastic Load Balancer (ELB)"]
+    alb["AWS Application Load Balancer (ALB)"]
     UAA["User Authentication/Authorization (UAA)"]
-    bosh["BOSH Director"]
-    ec2["AWS EC2 Instance"]
+    bosh{"BOSH Director"}
+    ec2{"AWS EC2 Instance"}
   end
   subgraph External
     github["GitHub Repository"]
@@ -21,11 +21,12 @@ graph TD
     SAML{"Single Sign-on (SSO)<br>providing MFA"}
   end
   Ops((Cloud Operations))
+  Zscaler["ZscalerVPN"]
 
-  Ops--"SSH or HTTPS<br>(software changes)"-->github
-  Ops--HTTPS-->elb
-  elb-->web
-  web-->worker
+  Ops--"SSH 22 or HTTPS 443<br>(software changes)"-->github
+  Ops--Web HTTP 80 or HTTPS 443-->Zscaler-->alb
+  alb--Run Pipeline-->web
+  web--Pipeline job-->worker
   web-.Authorization.->UAA
   UAA-.Authentication.->SAML
   github-."Authentication/Authorization".->github-auth
