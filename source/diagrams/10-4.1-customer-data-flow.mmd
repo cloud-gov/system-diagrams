@@ -18,13 +18,13 @@ graph LR
       Loggregator[Loggregator]
     end
     subgraph Customer Logs
-      Q[Redis Queue]
+      Q[AWS Elasticache Redis Queue]
       Logstash[Logstash]
       ES[Elasticsearch]
       Kibana[Kibana<br>logs.fr.cloud.gov]
     end
     subgraph AWS Brokered Services VPC
-      AWSService("AWS Services<br>e.g. RDS<br>Redis")
+      AWSService("AWS Services e.g.<br>AWS RDS Postgresql, MySQL<br>AWS Elasticache Redis<br>AWS ElasticSearch/OpenSearch")
     end
     subgraph SAML IDP
       SAML{cloud.gov fallback IDP<br>providing MFA}
