@@ -8,7 +8,7 @@ graph LR
         AppContainer{"Customer<br>Application"}
         Dashboard{Dashboard<br>dashboard.fr.cloud.gov}
       end
-      Router[Router]
+      Router{Router}
       SSHProxy[SSH Proxy]
       UAA["User Authentication/Authorization (UAA)<br>login.fr.cloud.gov"]
       CloudController[Cloud Controller<br>api.fr.cloud.gov]
@@ -24,10 +24,10 @@ graph LR
       Kibana[Kibana<br>logs.fr.cloud.gov]
     end
     subgraph AWS Brokered Services VPC
-      AWSService["AWS Services<br>e.g. RDS<br>Redis"]
+      AWSService("AWS Services<br>e.g. RDS<br>Redis")
     end
     subgraph SAML IDP
-      SAML[cloud.gov fallback IDP<br>providing MFA]
+      SAML{cloud.gov fallback IDP<br>providing MFA}
     end
     ALB("Application Load Balancer (ALB)")
     CloudControllerDB(Cloud Controller<br>RDS DB)
