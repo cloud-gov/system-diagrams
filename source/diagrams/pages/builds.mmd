@@ -15,7 +15,7 @@ flowchart TB
   %% Processors
   aws_load_balancer[Load Balancer / Router]:::processStyle
   pages_app[Pages Web Application <br/> *Node.js]:::processStyle
-  pages_builder[Pages Builder <br/> Starts a site build <br/> *Node.js]:::processStyle
+  pages_worker[Pages Worker <br/> Runs background job manage site builds <br/> *Node.js]:::processStyle
   pages_build_container[Pages Build Container <br/> Builds and publishes site <br/> *Docker]:::processStyle
   control_plane[Control Plane <br/> *CloudFoundry Task]:::processStyle
 
@@ -32,9 +32,9 @@ flowchart TB
   gh_source -- Webhook request to start build <br/> HTTPS Port 443 --> aws_load_balancer
   aws_load_balancer -- Proxy request <br/> HTTPS Port 443 --> pages_app
   pages_app -- Creates site build record <br/> TLS Port 5432 --> database
-  pages_app -- Starts site build event <br/> TLS Port 6379 --> key_value_store
-  pages_builder -- Listens for new site build event <br/> TLS Port 6379 --> key_value_store
-  pages_builder -- Sends site build task request <br/> HTTPS Port 443 --> control_plane
+  pages_app -- Starts site build event job <br/> TLS Port 6379 --> key_value_store
+  key_value_store -- Sends site build job data via the site builds queue <br/> TLS Port 6379 --> pages_worker
+  pages_worker -- Sends site build task request <br/> HTTPS Port 443 --> control_plane
   control_plane -- Starts site build task <br/> HTTPS Port 443 --> pages_build_container
   pages_build_container -- Publishes site files <br/> HTTPS Port 443 --> s3
   pages_build_container -- Sends build status <br/> HTTPS Port 443 --> pages_app
@@ -51,7 +51,7 @@ flowchart TB
       subgraph Pages cloud.gov production space
         pages_app
         pages_build_container
-        pages_builder
+        pages_worker
         control_plane
         subgraph cloud.gov space services
           database
