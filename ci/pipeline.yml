@@ -12,9 +12,9 @@ jobs:
         source:
           aws_access_key_id: ((ecr_aws_key))
           aws_secret_access_key: ((ecr_aws_secret))
-          repository: harden-concourse-task
+          repository: general-task
           aws_region: us-gov-west-1
-          semver_constraint: ">= 1.0.0"
+          tag: latest
       inputs:
       - name: cg-diagrams-source
       outputs:
@@ -32,9 +32,9 @@ jobs:
         source:
           aws_access_key_id: ((ecr_aws_key))
           aws_secret_access_key: ((ecr_aws_secret))
-          repository: harden-concourse-task
+          repository: general-task
           aws_region: us-gov-west-1
-          semver_constraint: ">= 1.0.0"
+          tag: latest
       manifest: cg-diagrams-compiled/manifest.yml
       path: cg-diagrams-compiled
       current_app_name: diagrams
@@ -81,6 +81,15 @@ resources:
     url: ((slack-webhook-url))
 
 resource_types:
+- name: registry-image
+  type: registry-image
+  source:
+    aws_access_key_id: ((ecr_aws_key))
+    aws_secret_access_key: ((ecr_aws_secret))
+    repository: registry-image-resource
+    aws_region: us-gov-west-1
+    tag: latest
+
 - name: slack-notification
   type: registry-image
   source:
