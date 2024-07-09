@@ -1,4 +1,4 @@
-import mermaid from 'mermaid';
+import * as mermaid from 'mermaid/dist/mermaid.esm.min.mjs';
 import * as svgPng from 'save-svg-as-png';
 
 // TODO This is very ugly, but for now it renders. This SVG creation should be
@@ -17,8 +17,6 @@ btn.addEventListener('click', function() {
     svgPng.saveSvgAsPng(svgList[0], document.title+'.png', options);
   }
 });
-
-console.log( 'mermaid', mermaid.version() );
 
 mermaid.mermaidAPI.render(
   'js-stage',
