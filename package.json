@@ -3,6 +3,10 @@
   "description": "Mermaid-based flow charts and diagrams using the US Draft Web Design Standards",
   "private": true,
   "main": "gulpfile.js",
+  "type": "module",
+  "engines": {
+    "node": ">=18"
+  },
   "scripts": {
     "build": "gulp build",
     "deploy": "npm run build && npm run target && npm run push",
@@ -32,7 +36,7 @@
     "font-awesome": "^4.6.3",
     "gulp": "^5.0.0",
     "gulp-sass": "^5.1.0",
-    "mermaid": "^9.3.0",
+    "mermaid": "^10.9.1",
     "mustache": "^2.2.1",
     "node-notifier": "^8.0.1",
     "node-sass": "^9.0.0",
