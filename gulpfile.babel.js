@@ -14,9 +14,12 @@ import source from 'vinyl-source-stream';
 import nodeSass from 'node-sass';
 import del from 'del';
 import figlet from 'figlet';
-import pkg from './package';
+import pkg from './package.json' assert { type: "json" };
 import browserSync from 'browser-sync';
 import gulpSass from 'gulp-sass';
+import {fileURLToPath} from 'node:url';
+
+const __dirname = path.dirname(fileURLToPath(import.meta.url));
 
 // Create browserSync instance
 //
@@ -78,7 +81,7 @@ gulp.task( 'javascript', () => {
       sourceType: 'module',
       presets: ['@babel/preset-env'],
       plugins: ['@babel/plugin-transform-modules-commonjs']
-    });
+    })
 
   return bundler.bundle()
     .pipe(source('render.js'))
