@@ -11,20 +11,21 @@ import Mustache from 'mustache';
 import through from 'through2';
 import browserify from 'browserify';
 import source from 'vinyl-source-stream';
-import nodeSass from 'node-sass';
 import del from 'del';
 import figlet from 'figlet';
-import pkg from './package.json' assert { type: "json" };
 import browserSync from 'browser-sync';
 import gulpSass from 'gulp-sass';
 import {fileURLToPath} from 'node:url';
+import dartSass from 'dart-sass';
+import { createRequire } from "module";
 
+const pkg = createRequire(import.meta.url)("./package.json");
 const __dirname = path.dirname(fileURLToPath(import.meta.url));
 
 // Create browserSync instance
 //
 const browserSyncInstance = browserSync.create();
-const sass = gulpSass(nodeSass);
+const sass = gulpSass(dartSass);
 
 /**
  * @name default
