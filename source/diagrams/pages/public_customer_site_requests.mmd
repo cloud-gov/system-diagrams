@@ -1,0 +1,83 @@
+flowchart TB
+  %% Styles
+  classDef userStyle stroke:#167CC5,stroke-width:4px
+  classDef processStyle stroke:#bc0061,stroke-width:4px
+  classDef decisionStyle stroke:#ea8d02,stroke-width:4px
+  classDef dbStyle stroke:#010daf,stroke-width:4px
+  classDef dbStyle stroke:#010daf,stroke-width:4px
+
+  %% Component Defintions
+
+  %% Users
+  admin["👤  <br/> Site Admin <br/> Manages Web Site"]:::userStyle
+  user["👤  <br/> Public User <br/> Navigates to site URL"]:::userStyle
+
+  %% Processors
+  aws_cdn[CDN <br/> AWS CloudFront]:::processStyle
+  aws_load_balancer[Load Balancer / Router <br/> AWS Application Load Balancer]:::processStyle
+  pages_proxy[Pages Proxy Application <br/> *NGINX]:::processStyle
+  pages_builder[Site Builder]:::processStyle
+
+  %% Databases
+  s3[(Published Website <br/> File Storage <br/> *AWS S3)]:::dbStyle
+
+  %% Customers Components
+  dns_config[DNS Records]:::dbStyle
+  github[(Github Repository <br/> Site Source)]:::dbStyle
+
+  %% Public Flow
+  user -- Site Web Request <br/> HTTPS/443 --> aws_cdn
+  aws_cdn -- Site Web Response <br /> HTTPS/443 --> user
+  aws_cdn -- Site Web Request <br /> HTTPS/443 --> aws_load_balancer
+  aws_load_balancer -- Site Web Response <br /> HTTPS/443 --> aws_cdn
+  aws_load_balancer -- Site Web Request <br /> HTTPS/443 --> pages_proxy
+  pages_proxy -- Site Web Request <br /> HTTPS/443 --> aws_load_balancer
+
+  pages_proxy -- Site Web Request <br /> HTTPS/443  --> s3
+  s3 -- Site Web Response <br /> HTTPS/443  --> pages_proxy
+
+  %% Customer Flow
+
+  admin -- Updates Site --> github
+  github -- Site Updates to Build --> pages_builder
+  dns_config -- Site Domain DNS Records --> aws_cdn
+  pages_builder -- Publishes Site --> s3
+
+  %% Layout
+  subgraph Customer
+    subgraph DNS
+      dns_config
+    end
+    subgraph Github
+      github
+    end
+  end
+
+  subgraph Pages
+    subgraph AWS Gov Cloud
+      subgraph cloud.gov platform
+        aws_load_balancer
+        subgraph Pages cloud.gov production space
+          pages_proxy
+          pages_builder
+          subgraph cloud.gov space services
+            s3
+          end
+        end
+      end
+    end
+
+    subgraph AWS Commercial Cloud
+      subgraph cloud.gov platform
+        aws_cdn
+      end
+    end
+  end
+
+  subgraph Legend
+    direction BT
+    legend_user["👤 User"]:::userStyle
+    legend_process[Process]:::processStyle
+    legend_db[(Database)]:::dbStyle
+    legend_config[Configuration]:::dbStyle
+  end
