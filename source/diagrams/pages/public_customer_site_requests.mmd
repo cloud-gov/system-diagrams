@@ -62,7 +62,7 @@ flowchart TB
     end
   end
 
-  subgraph Pages
+  subgraph Pages[cloud.gov Pages]
     subgraph aws_gov_cloud[AWS Gov Cloud]
       subgraph cg_platform[cloud.gov platform]
         aws_load_balancer
@@ -76,8 +76,8 @@ flowchart TB
       end
     end
 
-    subgraph aws_com[AWS Commercial Cloud]
-      subgraph cg_platform[cloud.gov platform]
+    subgraph aws_com[AWS Commercial cloud]
+      subgraph cg_platform_2[cloud.gov platform]
         aws_cdn
       end
     end
@@ -101,5 +101,6 @@ flowchart TB
   class aws_com cgGraphStyle
   class aws_gov_cloud cgGraphStyle
   class cg_platform cgGraphStyle
+  class cg_platform_2 cgGraphStyle
   class cg_pages_space cgGraphStyle
   class cg_pages_services cgGraphStyle
