@@ -21,7 +21,7 @@ flowchart TB
   aws_cdn[CDN <br/> AWS CloudFront]:::processStyle
   aws_load_balancer[Load Balancer / Router <br/> AWS Application Load Balancer]:::processStyle
   pages_proxy[Pages Proxy Application <br/> *NGINX]:::processStyle
-  pages_builder[Site Builder]:::processStyle
+  pages_builder[Site Builder <br/> Generates Site Files]:::processStyle
 
   %% Databases
   s3[(Published Website <br/> File Storage <br/> *AWS S3)]:::dbStyle
@@ -39,7 +39,7 @@ flowchart TB
   aws_cdn -- Site Web Request <br /> HTTPS/443 --> aws_load_balancer
   aws_load_balancer -- Site Web Response <br /> HTTPS/443 --> aws_cdn
   aws_load_balancer -- Site Web Request <br /> HTTPS/443 --> pages_proxy
-  pages_proxy -- Site Web Request <br /> HTTPS/443 --> aws_load_balancer
+  pages_proxy -- Site Web Response <br /> HTTPS/443 --> aws_load_balancer
 
   pages_proxy -- Site Web Request <br /> HTTPS/443  --> s3
   s3 -- Site Web Response <br /> HTTPS/443  --> pages_proxy
@@ -47,9 +47,9 @@ flowchart TB
   %% Customer Flow
 
   admin --> auth --> github
-  github --> webhook -- Web Request <br /> HTTPS/443 --> pages_builder
+  github --> webhook -- HTTP POST Request <br /> HTTPS/443 --> pages_builder
   dns_config -- Site Domain DNS Records --> aws_cdn
-  pages_builder -- Publishes Site --> s3
+  pages_builder -- Publishes Site <br/> HTTPS/443 <br/> File Upload --> s3
 
   %% Layout
   subgraph Customer
