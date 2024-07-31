@@ -1,0 +1,106 @@
+flowchart TB
+  %% Styles
+  classDef userStyle stroke:#167CC5,stroke-width:4px
+  classDef processStyle stroke:#bc0061,stroke-width:4px
+  classDef decisionStyle stroke:#ea8d02,stroke-width:4px
+  classDef dbStyle stroke:#010daf,stroke-width:4px
+  classDef authStyle stroke:#000000,stroke-width:4px
+
+  %% Style Subgrapohs
+  classDef customerGraphStyle fill:#FFF1EB
+  classDef cgGraphStyle fill:#E3EEFF
+  classDef blank fill:#fff;
+
+  %% Component Defintions
+
+  %% Users
+  admin["👤  <br/> Site Admin <br/> Manages Web Site"]:::userStyle
+  user["👤  <br/> Public User <br/> Navigates to site URL"]:::userStyle
+
+  %% Processors
+  aws_cdn[CDN <br/> AWS CloudFront]:::processStyle
+  aws_load_balancer[Load Balancer / Router <br/> AWS Application Load Balancer]:::processStyle
+  pages_proxy[Pages Proxy Application <br/> *NGINX]:::processStyle
+  pages_builder[Site Builder <br/> Generates Site Files]:::processStyle
+
+  %% Databases
+  s3[(Published Website <br/> File Storage <br/> *AWS S3)]:::dbStyle
+
+  %% Customers Components
+  dns_config[DNS Records]:::dbStyle
+  github[(Github Repository <br/> Site Source)]:::dbStyle
+  auth(("🔐 <br/> Authenticated <br/> Request")):::authStyle
+  public_auth(("🌎 <br/> Public <br/> Unauthenticated <br/> Request")):::authStyle
+  webhook[Automated Webhook<br/>Starts Build]:::processStyle
+
+  %% Public Flow
+  user --  Site Web Request <br /> HTTPS/443 --> public_auth --> aws_cdn
+  aws_cdn -- Site Web Response <br /> HTTPS/443 --> public_auth --  Site Web Response <br /> HTTPS/443  --> user
+  aws_cdn -- Site Web Request <br /> HTTPS/443 --> aws_load_balancer
+  aws_load_balancer -- Site Web Response <br /> HTTPS/443 --> aws_cdn
+  aws_load_balancer -- Site Web Request <br /> HTTPS/443 --> pages_proxy
+  pages_proxy -- Site Web Response <br /> HTTPS/443 --> aws_load_balancer
+
+  pages_proxy -- Site Web Request <br /> HTTPS/443  --> s3
+  s3 -- Site Web Response <br /> HTTPS/443  --> pages_proxy
+
+  %% Customer Flow
+
+  admin --> auth --> github
+  github --> webhook -- HTTP POST Request <br /> HTTPS/443 --> pages_builder
+  dns_config -- Site Domain DNS Records --> aws_cdn
+  pages_builder -- Publishes Site <br/> HTTPS/443 <br/> File Upload --> s3
+
+  %% Layout
+  subgraph Customer
+    subgraph DNS
+      dns_config
+    end
+    subgraph Github
+      github
+      webhook
+    end
+  end
+
+  subgraph Pages[cloud.gov Pages]
+    subgraph aws_gov_cloud[AWS Gov Cloud]
+      subgraph cg_platform[cloud.gov platform]
+        aws_load_balancer
+        subgraph cg_pages_space[Pages cloud.gov production space]
+          pages_proxy
+          pages_builder
+          subgraph cg_pages_services[cloud.gov space services]
+            s3
+          end
+        end
+      end
+    end
+
+    subgraph aws_com[AWS Commercial cloud]
+      subgraph cg_platform_2[cloud.gov platform]
+        aws_cdn
+      end
+    end
+  end
+
+  subgraph Legend
+    direction BT
+    legend_user["👤 User"]:::userStyle
+    legend_process[Process]:::processStyle
+    legend_db[(Database)]:::dbStyle
+    legend_config[Configuration]:::dbStyle
+    legend_connect((Authentication <br> Type)):::authStyle
+  end
+
+  class Customer customerGraphStyle
+  class DNS customerGraphStyle
+  class Github customerGraphStyle
+  class Legend blank
+
+  class Pages cgGraphStyle
+  class aws_com cgGraphStyle
+  class aws_gov_cloud cgGraphStyle
+  class cg_platform cgGraphStyle
+  class cg_platform_2 cgGraphStyle
+  class cg_pages_space cgGraphStyle
+  class cg_pages_services cgGraphStyle
