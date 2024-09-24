@@ -15,6 +15,9 @@ flowchart TB
   aws_load_balancer[Load Balancer / Router <br/> AWS Application Load Balancer]:::processStyle
   pages_proxy[Pages Proxy Application <br/> *NGINX]:::processStyle
 
+  %% Services
+  waf[Web Application Firewall]:::processStyle
+
   %% Decisions
   is_cached{Is request cached}:::decisionStyle
 
@@ -22,7 +25,8 @@ flowchart TB
   s3[(Object Store <br/> *AWS S3)]:::dbStyle
 
   %% Flow
-  user -- Views Static Content <br/> HTTPS/443 --> is_cached
+  user -- Views Static Content <br/> HTTPS/443 --> waf
+  waf -- Views Static Content <br/> HTTPS/443 --> is_cached
   is_cached -- Yes --> aws_cdn
   is_cached -- No --> aws_load_balancer
   aws_cdn -- Proxy Request <br /> HTTPS/443 --> aws_load_balancer
@@ -32,6 +36,8 @@ flowchart TB
 
   %% Layout
   subgraph AWS Commercial Cloud
+    waf
+    is_cached
     subgraph cloud.gov platform
       aws_cdn
     end
