@@ -22,6 +22,7 @@ flowchart TB
   aws_load_balancer[Load Balancer / Router <br/> AWS Application Load Balancer]:::processStyle
   pages_proxy[Pages Proxy Application <br/> *NGINX]:::processStyle
   pages_builder[Site Builder <br/> Generates Site Files]:::processStyle
+  waf[Web Application Firewall]:::processStyle
 
   %% Databases
   s3[(Published Website <br/> File Storage <br/> *AWS S3)]:::dbStyle
@@ -34,8 +35,9 @@ flowchart TB
   webhook[Automated Webhook<br/>Starts Build]:::processStyle
 
   %% Public Flow
-  user --  Site Web Request <br /> HTTPS/443 --> public_auth --> aws_cdn
-  aws_cdn -- Site Web Response <br /> HTTPS/443 --> public_auth --  Site Web Response <br /> HTTPS/443  --> user
+  user --  Site Web Request <br /> HTTPS/443 --> public_auth --> waf --> aws_cdn
+  waf -- Site Web Response <br /> HTTPS/443 --> public_auth --  Site Web Response <br /> HTTPS/443  --> user
+  aws_cdn --> waf
   aws_cdn -- Site Web Request <br /> HTTPS/443 --> aws_load_balancer
   aws_load_balancer -- Site Web Response <br /> HTTPS/443 --> aws_cdn
   aws_load_balancer -- Site Web Request <br /> HTTPS/443 --> pages_proxy
@@ -78,6 +80,7 @@ flowchart TB
 
     subgraph aws_com[AWS Commercial cloud]
       subgraph cg_platform_2[cloud.gov platform]
+        waf
         aws_cdn
       end
     end
