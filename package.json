@@ -27,7 +27,7 @@
     "@babel/register": "^7.11.5",
     "ansi-colors": "^4.1.1",
     "babelify": "^10.0.0",
-    "browser-sync": "^3.0.2",
+    "browser-sync": "^3.0.3",
     "browserify": "^13.0.1",
     "connect": "^3.4.1",
     "dart-sass": "^1.25.0",
@@ -42,7 +42,7 @@
     "node-notifier": "^8.0.1",
     "plugin-error": "^1.0.1",
     "save-svg-as-png": "git+https://github.com/exupero/saveSvgAsPng#f56023b",
-    "serve-static": "^1.16.0",
+    "serve-static": "^1.16.1",
     "through2": "^2.0.1",
     "uswds": "^2.8.1",
     "vinyl-source-stream": "^2.0.0"
