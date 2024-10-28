@@ -37,7 +37,7 @@
     "font-awesome": "^4.6.3",
     "gulp": "^5.0.0",
     "gulp-sass": "^5.1.0",
-    "mermaid": "^10.9.1",
+    "mermaid": "^10.9.3",
     "mustache": "^2.2.1",
     "node-notifier": "^8.0.1",
     "plugin-error": "^1.0.1",
