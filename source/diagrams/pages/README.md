@@ -15,7 +15,7 @@ The diagrams are written in mermaid and the diagram images are generated using t
 
 #### Generate an image from a diagram
 
-`mmdc -i source/diagrams/pages/diagram-a.mmd -o out/diagrams/pages/diagram-a.png --width 2500`
+`mmdc -i source/diagrams/pages/diagram-a.mmd -o out/diagrams/pages/diagram-a.png --width 5000`
 
 Options:
 - `-i`: Input mermaid diagram

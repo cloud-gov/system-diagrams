@@ -2,7 +2,7 @@ flowchart TB
   %% Styles
   classDef userStyle stroke:#167CC5,stroke-width:4px
   classDef processStyle stroke:#bc0061,stroke-width:4px
-  classDef externalStyle stroke:#00a63c,stroke-width:4px
+  classDef externalStyle fill:#e4eee9,stroke:#000,stroke-width:4px,stroke-dasharray: 4 5
   classDef decisionStyle stroke:#ea8d02,stroke-width:4px
   classDef dbStyle stroke:#010daf,stroke-width:4px
   classDef authStyle stroke:#000000,stroke-width:4px
@@ -38,10 +38,12 @@ flowchart TB
   %% External Services
   search[Search.gov]:::externalStyle
   dap[Digital Analytics Program <br/> DAP]:::externalStyle
+  touchpoints[Touchpoints]:::externalStyle
 
   %% Public Flow
-  public_auth --  Site Web Request <br /> HTTPS/443 --> dap
-  public_auth --  Site Web Request <br /> HTTPS/443 --> search
+  public_auth -.  Site Web Request <br /> HTTPS/443 .-> dap
+  public_auth -.  Site Web Request <br /> HTTPS/443 .-> search
+  public_auth -.  Site Web Request <br /> HTTPS/443 .-> touchpoints
   user --  Site Web Request <br /> HTTPS/443 --> public_auth --> waf --> aws_cdn
   waf -- Site Web Response <br /> HTTPS/443 --> public_auth --  Site Web Response <br /> HTTPS/443  --> user
   aws_cdn --> waf
@@ -97,26 +99,23 @@ flowchart TB
     direction BT
     legend_user["👤 User"]:::userStyle
     legend_process[Process]:::processStyle
-    legend_external[External Service]:::externalStyle
+    legend_external[Optional External Service]:::externalStyle
     legend_db[(Database)]:::dbStyle
     legend_config[Configuration]:::dbStyle
     legend_connect((Authentication <br> Type)):::authStyle
   end
 
-  subgraph external[External Services]
-    subgraph dap_boundary[Digital Analytics Program]
-      dap
-    end
-
-    subgraph search_boundary[Search.gov]
-      search
-    end
+  subgraph external[Optional External Services]
+    dap
+    search
+    touchpoints
   end
 
   class Customer customerGraphStyle
   class DNS customerGraphStyle
   class Github customerGraphStyle
   class Legend blank
+  class external externalStyle
 
   class Pages cgGraphStyle
   class aws_com cgGraphStyle
