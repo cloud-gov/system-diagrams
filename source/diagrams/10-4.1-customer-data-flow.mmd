@@ -20,11 +20,11 @@ graph LR
     subgraph Customer Logs
       Q[AWS Elasticache Redis Queue]
       Logstash[Logstash]
-      ES[Elasticsearch]
-      Kibana[Kibana<br>logs.fr.cloud.gov]
+      OS[Elasticsearch]
+      OpensearchDashboard[Opensearch Dashboard<br>logs.fr.cloud.gov]
     end
     subgraph AWS Brokered Services VPC
-      AWSService("AWS Services e.g.<br>AWS RDS Postgresql, MySQL<br>AWS Elasticache Redis<br>AWS ElasticSearch/OpenSearch")
+      AWSService("AWS Services e.g.<br>AWS RDS Postgresql, MySQL<br>AWS Elasticache Redis<br>AWS OpenSearch")
     end
     subgraph SAML IDP
       SAML{cloud.gov fallback IDP<br>providing MFA}
@@ -62,10 +62,10 @@ graph LR
 
   Loggregator-->Logstash
   Logstash-->Q
-  Q-->ES
+  Q-->OS
   Logstash-->CloudWatch
   Logstash-->S3
-  ES-->Kibana
+  OS-->OpensearchDashboard
 
   Customer--"Web HTTP 80 or HTTPS 443"-->ALB
   Customer--SSH port 2222 using temporary key-->ALB
@@ -77,10 +77,10 @@ graph LR
   ALB --SSH port 2222 using temporary key--> SSHProxy
   ALB --"Web HTTP 80 or HTTPS 443"--> Router
   ALB --API request HTTPS 443--> CloudController
-  ALB -- "Triggered by web request HTTPS 443 only" --> Kibana
+  ALB -- "Triggered by web request HTTPS 443 only" --> OpensearchDashboard
 
   UAA-.Authentication.->CustomerSAML
   UAA-.Authentication.->SAML
   CloudController-.Authorization.->UAA
   SSHProxy-.Authorization.->UAA
-  Kibana-.Authorization.->UAA
+  OpensearchDashboard-.Authorization.->UAA
