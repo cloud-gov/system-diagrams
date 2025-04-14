@@ -1,0 +1,90 @@
+flowchart TB
+  direction BT
+
+  %% Styles
+  classDef userStyle stroke:#167CC5,stroke-width:4px
+  classDef processStyle stroke:#bc0061,stroke-width:4px
+  classDef dbStyle stroke:#010daf,stroke-width:4px
+
+
+  %% Users
+  user_unprivleged["👤  <br/> Unprivileged User <br/> *Pages Customer"]:::userStyle
+  user["👤  <br/> Public User <br/> *A member of the public"]:::userStyle
+
+
+  %% Processors
+  aws_cdn[CDN <br/> AWS CloudFront]:::processStyle
+  pages_proxy[Pages Proxy Application <br/> *NGINX]:::processStyle
+  aws_load_balancer[Load Balancer / Router]:::processStyle
+  auth_provider[Authentication Provider <br/> *UAA]:::processStyle
+  pages_app[Pages Web Application <br/> *Node.js]:::processStyle
+
+
+  %% Services
+   waf[Web Application Firewall]:::processStyle
+
+
+  %% Decisions
+  is_cached{Is request cached}:::decisionStyle
+
+
+  %% Databases
+  database[(Database <br/> *AWS RDS Postgres)]:::dbStyle
+  s3[(File Store <br/> *AWS S3)]:::dbStyle
+
+
+  %% Flow
+  %%%% Pages Customer
+  auth_provider -- All Users <br/> HTTPS Port 443--> pages_app
+  user_unprivleged -- Manages Public File Storage <br/> HTTPS Port 443 --> aws_load_balancer
+  aws_load_balancer -- Request <br /> HTTPS Port 443 --> auth_provider
+  pages_app -- Read/Write File Management <br /> Authenticated TLS Port 5432  --> database
+  pages_app -- Read/Write File Storage <br /> Authenticated HTTPS  --> s3
+
+  %%%%%%%% Styling
+  linkStyle 0,1,2,3,4 stroke-width:4px,fill:none,stroke:navy
+
+  %%%% Public
+  user -- Views Public File <br/> HTTPS/443 --> waf
+  waf -- Views Public File <br/> HTTPS/443 --> is_cached
+  is_cached -- Yes --> aws_cdn
+  is_cached -- No --> aws_load_balancer
+  aws_load_balancer -- Proxy Request <br /> HTTPS/443 --> pages_proxy
+  pages_proxy -- Proxy Site Requests <br /> HTTPS/443  --> s3
+
+  %%%%%%%% Styling
+  linkStyle 5,6,7,8,9,10 stroke-width:4px,fill:none,stroke:orange
+
+
+  %% Layout
+  subgraph AWS Commercial Cloud
+    waf
+    is_cached
+    subgraph cloud.gov platform
+      aws_cdn
+    end
+  end
+
+  subgraph AWS Gov Cloud
+    aws_load_balancer
+    subgraph cloud.gov platform
+      auth_provider
+      subgraph Pages cloud.gov production space
+        pages_app
+        pages_proxy
+        subgraph cloud.gov space services
+          database
+          subgraph dedicated customer site bucket
+            s3
+          end
+        end
+      end
+    end
+  end
+
+  subgraph Legend
+    direction BT
+    legend_user["👤 User"]:::userStyle
+    legend_process[Process]:::processStyle
+    legend_db[(Database)]:::dbStyle
+  end
