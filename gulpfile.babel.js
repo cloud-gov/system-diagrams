@@ -15,12 +15,12 @@ import del from 'del';
 import figlet from 'figlet';
 import browserSync from 'browser-sync';
 import gulpSass from 'gulp-sass';
-import dartSass from 'dart-sass';
+import coreSass from 'sass';
 
 // Create browserSync instance
 //
 const browserSyncInstance = browserSync.create();
-const sass = gulpSass(dartSass);
+const sass = gulpSass(coreSass);
 
 /**
  * @name default
