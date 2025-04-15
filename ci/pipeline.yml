@@ -1,8 +1,16 @@
 ---
 jobs:
+  - name: set-self
+    plan:
+      - get: cg-diagrams-source
+        trigger: true
+      - set_pipeline: self
+        file: cg-diagrams-source/ci/pipeline.yml
+
   - name: deploy-production
     plan:
       - get: cg-diagrams-source
+        passed: [set-self]
         trigger: true
       - task: build
         config:
@@ -52,14 +60,14 @@ resources:
   - name: cg-diagrams-source
     type: git
     source:
-      uri: ((cg-diagrams-git-url))
-      branch: ((cg-diagrams-branch))
+      uri: https://github.com/cloud-gov/cg-diagrams.git
+      branch: main
       commit_verification_keys: ((cloud-gov-pgp-keys))
 
   - name: cloud-gov-production
     type: cf
     source:
-      api: ((cf-api-url-production))
+      api: ((prod-cf-api-url))
       username: ((cf-deploy-username-production))
       password: ((cf-deploy-password-production))
       organization: ((cf-organization))
