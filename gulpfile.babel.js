@@ -15,12 +15,7 @@ import del from 'del';
 import figlet from 'figlet';
 import browserSync from 'browser-sync';
 import gulpSass from 'gulp-sass';
-import {fileURLToPath} from 'node:url';
 import dartSass from 'dart-sass';
-import { createRequire } from "module";
-
-const pkg = createRequire(import.meta.url)("./package.json");
-const __dirname = path.dirname(fileURLToPath(import.meta.url));
 
 // Create browserSync instance
 //
@@ -32,40 +27,40 @@ const sass = gulpSass(dartSass);
  * @description The default gulp task.
  * @param { function } done - Callback that signals the task is complete.
  */
-gulp.task( 'default', ( done ) => {
-  logData( `v${ pkg.version }`, pkg.name );
-  logData( 'default', pkg.description );
-  logName( 'default', done );
-} );
+gulp.task('default', (done) => {
+  logData(`v${pkg.version}`, pkg.name);
+  logData('default', pkg.description);
+  logName('default', done);
+});
 
 /**
  * @name clean
  * @desc Deletes the public directory.
  * @return { stream } - A stream containing the deleted `public/` directory.
  */
-gulp.task( 'clean', () => del( 'public' ) );
+gulp.task('clean', () => del('public'));
 
 /**
  * @name copy:fonts
  * @desc Copies `uswds` fonts statically to public.
  * @return { stream } - A stream of copied font files.
  */
-gulp.task( 'copy:fonts', () => {
-  return gulp.src( ['node_modules/uswds/dist/fonts/**/*', 'node_modules/font-awesome/fonts/*'] )
-    .pipe( gulp.dest( 'public/fonts' ) );
-} );
+gulp.task('copy:fonts', () => {
+  return gulp.src(['node_modules/uswds/dist/fonts/**/*', 'node_modules/font-awesome/fonts/*'])
+    .pipe(gulp.dest('public/fonts'));
+});
 
 /**
  * @name stylesheets
  * @desc Compiles the Sass files under `source/stylesheets`.
  * @return { stream } - A stream of compiled CSS files.
  */
-gulp.task( 'stylesheets', gulp.series('copy:fonts', () => {
+gulp.task('stylesheets', gulp.series('copy:fonts', () => {
 
-  return gulp.src( 'source/styles/render.scss' )
-    .pipe( sass().on( 'error', sass.logError ) )
-    .pipe( gulp.dest( 'public' ) )
-    .pipe( browserSyncInstance.stream() );
+  return gulp.src('source/styles/render.scss')
+    .pipe(sass().on('error', sass.logError))
+    .pipe(gulp.dest('public'))
+    .pipe(browserSyncInstance.stream());
 
 }));
 
@@ -74,7 +69,7 @@ gulp.task( 'stylesheets', gulp.series('copy:fonts', () => {
  * @desc Bundles and transpiles the JavaScript files under `source/javascript`.
  * @return { stream } - A stream of bundled JavaScript files.
  */
-gulp.task( 'javascript', () => {
+gulp.task('javascript', () => {
 
   const bundler = browserify('source/javascript/start.js')
     .transform('babelify', {
@@ -88,7 +83,7 @@ gulp.task( 'javascript', () => {
     .pipe(source('render.js'))
     .pipe(gulp.dest('public'));
 
-} );
+});
 
 /**
  * @name render
@@ -97,15 +92,15 @@ gulp.task( 'javascript', () => {
  * @see { @link javascript }
  * @return { stream } - A stream of rendered diagrams in HTML files.
  */
-gulp.task( 'render', () => {
+gulp.task('render', () => {
 
-  const htmlTemplate = fs.readFileSync( 'source/html/render.html', 'utf-8' );
+  const htmlTemplate = fs.readFileSync('source/html/render.html', 'utf-8');
 
-  return gulp.src( 'source/diagrams/**.mmd' )
-    .pipe( renderMermaid( htmlTemplate ) )
-    .pipe( gulp.dest( 'public' ) );
+  return gulp.src('source/diagrams/**.mmd')
+    .pipe(renderMermaid(htmlTemplate))
+    .pipe(gulp.dest('public'));
 
-} );
+});
 
 /**
  * @name render:list
@@ -113,43 +108,43 @@ gulp.task( 'render', () => {
  * @see { @link render }
  * @param { function } done - Callback that signals the task is complete.
  */
-gulp.task( 'render:list', gulp.series('render', ( done ) => {
+gulp.task('render:list', gulp.series('render', (done) => {
 
-  const htmlTemplate = fs.readFileSync( 'source/html/index.html', 'utf-8' );
+  const htmlTemplate = fs.readFileSync('source/html/index.html', 'utf-8');
 
-  fs.readdir( 'source/diagrams', ( error, files ) => {
+  fs.readdir('source/diagrams', (error, files) => {
 
-    let diagrams = files.filter(file => file.includes('.mmd')).map( ( file ) => {
+    let diagrams = files.filter(file => file.includes('.mmd')).map((file) => {
       let content = fs.readFileSync('source/diagrams/' + file, 'utf-8');
-      let metadata = content.split('\n').filter(function(line) {
-	return line.match(/^%%/) !== null;
-      }).reduce(function(memo, line) {
-	let parts = line.replace(/^%%/, '').split(':').map(function(part) {
-	  return part.trim();
-	});
-	memo[parts[0]] = parts[1];
-	return memo;
+      let metadata = content.split('\n').filter(function (line) {
+        return line.match(/^%%/) !== null;
+      }).reduce(function (memo, line) {
+        let parts = line.replace(/^%%/, '').split(':').map(function (part) {
+          return part.trim();
+        });
+        memo[parts[0]] = parts[1];
+        return memo;
       }, {});
 
       return {
-        href: `${ path.basename( file, '.mmd' ) }.html`,
+        href: `${path.basename(file, '.mmd')}.html`,
         name: metadata.title || "needs a title",
-	description: metadata.description || "need a description"
+        description: metadata.description || "need a description"
       };
-    } );
+    });
 
-    var listView = Mustache.render( htmlTemplate, {
+    var listView = Mustache.render(htmlTemplate, {
       'diagram-list': diagrams,
-    } );
+    });
 
-    fs.writeFile( './public/index.html', listView, ( error ) => {
-      if ( ! error ) {
+    fs.writeFile('./public/index.html', listView, (error) => {
+      if (!error) {
         browserSyncInstance.reload();
         done();
       }
-    } );
+    });
 
-  } );
+  });
 
 }));
 
@@ -159,40 +154,40 @@ gulp.task( 'render:list', gulp.series('render', ( done ) => {
  * @see { @link render:list }
  * @param { function } done - Callback that signals the task is complete.
  */
-gulp.task( 'server', gulp.series('stylesheets', 'javascript', 'render:list', ( done ) => {
+gulp.task('server', gulp.series('stylesheets', 'javascript', 'render:list', (done) => {
 
   var port = 1337;
 
-  browserSyncInstance.init( {
-    proxy: `localhost:${ port }`,
-  } );
+  browserSyncInstance.init({
+    proxy: `localhost:${port}`,
+  });
 
-  gulp.watch( 'source/diagrams/*.mmd', gulp.series('render:list'))
-    .on( 'change', ( event ) => {
-      if ( 'deleted' === event.type ) {
-        let renderedFileName = `${ path.basename( event.path, '.mmd' ) }.html`;
-        let destFilePath = path.resolve( 'public', renderedFileName);
-        del.sync( destFilePath );
+  gulp.watch('source/diagrams/*.mmd', gulp.series('render:list'))
+    .on('change', (event) => {
+      if ('deleted' === event.type) {
+        let renderedFileName = `${path.basename(event.path, '.mmd')}.html`;
+        let destFilePath = path.resolve('public', renderedFileName);
+        del.sync(destFilePath);
       }
       browserSyncInstance.reload();
-    } );
-  gulp.watch( 'source/html/*.html', gulp.series('render:list'));
-  gulp.watch( 'source/styles/**/*.scss', gulp.series('stylesheets'));
-  gulp.watch( 'source/javascript/**/*.js', gulp.series('javascript'))
-    .on( 'change', browserSyncInstance.reload );
+    });
+  gulp.watch('source/html/*.html', gulp.series('render:list'));
+  gulp.watch('source/styles/**/*.scss', gulp.series('stylesheets'));
+  gulp.watch('source/javascript/**/*.js', gulp.series('javascript'))
+    .on('change', browserSyncInstance.reload);
 
   connect()
-    .use( serveStatic( path.join( __dirname, '/public' ), { fallthrough: false } ) )
-    .use( ( error, request, response, next ) => {
-      if ( error ) {
-        logError( 'server', `${ error.statusCode } ${ error.path }` );
+    .use(serveStatic(path.join(__dirname, '/public'), { fallthrough: false }))
+    .use((error, request, response, next) => {
+      if (error) {
+        logError('server', `${error.statusCode} ${error.path}`);
       }
       next();
-    } )
-    .listen( port, () => {
-      logName( 'server' );
-      logMessage( 'server', `Site available at http://localhost:${ port }/` );
-    } );
+    })
+    .listen(port, () => {
+      logName('server');
+      logMessage('server', `Site available at http://localhost:${port}/`);
+    });
 
 }));
 
@@ -201,8 +196,8 @@ gulp.task( 'server', gulp.series('stylesheets', 'javascript', 'render:list', ( d
  * @desc Exports the compiled diagrams and pages into the public/ directory.
  * @param { function } done - Callback that signals the task is complete.
  */
-gulp.task( 'build', gulp.series('stylesheets', 'javascript', 'render:list', ( done ) => {
-  logMessage( 'build', 'Build complete.' );
+gulp.task('build', gulp.series('stylesheets', 'javascript', 'render:list', (done) => {
+  logMessage('build', 'Build complete.');
   done();
 }));
 
@@ -214,12 +209,12 @@ gulp.task( 'build', gulp.series('stylesheets', 'javascript', 'render:list', ( do
  * @param { string } title - The title of the notification.
  * @param { string } message - The message fo the notification.
  */
-const notify = ( title, message ) => {
-  notifier.notify( {
+const notify = (title, message) => {
+  notifier.notify({
     title: title,
     message: message,
     icon: 'scuttle-icon.jpg',
-  } );
+  });
 };
 
 /**
@@ -228,10 +223,10 @@ const notify = ( title, message ) => {
  * @param { string } task - The name of the task.
  * @param { string } data - The data for the task.
  */
-const logData = ( task, data ) => {
+const logData = (task, data) => {
   log(
-    colors.cyan( task ),
-    colors.white( data )
+    colors.cyan(task),
+    colors.white(data)
   );
 };
 
@@ -241,11 +236,11 @@ const logData = ( task, data ) => {
  * @param { string } task - The name of the task.
  * @param { string } message - The message for the task.
  */
-const logMessage = ( task, message ) => {
-  notify( task, message );
+const logMessage = (task, message) => {
+  notify(task, message);
   log(
-    colors.cyan( task ),
-    colors.yellow( message )
+    colors.cyan(task),
+    colors.yellow(message)
   );
 };
 
@@ -255,10 +250,10 @@ const logMessage = ( task, message ) => {
  * @param { string } task - The name of the task.
  * @param { string } message - The error message for the task.
  */
-const logError = ( task, message ) => {
+const logError = (task, message) => {
   log(
-    colors.red( task ),
-    colors.yellow( message )
+    colors.red(task),
+    colors.yellow(message)
   );
 };
 
@@ -268,21 +263,21 @@ const logError = ( task, message ) => {
  * @param { string } task - The name of the task.
  * @param { function } done - A callback to run.
  */
-const logName = ( task, done ) => {
-  figlet( pkg.name, {
-    font: `Isometric${ Math.floor( Math.random() * ( 4 - 1 + 1 ) ) + 1 }`,
-  }, ( error, data ) => {
-    if ( ! error ) {
-      data.split( '\n' )
-        .forEach( ( line ) => {
-          logData( task, line );
-        } );
-      logData( task, '' );
+const logName = (task, done) => {
+  figlet(pkg.name, {
+    font: `Isometric${Math.floor(Math.random() * (4 - 1 + 1)) + 1}`,
+  }, (error, data) => {
+    if (!error) {
+      data.split('\n')
+        .forEach((line) => {
+          logData(task, line);
+        });
+      logData(task, '');
     }
-    if ( 'function' === typeof done ) {
+    if ('function' === typeof done) {
       done();
     }
-  } );
+  });
 };
 
 /**
@@ -291,38 +286,38 @@ const logName = ( task, done ) => {
  * @param { string } template - The Mustache template.
  * @return { stream } - A node stream wrapped in through2.
  */
-const renderMermaid = function ( template ) {
+const renderMermaid = function (template) {
 
   const taskName = 'render-mermaid';
 
-  if ( ! template ) {
-    throw new PluginError( taskName, 'Missing a Mustache template.' );
+  if (!template) {
+    throw new PluginError(taskName, 'Missing a Mustache template.');
   }
 
-  template = new Buffer.from( template );
+  template = new Buffer.from(template);
 
-  return through.obj( function ( file, encoding, callback )  {
+  return through.obj(function (file, encoding, callback) {
 
-    if ( file.isNull() ) {
-      return callback( null, file );
+    if (file.isNull()) {
+      return callback(null, file);
     }
 
-    let fileName = path.basename( file.path, '.mmd' );
-    logMessage( taskName, `Processing ${ file.path }`);
+    let fileName = path.basename(file.path, '.mmd');
+    logMessage(taskName, `Processing ${file.path}`);
 
-    if ( file.isBuffer() ) {
-      file.contents = new Buffer.from( Mustache.render( template.toString(), {
+    if (file.isBuffer()) {
+      file.contents = new Buffer.from(Mustache.render(template.toString(), {
         'diagram-title': fileName,
         'diagram-contents': file.contents.toString(),
-      } ) );
+      }));
 
-      file.path = path.join( path.dirname( file.path ), `${ fileName }.html` );
+      file.path = path.join(path.dirname(file.path), `${fileName}.html`);
     }
-    if ( file.isStream() ) {
-      this.emit( 'error', new PluginError( taskName, 'Streaming not supported' ) );
-      return callback( null, file );
+    if (file.isStream()) {
+      this.emit('error', new PluginError(taskName, 'Streaming not supported'));
+      return callback(null, file);
     }
 
-    callback( null, file );
-  } );
+    callback(null, file);
+  });
 };
