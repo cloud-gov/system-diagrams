@@ -60,7 +60,7 @@ resources:
   - name: cg-diagrams-source
     type: git
     source:
-      uri: https://github.com/cloud-gov/cg-diagrams.git
+      uri: https://github.com/cloud-gov/system-diagrams.git
       branch: main
       commit_verification_keys: ((cloud-gov-pgp-keys))
 
