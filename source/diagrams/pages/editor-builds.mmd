@@ -1,0 +1,102 @@
+flowchart TB
+  %% Styles
+  classDef userStyle stroke:#167CC5,stroke-width:4px
+  classDef operatorStyle stroke:#bada55,stroke-width:4px
+  classDef processStyle stroke:#bc0061,stroke-width:4px
+  classDef saasStyle stroke:#f2ff07,stroke-width:4px
+  classDef appStyle stroke:#ff9900,stroke-width:4px
+  classDef dbStyle stroke:#010daf,stroke-width:4px
+
+  %% Component Definitions
+
+  %% Users
+  user["👤  <br/> UnPrivileged User <br/> *A Pages customer"]:::userStyle
+  operator["👤  <br/> Operator <br/> *A Pages operator"]:::operatorStyle
+
+  %% Services
+  uaa_authentication[UAA Authentication <br/> *CloudFoundry UAA]:::processStyle
+
+  %% Processors
+  pages_app[Pages Web Application <br/> *Node.js]:::processStyle
+  pages_worker[Pages Worker <br/> Runs background job manage site builds <br/> *Node.js]:::processStyle
+  pages_build_container[Pages Build Container <br/> Builds and publishes site <br/> *Docker]:::processStyle
+  control_plane[Control Plane <br/> *CloudFoundry Task]:::processStyle
+
+  %% SaaS
+  gh_source[Pages Site Gantry Source Control <br/> *GitHub]:::saasStyle
+
+  %% Apps
+  editor_app[Editor Application <br/> *React/Node.js]:::appStyle
+  preview_app[Preview Application <br/> *React/Node.js]:::appStyle
+
+  %% Store
+  database[(Database <br/> *AWS RDS Postgres)]:::dbStyle
+  editor_db[(Editor Database <br/> *AWS RDS Postgres)]:::dbStyle
+  key_value_store[(Key/Value Store <br/> *AWS Elasticache Redis)]:::dbStyle
+  s3[(Object Store <br/> *AWS S3)]:::dbStyle
+  editor_s3[(Editor Object Store <br/> *AWS S3)]:::dbStyle
+
+  %% Flow
+  operator -- Commits update to source code <br/> HTTPS Port 443 --> gh_source
+  editor_app -- On content publish:Webhook request to start build <br/> HTTPS Port 443 --> pages_app
+  pages_app -- Creates site build record <br/> TLS Port 5432 --> database
+  pages_app -- Starts site build event job <br/> TLS Port 6379 --> key_value_store
+  key_value_store -- Sends site build job data via the site builds queue <br/> TLS Port 6379 --> pages_worker
+  pages_worker -- Sends site build task request <br/> HTTPS Port 443 --> control_plane
+  control_plane -- Starts site build task <br/> HTTPS Port 443 --> pages_build_container
+  pages_build_container -- Publishes site files <br/> HTTPS Port 443 --> s3
+  pages_build_container -- Sends build status <br/> HTTPS Port 443 --> pages_app
+  pages_build_container -- Sends build logs <br/> TLS Port 5432 --> database
+
+  %% New Editor App Flows
+  user -- Edits content <br/> HTTPS Port 443 --> uaa_authentication --> editor_app
+  user -- Views site <br/> HTTPS Port 443 --> uaa_authentication --> preview_app
+  editor_app -- Sends content update to editor database <br/> TLS Port 5432 --> editor_db
+  editor_app -- Saves content update to editor object store <br/> TLS Port 5432 --> editor_s3
+  preview_app -- Authenticated API call: Pulls site data <br/> HTTPS Port 443 --> editor_app
+  preview_app -- Pulls fron github <br/> HTTPS Port 443 --> gh_source
+  gh_source -- Pulls data from editor API <br/> HTTPS Port 443 --> preview_app
+  pages_build_container -- Authenticated API call: Pulls site data <br/> HTTPS Port 443 --> editor_app
+  pages_build_container -- Pulls the source code <br/> SSH Port 22 --> gh_source
+
+  %% Layout
+  subgraph GSA Authorized SaaS Connection
+    gh_source
+  end
+
+  subgraph AWS Gov Cloud
+    subgraph cloud.gov platform
+      uaa_authentication
+
+      subgraph Pages cloud.gov editor space
+        preview_app
+        editor_app
+
+        subgraph cloud.gov space services
+          editor_db
+          editor_s3
+        end
+      end
+      subgraph Pages cloud.gov production space
+        pages_app
+        pages_build_container
+        pages_worker
+        control_plane
+        subgraph cloud.gov space services
+          database
+          key_value_store
+          s3
+        end
+      end
+    end
+  end
+
+  subgraph Legend
+    direction BT
+    legend_user["👤 User"]:::userStyle
+    legend_operator["👤 Operator"]:::operatorStyle
+    legend_process[Process]:::processStyle
+    legend_db[(Database)]:::dbStyle
+    legend_saas[Software as a service <br/> *SaaS]:::saasStyle
+    legend_app[Application]:::appStyle
+  end
